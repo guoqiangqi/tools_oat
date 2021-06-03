@@ -60,8 +60,8 @@ public final class OhosLogUtil {
      * @param className class name to write log
      * @param logtext log text
      */
-    public static void print(final Class className, final String logtext) {
-        System.out.println(className + "\t" + logtext);
+    public static void println(final Class className, final String logtext) {
+        System.out.println(logtext);
     }
 
     /**

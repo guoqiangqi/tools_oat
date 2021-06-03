@@ -85,12 +85,15 @@ public class OhosLicenseMain {
     /**
      * Prompt message when the program started
      */
-    private static final String PROMPT_MESSAGE =
-        "\n-------------------------------------------------------------------------------------------\n"
-            + "OpenHarmony OSS Audit Tool \n" + "Copyright (C) 2021 Huawei Device Co., Ltd.\n"
-            + "if you have any questions or concerns, please create issue in OpenHarmony-SIG/tools_oat "
-            + " @jalenchen or chenyaxun.\n"
-            + "-------------------------------------------------------------------------------------------\n";
+    private static final String PROMPT_MESSAGE_SEPARATOR = "----------------------------------------------------------";
+
+    private static final String PROMPT_MESSAGE_NAME = "OpenHarmony OSS Audit Tool";
+
+    private static final String PROMPT_MESSAGE_COPY = "Copyright (C) 2021 Huawei Device Co., Ltd.";
+
+    private static final String PROMPT_MESSAGE_FEEDBACK =
+        "If you have any questions or concerns, please create issue at https://gitee"
+            + ".com/openharmony-sig/tools_oat/issues";
 
     /**
      * Private constructure to prevent new instance
@@ -106,7 +109,11 @@ public class OhosLicenseMain {
      * @throws Exception exception wile process
      */
     public static void main(final String[] args) throws Exception {
-        OhosLogUtil.print(OhosLicenseMain.class, OhosLicenseMain.PROMPT_MESSAGE);
+        OhosLogUtil.println(OhosLicenseMain.class, OhosLicenseMain.PROMPT_MESSAGE_SEPARATOR);
+        OhosLogUtil.println(OhosLicenseMain.class, OhosLicenseMain.PROMPT_MESSAGE_NAME);
+        OhosLogUtil.println(OhosLicenseMain.class, OhosLicenseMain.PROMPT_MESSAGE_COPY);
+        OhosLogUtil.println(OhosLicenseMain.class, OhosLicenseMain.PROMPT_MESSAGE_FEEDBACK);
+        OhosLogUtil.println(OhosLicenseMain.class, OhosLicenseMain.PROMPT_MESSAGE_SEPARATOR);
         final Options options = new Options();
         final CommandLine cmd = parseCommandLine(options, args);
         final OhosConfig ohosConfig = new OhosConfig();
@@ -166,7 +173,7 @@ public class OhosLicenseMain {
         OhosLogUtil.warn(OhosLicenseMain.class, "CommandLine" + "\tfileList\t" + fileList);
         if (cmd.hasOption("s")) {
             if (!cmd.hasOption("r") || !cmd.hasOption("n")) {
-                OhosLogUtil.print(OhosLicenseMain.class, "Args invalid, the valid args is: [-s sourceCodeRepoPath -r "
+                OhosLogUtil.println(OhosLicenseMain.class, "Args invalid, the valid args is: [-s sourceCodeRepoPath -r "
                     + "reportFilePath -n nameOfRepo -m 0] or [-s sourceCodeRepoPath -r reportFilePath -n nameOfRepo -m "
                     + "1 -f filelistSeparatedBy|]" + " ");
                 System.exit(0);
@@ -210,7 +217,7 @@ public class OhosLicenseMain {
         } catch (final ParseException e) {
             OhosLogUtil.traceException(e);
         }
-        if (ArrayUtils.isEmpty(args) || cmd.hasOption("h")) {
+        if (ArrayUtils.isEmpty(args) || (cmd != null && cmd.hasOption("h"))) {
             printUsage(options);
         }
         return cmd;
@@ -230,9 +237,8 @@ public class OhosLicenseMain {
      *
      * @param reportFile File to report results
      * @param ohosConfig Config in oat.xml
-     * @throws Exception in case of errors.
      */
-    private static void oatCheck(final String reportFile, final OhosConfig ohosConfig) throws Exception {
+    private static void oatCheck(final String reportFile, final OhosConfig ohosConfig) {
         final List<OhosTask> taskList = ohosConfig.getTaskList();
         final int size = taskList.size();
         int maxThread = Math.min(size, 100);
@@ -245,7 +251,7 @@ public class OhosLicenseMain {
         final SimpleDateFormat simpleDataFormat = new SimpleDateFormat("yyyy-MM-dd-HH_mm_ss");
         final String startTime = simpleDataFormat.format(date);
         final String resultfolder = "./oat_results_" + startTime;
-        OhosLogUtil.print(OhosLicenseMain.class, startTime + " Start analyzing....");
+        OhosLogUtil.println(OhosLicenseMain.class, startTime + " Start analyzing....");
         if (reportFile.length() <= 0) {
             final File dir = new File(resultfolder);
             if (!dir.exists()) {
@@ -264,13 +270,13 @@ public class OhosLicenseMain {
                 }
 
                 private void repoort() {
-                    File resultFile = null;
+                    final File resultFile;
                     if (reportFile.length() > 0) {
                         resultFile = new File(reportFile);
                     } else {
                         resultFile = new File(resultfolder + "/oat_" + ohosTask.getNamne() + ".txt");
                     }
-                    OhosLogUtil.print(OhosLicenseMain.class, "resultfilepath:" + resultFile);
+                    OhosLogUtil.println(OhosLicenseMain.class, "Result file path:\t" + resultFile);
                     try {
                         final FileWriter fileWriter = new FileWriter(resultFile, false);
 
@@ -291,7 +297,7 @@ public class OhosLicenseMain {
     }
 
     private static void checkProjects(final IOhosReport report, final OhosTask ohosTask, final OhosConfig ohosConfig)
-        throws IOException, RatException {
+        throws RatException {
         final List<OhosProject> projectList = ohosTask.getProjectList();
 
         for (final OhosProject ohosProject : projectList) {
@@ -330,7 +336,7 @@ public class OhosLicenseMain {
         return null;
     }
 
-    private static FilenameFilter parseFileExclusions(final List<String> excludes) throws IOException {
+    private static FilenameFilter parseFileExclusions(final List<String> excludes) {
         final OrFileFilter orFilter = new OrFileFilter();
 
         for (final String exclude : excludes) {
