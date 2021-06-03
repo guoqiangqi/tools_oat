@@ -59,6 +59,7 @@ import org.apache.commons.io.filefilter.OrFileFilter;
 import org.apache.commons.io.filefilter.RegexFileFilter;
 import org.apache.commons.io.filefilter.WildcardFileFilter;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.rat.api.RatException;
 import org.apache.rat.report.IReportable;
 
@@ -87,7 +88,7 @@ public class OhosLicenseMain {
     private static final String PROMPT_MESSAGE =
         "\n-------------------------------------------------------------------------------------------\n"
             + "OpenHarmony OSS Audit Tool \n" + "Copyright (C) 2021 Huawei Device Co., Ltd.\n"
-            + "if you have any questions or concerns, please create issue in OpenHarmony/tools_oat and"
+            + "if you have any questions or concerns, please create issue in OpenHarmony-SIG/tools_oat "
             + " @jalenchen or chenyaxun.\n"
             + "-------------------------------------------------------------------------------------------\n";
 
@@ -106,7 +107,8 @@ public class OhosLicenseMain {
      */
     public static void main(final String[] args) throws Exception {
         OhosLogUtil.print(OhosLicenseMain.class, OhosLicenseMain.PROMPT_MESSAGE);
-        final CommandLine cmd = parseCommandLine(args);
+        final Options options = new Options();
+        final CommandLine cmd = parseCommandLine(options, args);
         final OhosConfig ohosConfig = new OhosConfig();
 
         String initOATCfgFile = "OAT.xml";
@@ -185,8 +187,8 @@ public class OhosLicenseMain {
         OhosLicenseMain.oatCheck(reportFile, ohosConfig);
     }
 
-    private static CommandLine parseCommandLine(final String[] args) {
-        final Options options = new Options();
+    private static CommandLine parseCommandLine(final Options options, final String[] args) {
+
         options.addOption("i", true, "OAT.xml file path, default vaule is OAT.xml in the running path");
         options.addOption("s", true, "Source code repository path");
         options.addOption("r", true, "Report file path, must be used together with -s option");
@@ -208,7 +210,7 @@ public class OhosLicenseMain {
         } catch (final ParseException e) {
             OhosLogUtil.traceException(e);
         }
-        if (cmd.hasOption("h")) {
+        if (ArrayUtils.isEmpty(args) || cmd.hasOption("h")) {
             printUsage(options);
         }
         return cmd;
