@@ -91,9 +91,9 @@ public class OhosLicenseMain {
 
     private static final String PROMPT_MESSAGE_COPY = "Copyright (C) 2021 Huawei Device Co., Ltd.";
 
-    private static final String PROMPT_MESSAGE_FEEDBACK =
-        "If you have any questions or concerns, please create issue at https://gitee"
-            + ".com/openharmony-sig/tools_oat/issues";
+    private static final String PROMPT_MESSAGE_FEEDBACK
+        = "If you have any questions or concerns, please create issue at https://gitee"
+        + ".com/openharmony-sig/tools_oat/issues";
 
     /**
      * Private constructure to prevent new instance
@@ -109,11 +109,11 @@ public class OhosLicenseMain {
      * @throws Exception exception wile process
      */
     public static void main(final String[] args) throws Exception {
-        OhosLogUtil.println(OhosLicenseMain.class, OhosLicenseMain.PROMPT_MESSAGE_SEPARATOR);
-        OhosLogUtil.println(OhosLicenseMain.class, OhosLicenseMain.PROMPT_MESSAGE_NAME);
-        OhosLogUtil.println(OhosLicenseMain.class, OhosLicenseMain.PROMPT_MESSAGE_COPY);
-        OhosLogUtil.println(OhosLicenseMain.class, OhosLicenseMain.PROMPT_MESSAGE_FEEDBACK);
-        OhosLogUtil.println(OhosLicenseMain.class, OhosLicenseMain.PROMPT_MESSAGE_SEPARATOR);
+        OhosLogUtil.println("", OhosLicenseMain.PROMPT_MESSAGE_SEPARATOR);
+        OhosLogUtil.println("", OhosLicenseMain.PROMPT_MESSAGE_NAME);
+        OhosLogUtil.println("", OhosLicenseMain.PROMPT_MESSAGE_COPY);
+        OhosLogUtil.println("", OhosLicenseMain.PROMPT_MESSAGE_FEEDBACK);
+        OhosLogUtil.println("", OhosLicenseMain.PROMPT_MESSAGE_SEPARATOR);
         final Options options = new Options();
         final CommandLine cmd = parseCommandLine(options, args);
         final OhosConfig ohosConfig = new OhosConfig();
@@ -122,13 +122,13 @@ public class OhosLicenseMain {
         if (cmd.hasOption("i")) {
             initOATCfgFile = cmd.getOptionValue("i");
         }
-        OhosLogUtil.warn(OhosLicenseMain.class, "CommandLine" + "\tinitOATCfgFile\t" + initOATCfgFile);
+        OhosLogUtil.warn(OhosLicenseMain.class.getSimpleName(), "CommandLine" + "\tinitOATCfgFile\t" + initOATCfgFile);
         boolean logSwitch = false;
         if (cmd.hasOption("l")) {
             logSwitch = true;
         }
         OhosLogUtil.setDebugMode(logSwitch);
-        OhosLogUtil.warn(OhosLicenseMain.class, "CommandLine" + "\tlogSwitch\t" + logSwitch);
+        OhosLogUtil.warn(OhosLicenseMain.class.getSimpleName(), "CommandLine" + "\tlogSwitch\t" + logSwitch);
 
         // The following para is used for pipleline plugin integration
         String sourceCodeRepoPath = "";
@@ -141,12 +141,12 @@ public class OhosLicenseMain {
             ohosConfig.setBasedir(sourceCodeRepoPath);
             initOATCfgFile = OhosLicenseMain.class.getResource("/OAT-Default.xml").toString();
         }
-        OhosLogUtil.warn(OhosLicenseMain.class, "CommandLine" + "\tsourceCodeRepoPath\t" + sourceCodeRepoPath);
+        OhosLogUtil.warn(OhosLicenseMain.class.getSimpleName(), "CommandLine" + "\tsourceCodeRepoPath\t" + sourceCodeRepoPath);
         String reportFile = "";
         if (cmd.hasOption("s") && cmd.hasOption("r")) {
             reportFile = OhosCfgUtil.formatPath(cmd.getOptionValue("r"));
         }
-        OhosLogUtil.warn(OhosLicenseMain.class, "CommandLine" + "\treportFile\t" + reportFile);
+        OhosLogUtil.warn(OhosLicenseMain.class.getSimpleName(), "CommandLine" + "\treportFile\t" + reportFile);
         String nameOfRepository = "";
         if (cmd.hasOption("s") && cmd.hasOption("n")) {
             nameOfRepository = OhosCfgUtil.formatPath(cmd.getOptionValue("n"));
@@ -155,7 +155,7 @@ public class OhosLicenseMain {
             nameOfRepository = "defaultProject";
         }
         ohosConfig.setRepositoryName(nameOfRepository);
-        OhosLogUtil.warn(OhosLicenseMain.class, "CommandLine" + "\tnameOfRepository\t" + nameOfRepository);
+        OhosLogUtil.warn(OhosLicenseMain.class.getSimpleName(), "CommandLine" + "\tnameOfRepository\t" + nameOfRepository);
         String mode = "0";
         if (cmd.hasOption("s") && cmd.hasOption("m")) {
             final String tmpMode = cmd.getOptionValue("m");
@@ -164,16 +164,16 @@ public class OhosLicenseMain {
             }
         }
         ohosConfig.setPluginCheckMode(mode);
-        OhosLogUtil.warn(OhosLicenseMain.class, "CommandLine" + "\tmode\t" + mode);
+        OhosLogUtil.warn(OhosLicenseMain.class.getSimpleName(), "CommandLine" + "\tmode\t" + mode);
         String fileList = "";
         if (cmd.hasOption("s") && cmd.hasOption("f")) {
             fileList = OhosCfgUtil.formatPath(cmd.getOptionValue("f"));
         }
         ohosConfig.setSrcFileList(fileList);
-        OhosLogUtil.warn(OhosLicenseMain.class, "CommandLine" + "\tfileList\t" + fileList);
+        OhosLogUtil.warn(OhosLicenseMain.class.getSimpleName(), "CommandLine" + "\tfileList\t" + fileList);
         if (cmd.hasOption("s")) {
             if (!cmd.hasOption("r") || !cmd.hasOption("n")) {
-                OhosLogUtil.println(OhosLicenseMain.class, "Args invalid, the valid args is: [-s sourceCodeRepoPath -r "
+                OhosLogUtil.println("", "Args invalid, the valid args is: [-s sourceCodeRepoPath -r "
                     + "reportFilePath -n nameOfRepo -m 0] or [-s sourceCodeRepoPath -r reportFilePath -n nameOfRepo -m "
                     + "1 -f filelistSeparatedBy|]" + " ");
                 System.exit(0);
@@ -251,13 +251,13 @@ public class OhosLicenseMain {
         final SimpleDateFormat simpleDataFormat = new SimpleDateFormat("yyyy-MM-dd-HH_mm_ss");
         final String startTime = simpleDataFormat.format(date);
         final String resultfolder = "./oat_results_" + startTime;
-        OhosLogUtil.println(OhosLicenseMain.class, startTime + " Start analyzing....");
+        OhosLogUtil.println("", startTime + " Start analyzing....");
         if (reportFile.length() <= 0) {
             final File dir = new File(resultfolder);
             if (!dir.exists()) {
                 final boolean success = dir.mkdirs();
                 if (!success) {
-                    OhosLogUtil.warn(OhosLicenseMain.class, "Create dir failed");
+                    OhosLogUtil.warn(OhosLicenseMain.class.getSimpleName(), "Create dir failed");
                 }
             }
         }
@@ -276,7 +276,7 @@ public class OhosLicenseMain {
                     } else {
                         resultFile = new File(resultfolder + "/oat_" + ohosTask.getNamne() + ".txt");
                     }
-                    OhosLogUtil.println(OhosLicenseMain.class, "Result file path:\t" + resultFile);
+                    OhosLogUtil.println("", "Result file path:\t" + resultFile);
                     try {
                         final FileWriter fileWriter = new FileWriter(resultFile, false);
 
@@ -309,7 +309,7 @@ public class OhosLicenseMain {
                 base.run(report);
             }
             final long costTime = (System.currentTimeMillis() - startTime) / 1000;
-            OhosLogUtil.warn(OhosLicenseMain.class, ohosProject.getPath() + "\tCostTime\t" + costTime);
+            OhosLogUtil.warn(OhosLicenseMain.class.getSimpleName(), ohosProject.getPath() + "\tCostTime\t" + costTime);
 
         }
 

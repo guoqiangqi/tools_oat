@@ -124,7 +124,6 @@ public class OhosMainReport implements IOhosReport {
         try {
             // wait the pool until finish
             while (!exec.awaitTermination(3, TimeUnit.SECONDS)) {
-                ;
             }
         } catch (final InterruptedException e) {
             OhosLogUtil.traceException(e);

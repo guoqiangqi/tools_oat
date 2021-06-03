@@ -37,10 +37,7 @@ public class OhosMatchUtils {
      * @return stop match or not
      */
     public static boolean stopWhileMatchedSpdx(final String licenseName) {
-        if (licenseName != null && (licenseName.startsWith("SPDX:"))) {
-            return true;
-        }
-        return false;
+        return licenseName != null && (licenseName.startsWith("SPDX:"));
     }
 
     /**
@@ -50,10 +47,7 @@ public class OhosMatchUtils {
      * @return stop match or not
      */
     public static boolean stopWhileMatchedAny(final String licenseName) {
-        if (licenseName != null && (!licenseName.equals("InvalidLicense"))) {
-            return true;
-        }
-        return false;
+        return licenseName != null && (!licenseName.equals("InvalidLicense"));
     }
 
     /**
@@ -63,10 +57,7 @@ public class OhosMatchUtils {
      * @return stop match or not
      */
     public static boolean stopWhileMatchedGPL(final String licenseName) {
-        if (licenseName != null && licenseName.contains("GPL")) {
-            return true;
-        }
-        return false;
+        return licenseName != null && licenseName.contains("GPL");
     }
 
     /**
@@ -76,10 +67,7 @@ public class OhosMatchUtils {
      * @return stop match or not
      */
     public static boolean stopWhileMatchedMPLEPL(final String licenseName) {
-        if (licenseName != null && (licenseName.contains("MPL") || licenseName.contains("EPL"))) {
-            return true;
-        }
-        return false;
+        return licenseName != null && (licenseName.contains("MPL") || licenseName.contains("EPL"));
     }
 
 }

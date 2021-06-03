@@ -108,14 +108,14 @@ public class OhosPostAnalyser4Output implements IDocumentAnalyser {
         if (!document.isDirectory()) {
             if (shortFileUnderProject.equals("LICENSE")) {
                 findIt = true;
-                OhosLogUtil.logLicenseFile(this.getClass(),
+                OhosLogUtil.logLicenseFile(this.getClass().getSimpleName(),
                     ohosProject.getPath() + "\tLICENSEFILE\t" + shortFileUnderProject + "\t" + name + "\t"
                         + LicenseHeaderText);
             }
             for (final String defLicenseFile : defLicenseFiles) {
                 if (shortFileUnderProject.endsWith(defLicenseFile)) {
                     findIt = true;
-                    OhosLogUtil.logLicenseFile(this.getClass(),
+                    OhosLogUtil.logLicenseFile(this.getClass().getSimpleName(),
                         ohosProject.getPath() + "\tDEFLICENSEFILE\t" + shortFileUnderProject + "\t" + name + "\t"
                             + LicenseHeaderText);
                 }
@@ -129,7 +129,7 @@ public class OhosPostAnalyser4Output implements IDocumentAnalyser {
                 if (fName.contains("license") || fName.contains("licence") || fName.contains("copying")
                     || fName.contains("copyright") || fName.contains("licenseagreement") || fName.contains(
                     "licenceagreement")) {
-                    OhosLogUtil.logLicenseFile(this.getClass(),
+                    OhosLogUtil.logLicenseFile(this.getClass().getSimpleName(),
                         ohosProject.getPath() + "\tOTHERLICENSEFILE\t" + shortFileUnderProject + "\t" + name + "\t"
                             + LicenseHeaderText);
                 }
@@ -145,7 +145,7 @@ public class OhosPostAnalyser4Output implements IDocumentAnalyser {
         final String isSkiped = document.getData("isSkipedFile");
         if (isSkiped.equals("true")) {
             if (this.ohosConfig.getData("TraceSkippedAndIgnoredFiles").equals("true")) {
-                OhosLogUtil.warn(this.getClass(), ohosProject.getPath() + "\tSkipedFile\t" + shortFileUnderProject);
+                OhosLogUtil.warn(this.getClass().getSimpleName(), ohosProject.getPath() + "\tSkipedFile\t" + shortFileUnderProject);
 
             }
             return;
@@ -396,7 +396,7 @@ public class OhosPostAnalyser4Output implements IDocumentAnalyser {
             try {
                 piPath = piPath.substring(1);
             } catch (final Exception e) {
-                OhosLogUtil.warn(this.getClass(),
+                OhosLogUtil.warn(this.getClass().getSimpleName(),
                     subject.getOhosProject().getPath() + "\tisMatched failed\t" + shortFilePathUnderPrj);
                 OhosLogUtil.traceException(e);
             }

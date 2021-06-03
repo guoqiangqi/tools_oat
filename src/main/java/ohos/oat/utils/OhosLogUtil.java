@@ -60,8 +60,8 @@ public final class OhosLogUtil {
      * @param className class name to write log
      * @param logtext log text
      */
-    public static void println(final Class className, final String logtext) {
-        System.out.println(logtext);
+    public static void println(final String className, final String logtext) {
+        System.out.println(className + "\t" + logtext);
     }
 
     /**
@@ -70,7 +70,7 @@ public final class OhosLogUtil {
      * @param className class name to write log
      * @param logtext log text
      */
-    public static void info(final Class className, final String logtext) {
+    public static void info(final String className, final String logtext) {
         if (isDebugMode) {
             logger.info(className + "\t" + logtext);
         }
@@ -82,7 +82,7 @@ public final class OhosLogUtil {
      * @param className class name to write log
      * @param logtext log text
      */
-    public static void warn(final Class className, final String logtext) {
+    public static void warn(final String className, final String logtext) {
         if (isDebugMode) {
             logger.warn(className + "\t" + logtext);
         }
@@ -94,7 +94,7 @@ public final class OhosLogUtil {
      * @param className class name to write log
      * @param logtext log text
      */
-    public static void error(final Class className, final String logtext) {
+    public static void error(final String className, final String logtext) {
         if (isDebugMode) {
             logger.error(className + "\t" + logtext);
         }
@@ -115,7 +115,7 @@ public final class OhosLogUtil {
      * @param className class name to write log
      * @param logtext log text
      */
-    public static void logLicense(final Class className, final String logtext) {
+    public static void logLicense(final String className, final String logtext) {
         licenseLogger.warn(className + "\t" + logtext);
     }
 
@@ -125,7 +125,7 @@ public final class OhosLogUtil {
      * @param className class name to write log
      * @param logtext log text
      */
-    public static void logLicenseFile(final Class className, final String logtext) {
+    public static void logLicenseFile(final String className, final String logtext) {
         licenseFileLogger.warn(className + "\t" + logtext);
     }
 
@@ -135,7 +135,7 @@ public final class OhosLogUtil {
      * @param className class name to write log
      * @param logtext log text
      */
-    public static void logOatConfig(final Class className, final String logtext) {
+    public static void logOatConfig(final String className, final String logtext) {
         oatConfigLogger.warn(className + "\t" + logtext);
     }
 

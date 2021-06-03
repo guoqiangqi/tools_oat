@@ -35,5 +35,5 @@ public interface IOhosReport extends RatReport {
      *
      * @throws RatException exception
      */
-    public void concurrentReport() throws RatException;
+    void concurrentReport() throws RatException;
 }
