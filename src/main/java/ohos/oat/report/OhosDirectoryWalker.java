@@ -122,7 +122,7 @@ public class OhosDirectoryWalker extends Walker {
         for (final String ohosFilePathFilterItem : ohosFilePathFilterItems) {
             if (shortPath.startsWith(ohosFilePathFilterItem)) {
                 if (this.ohosConfig.getData("TraceSkippedAndIgnoredFiles").equals("true")) {
-                    OhosLogUtil.warn(this.getClass(),
+                    OhosLogUtil.warn(this.getClass().getSimpleName(),
                         this.ohosProject.getPath() + "\t:" + "\tstartsWith-skip\t" + this.name + "\t:"
                             + file.getPath());
                 }
@@ -132,7 +132,7 @@ public class OhosDirectoryWalker extends Walker {
             final boolean needFilter = pattern.matcher(shortPath).matches();
             if (needFilter) {
                 if (this.ohosConfig.getData("TraceSkippedAndIgnoredFiles").equals("true")) {
-                    OhosLogUtil.warn(this.getClass(),
+                    OhosLogUtil.warn(this.getClass().getSimpleName(),
                         this.ohosProject.getPath() + "\t:" + "\tmatcher-skip\t" + this.name + "\t:" + file.getPath());
                 }
 
@@ -154,7 +154,7 @@ public class OhosDirectoryWalker extends Walker {
         final boolean notIgnored = this.isNotIgnored(file);
         if (!notIgnored) {
             if (this.ohosConfig.getData("TraceSkippedAndIgnoredFiles").equals("true")) {
-                OhosLogUtil.warn(this.getClass(), this.ohosProject.getPath() + "\tIgnoredFile\t" + file.getPath());
+                OhosLogUtil.warn(this.getClass().getSimpleName(), this.ohosProject.getPath() + "\tIgnoredFile\t" + file.getPath());
             }
         }
         return notIgnored;

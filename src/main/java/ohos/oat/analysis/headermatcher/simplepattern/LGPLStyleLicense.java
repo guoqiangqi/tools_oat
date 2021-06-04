@@ -40,9 +40,6 @@ public class LGPLStyleLicense extends OhosSimplePatternLicense {
 
     @Override
     protected boolean stopWhileMatched(final String licenseName) {
-        if (OhosMatchUtils.stopWhileMatchedGPL(licenseName)) {
-            return true;
-        }
-        return false;
+        return OhosMatchUtils.stopWhileMatchedGPL(licenseName);
     }
 }

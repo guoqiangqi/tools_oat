@@ -122,7 +122,7 @@ public final class OhosCfgUtil {
             tmpDir += "/";
         }
         ohosConfig.setBasedir(tmpDir);
-        OhosLogUtil.logOatConfig(OhosCfgUtil.class, "basedir: " + tmpDir);
+        OhosLogUtil.logOatConfig(OhosCfgUtil.class.getSimpleName(), "basedir: " + tmpDir);
         OhosCfgUtil.initLicenseMatcher(ohosConfig, xmlconfig, null);
         OhosCfgUtil.initTask(ohosConfig, xmlconfig);
         OhosCfgUtil.initPolicy(ohosConfig, xmlconfig, null);
@@ -266,7 +266,7 @@ public final class OhosCfgUtil {
                 ohosFileFilter.addFilterItem(name);
                 if (ohosProject != null && (!ohosFileFilter.getName().contains("dir name underproject"))) {
                     // Project OAT XML
-                    OhosLogUtil.logOatConfig(OhosCfgUtil.class,
+                    OhosLogUtil.logOatConfig(OhosCfgUtil.class.getSimpleName(),
                         ohosProject.getPath() + "\tFilter\t" + ohosFileFilter.getName() + "\t\t" + "\tFileName\t" + name
                             + "\tDesc\t" + desc);
                 }
@@ -283,7 +283,7 @@ public final class OhosCfgUtil {
             ohosFileFilter.addFilePathFilterItem(name);
             if (ohosProject != null) {
                 // Project OAT XML
-                OhosLogUtil.logOatConfig(OhosCfgUtil.class,
+                OhosLogUtil.logOatConfig(OhosCfgUtil.class.getSimpleName(),
                     ohosProject.getPath() + "\tFilter\t" + ohosFileFilter.getName() + "\t\t" + "\tFilePath\t" + name
                         + "\tDesc\t" + desc);
             }
@@ -324,7 +324,7 @@ public final class OhosCfgUtil {
                     ohosProject.getOhosPolicy().addPolicyItem(ohosPolicyItem);
                     if (ohosProject != null) {
                         // Project OAT XML
-                        OhosLogUtil.logOatConfig(OhosCfgUtil.class,
+                        OhosLogUtil.logOatConfig(OhosCfgUtil.class.getSimpleName(),
                             ohosProject.getPath() + "\tPolicyItem\t" + ohosPolicyItem.getType() + "Policy\tName\t"
                                 + ohosPolicyItem.getName() + "\tPath\t" + ohosPolicyItem.getPath() + "\tDesc\t"
                                 + ohosPolicyItem.getDesc());
@@ -350,12 +350,12 @@ public final class OhosCfgUtil {
                 final String licenseText = OhosCfgUtil.getElementAttrValue(licenseTextCfg, "name");
                 if (ohosProject == null) {
                     ohosConfig.addLicenseText(licenseName, licenseText);
-                    OhosLogUtil.logOatConfig(OhosCfgUtil.class,
+                    OhosLogUtil.logOatConfig(OhosCfgUtil.class.getSimpleName(),
                         "GlobalConfig" + "\taddGlobalLicenseText\t" + "customizedLicenseConfig\tName\t" + licenseName
                             + "\t \t \tLicenseText\t" + licenseText);
                 } else {
                     ohosProject.addPrjLicenseText(licenseName, licenseText);
-                    OhosLogUtil.logOatConfig(OhosCfgUtil.class,
+                    OhosLogUtil.logOatConfig(OhosCfgUtil.class.getSimpleName(),
                         ohosProject.getPath() + "\taddPrjLicenseText\t" + "customizedLicenseConfig\tName\t"
                             + licenseName + "\t \t \tLicenseText\t" + licenseText);
                 }

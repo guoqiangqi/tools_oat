@@ -79,7 +79,7 @@ public class OhosFileDocument extends FileDocument {
 
     public Boolean getMatchResult(final String matcherName) {
         final Boolean tmp = this.matchResult.get(matcherName);
-        return tmp == null ? false : tmp;
+        return tmp != null && tmp;
     }
 
     public boolean isProjectRoot() {

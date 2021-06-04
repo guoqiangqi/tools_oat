@@ -216,7 +216,7 @@ public class OhosProcessor {
         String name = this.fileDocument.getMetaData().value(RAT_URL_LICENSE_FAMILY_NAME);
         final String srcText = headers.toString();
         if (name == null || (name.equals("InvalidLicense"))) {
-            OhosLogUtil.info(OhosProcessor.class,
+            OhosLogUtil.info(this.getClass().getSimpleName(),
                 "InvalidLicense and process customized matching, fileName:" + this.fileDocument.getFileName());
             for (final Map.Entry<String, List<String>> stringListEntry : this.ohosConfig.getLicenseText2NameMap()
                 .entrySet()) {
@@ -237,7 +237,7 @@ public class OhosProcessor {
         }
         name = this.fileDocument.getMetaData().value(RAT_URL_LICENSE_FAMILY_NAME);
         if (name != null && (name.equals("InvalidLicense") || (name.contains("Style")))) {
-            OhosLogUtil.info(OhosProcessor.class,
+            OhosLogUtil.info(this.getClass().getSimpleName(),
                 "InvalidLicense and process spdx matching, fileName:" + this.fileDocument.getFileName());
             this.matchWithSpdx(headers);
         }
@@ -291,7 +291,7 @@ public class OhosProcessor {
                 tmpLicenseStr = tmpLicenseStr.replace(":", "");
                 tmpLicenseStr = tmpLicenseStr.replace("\"", "");
                 tmpLicenseStr = tmpLicenseStr.replace(",", "");
-                OhosLogUtil.logLicense(OhosProcessor.class,
+                OhosLogUtil.logLicense(this.getClass().getSimpleName(),
                     this.repoDisplayName + "\t" + "README.OpenSource\t" + tmpLicenseStr.trim());
             }
         } else {

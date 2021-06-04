@@ -34,7 +34,7 @@ import org.apache.rat.api.MetaData;
  * @since 1.0
  */
 public class OhosSimplePatternLicense extends SimplePatternBasedLicense {
-    private String[] purePatterns = null;
+    private String[] purePatterns;
 
     protected OhosSimplePatternLicense(final MetaData.Datum pLicenseFamilyCategory,
         final MetaData.Datum pLicenseFamilyName, final String pNotes, final String[] pPatterns) {
@@ -75,9 +75,6 @@ public class OhosSimplePatternLicense extends SimplePatternBasedLicense {
     }
 
     protected boolean stopWhileMatched(final String licenseName) {
-        if (OhosMatchUtils.stopWhileMatchedAny(licenseName)) {
-            return true;
-        }
-        return false;
+        return OhosMatchUtils.stopWhileMatchedAny(licenseName);
     }
 }

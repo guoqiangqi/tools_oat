@@ -97,7 +97,7 @@ public class OhosConfig {
             tmpStr = tmpStr.replace("\\", "/");
             tmpStr = tmpStr.replace("//", "/");
             this.srcFileList.add(tmpStr);
-            OhosLogUtil.warn(this.getClass(), "CommandLine" + "\taddSrcListItem\t" + tmpStr);
+            OhosLogUtil.warn(this.getClass().getSimpleName(), "CommandLine" + "\taddSrcListItem\t" + tmpStr);
         }
     }
 
