@@ -27,7 +27,7 @@ import org.apache.rat.api.MetaData;
  * @author chenyaxun
  * @since 1.0
  */
-public class LibpngLicense extends OhosSimplePatternLicense {
+public class LibpngLicense extends OhosDefaultSimplePatternLicenseMatcher {
     public LibpngLicense() {
         super(new MetaData.Datum(RAT_URL_LICENSE_FAMILY_CATEGORY, "Libpng"),
             new MetaData.Datum(RAT_URL_LICENSE_FAMILY_NAME, "Libpng"), "", new String[] {"under the libpng license"});

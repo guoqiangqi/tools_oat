@@ -20,9 +20,9 @@ import static org.apache.rat.api.MetaData.RAT_URL_LICENSE_FAMILY_CATEGORY;
 import static org.apache.rat.api.MetaData.RAT_URL_LICENSE_FAMILY_NAME;
 
 import ohos.oat.analysis.headermatcher.OhosMatchUtils;
+import ohos.oat.analysis.headermatcher.OhosSimplePatternLicenseMatcher;
 
 import org.apache.rat.analysis.RatHeaderAnalysisException;
-import org.apache.rat.analysis.license.SimplePatternBasedLicense;
 import org.apache.rat.api.Document;
 import org.apache.rat.api.MetaData;
 
@@ -32,7 +32,7 @@ import org.apache.rat.api.MetaData;
  * @author chenyaxun
  * @since 1.0
  */
-public class GPLStyleLicense extends SimplePatternBasedLicense {
+public class GPLStyleLicense extends OhosSimplePatternLicenseMatcher {
     public GPLStyleLicense() {
         super(new MetaData.Datum(RAT_URL_LICENSE_FAMILY_CATEGORY, "GPLStyleLicense"),
             new MetaData.Datum(RAT_URL_LICENSE_FAMILY_NAME, "GPLStyleLicense"), "", new String[] {
@@ -42,10 +42,15 @@ public class GPLStyleLicense extends SimplePatternBasedLicense {
 
     @Override
     public boolean match(final Document pSubject, final String pLine) throws RatHeaderAnalysisException {
-        final String value = pSubject.getMetaData().value(MetaData.RAT_URL_LICENSE_FAMILY_CATEGORY);
-        if (OhosMatchUtils.stopWhileMatchedGPL(value)) {
-            return false;
+        final String licenseName = pSubject.getMetaData().value(MetaData.RAT_URL_LICENSE_FAMILY_NAME);
+        if (OhosMatchUtils.needMatchAgain(licenseName, this.getLicenseFamilyName())) {
+            return super.match(pSubject, pLine);
         }
-        return super.match(pSubject, pLine);
+        return true;
+    }
+
+    @Override
+    protected void reportLicense(final Document subject) {
+        OhosMatchUtils.reportGPL(subject, this.getLicenseFamilyName());
     }
 }

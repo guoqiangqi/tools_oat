@@ -19,7 +19,6 @@
 
 package ohos.oat.analysis.headermatcher;
 
-import org.apache.rat.analysis.IHeaderMatcher;
 import org.apache.rat.analysis.RatHeaderAnalysisException;
 import org.apache.rat.api.Document;
 import org.apache.rat.api.MetaData;
@@ -30,7 +29,7 @@ import org.apache.rat.api.MetaData;
  * @author chenyaxun
  * @since 1.0
  */
-public class OhosImportMatcher implements IHeaderMatcher {
+public class OhosImportMatcher implements IOhosHeaderMatcher {
     private int line;
 
     @Override
@@ -60,5 +59,10 @@ public class OhosImportMatcher implements IHeaderMatcher {
     @Override
     public void reset() {
 
+    }
+
+    @Override
+    public String getMatcherId() {
+        return this.getClass().getSimpleName();
     }
 }

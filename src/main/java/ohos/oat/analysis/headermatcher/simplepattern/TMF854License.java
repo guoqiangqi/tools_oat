@@ -27,7 +27,7 @@ import org.apache.rat.api.MetaData;
  * @author chenyaxun
  * @since 1.0
  */
-public class TMF854License extends OhosSimplePatternLicense {
+public class TMF854License extends OhosDefaultSimplePatternLicenseMatcher {
     public TMF854License() {
         super(new MetaData.Datum(RAT_URL_LICENSE_FAMILY_CATEGORY, "TMF854License"),
             new MetaData.Datum(RAT_URL_LICENSE_FAMILY_NAME, "TMF854License"), "",

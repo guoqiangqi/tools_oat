@@ -27,7 +27,7 @@ import org.apache.rat.api.MetaData;
  * @author chenyaxun
  * @since 1.0
  */
-public class ZopePublicLicense extends OhosFullTextMatchingLicense {
+public class ZopePublicLicense extends OhosDefaultFullTextLicenseMatcher {
     private static final String LICENSE_LINE_1 = "This Software is provided under the Zope Public License (ZPL)";
 
     public ZopePublicLicense() {

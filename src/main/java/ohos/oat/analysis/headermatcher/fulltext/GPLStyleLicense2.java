@@ -19,10 +19,8 @@ package ohos.oat.analysis.headermatcher.fulltext;
 import static org.apache.rat.api.MetaData.RAT_URL_LICENSE_FAMILY_CATEGORY;
 import static org.apache.rat.api.MetaData.RAT_URL_LICENSE_FAMILY_NAME;
 
-import ohos.oat.analysis.headermatcher.OhosContainTextMatchingLicense;
 import ohos.oat.analysis.headermatcher.OhosMatchUtils;
 
-import org.apache.rat.analysis.RatHeaderAnalysisException;
 import org.apache.rat.api.Document;
 import org.apache.rat.api.MetaData;
 
@@ -32,7 +30,7 @@ import org.apache.rat.api.MetaData;
  * @author chenyaxun
  * @since 1.0
  */
-public class GPLStyleLicense2 extends OhosContainTextMatchingLicense {
+public class GPLStyleLicense2 extends OhosDefaultFullTextLicenseMatcher {
     private static final String LICENSE_LINE_1 = "General Public License";
 
     public GPLStyleLicense2() {
@@ -41,12 +39,7 @@ public class GPLStyleLicense2 extends OhosContainTextMatchingLicense {
     }
 
     @Override
-    public boolean match(final Document pSubject, final String pLine) throws RatHeaderAnalysisException {
-        final String value = pSubject.getMetaData().value(MetaData.RAT_URL_LICENSE_FAMILY_CATEGORY);
-        if (OhosMatchUtils.stopWhileMatchedGPL(value)) {
-            return false;
-        }
-
-        return super.match(pSubject, pLine);
+    protected void reportLicense(final Document subject) {
+        OhosMatchUtils.reportGPL(subject, this.getLicenseFamilyName());
     }
 }

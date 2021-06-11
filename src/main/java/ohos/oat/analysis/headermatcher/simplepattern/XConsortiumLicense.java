@@ -27,7 +27,7 @@ import org.apache.rat.api.MetaData;
  * @author chenyaxun
  * @since 1.0
  */
-public class XConsortiumLicense extends OhosSimplePatternLicense {
+public class XConsortiumLicense extends OhosDefaultSimplePatternLicenseMatcher {
     public XConsortiumLicense() {
         super(new MetaData.Datum(RAT_URL_LICENSE_FAMILY_CATEGORY, "XConsortiumLicense"),
             new MetaData.Datum(RAT_URL_LICENSE_FAMILY_NAME, "XConsortiumLicense"), "", new String[] {"X Consortium"});

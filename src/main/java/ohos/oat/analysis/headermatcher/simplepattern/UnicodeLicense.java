@@ -27,7 +27,7 @@ import org.apache.rat.api.MetaData;
  * @author chenyaxun
  * @since 1.0
  */
-public class UnicodeLicense extends OhosSimplePatternLicense {
+public class UnicodeLicense extends OhosDefaultSimplePatternLicenseMatcher {
     public UnicodeLicense() {
         super(new MetaData.Datum(RAT_URL_LICENSE_FAMILY_CATEGORY, "Unicode-DFS-2016"),
             new MetaData.Datum(RAT_URL_LICENSE_FAMILY_NAME, "Unicode-DFS-2016"), "",

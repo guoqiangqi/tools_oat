@@ -27,10 +27,10 @@ import org.apache.rat.api.MetaData;
  * @author chenyaxun
  * @since 1.0
  */
-public class EndUserLicenseAgreement extends OhosSimplePatternLicense {
+public class EndUserLicenseAgreement extends OhosDefaultSimplePatternLicenseMatcher {
     public EndUserLicenseAgreement() {
         super(new MetaData.Datum(RAT_URL_LICENSE_FAMILY_CATEGORY, "EndUserLicenseAgreement"),
             new MetaData.Datum(RAT_URL_LICENSE_FAMILY_NAME, "EndUserLicenseAgreement"), "",
-            new String[] {"End User License Agreement", "THIS END USER LICENSE AGREEMENT"});
+            new String[] {"THIS END USER LICENSE AGREEMENT"});
     }
 }

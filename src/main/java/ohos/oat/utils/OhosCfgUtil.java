@@ -41,6 +41,7 @@ import org.apache.commons.configuration2.tree.ImmutableNode;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Stateless utility class for OAT config file
@@ -437,7 +438,7 @@ public final class OhosCfgUtil {
     }
 
     private static void initProjectDefaultPolicy(final OhosConfig ohosConfig, final OhosProject ohosProject) {
-        if (ohosConfig.getRepositoryName().toLowerCase().contains("third_party")) {
+        if (ohosConfig.getRepositoryName().toLowerCase(Locale.ENGLISH).contains("third_party")) {
             ohosProject.setPolicy("3rdDefaultPolicy");
         } else {
             ohosProject.setPolicy("defaultPolicy");

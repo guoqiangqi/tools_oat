@@ -27,7 +27,7 @@ import org.apache.rat.api.MetaData;
  * @author chenyaxun
  * @since 1.0
  */
-public class GPL2WithClassPathExceptionLicense extends OhosFullTextMatchingLicense {
+public class GPL2WithClassPathExceptionLicense extends OhosDefaultFullTextLicenseMatcher {
     private static final String FIRST_LICENSE_LINE = "Oracle designates this "
         + " particular file as subject to the \"Classpath\" exception as provided " + " by Oracle";
 

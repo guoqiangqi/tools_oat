@@ -27,7 +27,7 @@ import org.apache.rat.api.MetaData;
  * @author chenyaxun
  * @since 1.0
  */
-public class W3CLicense extends OhosSimplePatternLicense {
+public class W3CLicense extends OhosDefaultSimplePatternLicenseMatcher {
     public W3CLicense() {
         super(new MetaData.Datum(RAT_URL_LICENSE_FAMILY_CATEGORY, "W3C"),
             new MetaData.Datum(RAT_URL_LICENSE_FAMILY_NAME, "W3C"), "",

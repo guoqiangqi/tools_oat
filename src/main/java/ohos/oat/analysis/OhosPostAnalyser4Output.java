@@ -51,6 +51,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.regex.Pattern;
 
@@ -123,7 +124,7 @@ public class OhosPostAnalyser4Output implements IDocumentAnalyser {
         }
 
         if (!findIt && !document.isDirectory()) {
-            final String fName = document.getFileName().toLowerCase();
+            final String fName = document.getFileName().toLowerCase(Locale.ENGLISH);
             if (!fName.contains(".") || fName.endsWith(".md") || fName.endsWith(".txt") || fName.endsWith(".html")
                 || fName.endsWith(".htm") || fName.endsWith(".pdf")) {
                 if (fName.contains("license") || fName.contains("licence") || fName.contains("copying")
@@ -145,7 +146,8 @@ public class OhosPostAnalyser4Output implements IDocumentAnalyser {
         final String isSkiped = document.getData("isSkipedFile");
         if (isSkiped.equals("true")) {
             if (this.ohosConfig.getData("TraceSkippedAndIgnoredFiles").equals("true")) {
-                OhosLogUtil.warn(this.getClass().getSimpleName(), ohosProject.getPath() + "\tSkipedFile\t" + shortFileUnderProject);
+                OhosLogUtil.warn(this.getClass().getSimpleName(),
+                    ohosProject.getPath() + "\tSkipedFile\t" + shortFileUnderProject);
 
             }
             return;

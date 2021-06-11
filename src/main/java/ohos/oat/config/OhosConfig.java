@@ -54,6 +54,8 @@ public class OhosConfig {
 
     private List<OhosLicense> licenseList;
 
+    private List<OhosLicense> exceptionLicenseList;
+
     private boolean isPluginMode = false;
 
     private final Map<String, String> data = new HashMap<>();
@@ -191,6 +193,14 @@ public class OhosConfig {
 
     public void setLicenseList(final List<OhosLicense> licenseList) {
         this.licenseList = licenseList;
+    }
+
+    public List<OhosLicense> getExceptionLicenseList() {
+        return this.exceptionLicenseList;
+    }
+
+    public void setExceptionLicenseList(final List<OhosLicense> exceptionLicenseList) {
+        this.exceptionLicenseList = exceptionLicenseList;
     }
 
     public List<OhosTask> getTaskList() {

@@ -27,7 +27,7 @@ import org.apache.rat.api.MetaData;
  * @author chenyaxun
  * @since 1.0
  */
-public class MITLicense extends OhosFullTextMatchingLicense {
+public class MITLicense extends OhosDefaultFullTextLicenseMatcher {
     private static final String FIRST_LICENSE_LINE =
         "Permission is hereby granted, free of charge, to any person obtaining a copy of this software and"
             + " associated documentation files (the \"Software\"), to deal in the Software without restriction,"

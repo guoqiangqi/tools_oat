@@ -61,7 +61,7 @@ public final class OhosLogUtil {
      * @param logtext log text
      */
     public static void println(final String className, final String logtext) {
-        System.out.println(className + "\t" + logtext);
+        System.out.println(className + logtext);
     }
 
     /**

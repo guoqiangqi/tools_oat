@@ -28,6 +28,7 @@
                 <filtering>true</filtering>
                 <includes>
                     <include>**/*.xml</include>
+                    <include>**/*.json</include>
                 </includes>
             </resource>
             <resource>

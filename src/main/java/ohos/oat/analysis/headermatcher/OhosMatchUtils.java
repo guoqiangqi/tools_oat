@@ -19,6 +19,9 @@
 
 package ohos.oat.analysis.headermatcher;
 
+import org.apache.rat.api.Document;
+import org.apache.rat.api.MetaData;
+
 /**
  * Stateless utility class for determining whether to continue matching.
  *
@@ -27,6 +30,11 @@ package ohos.oat.analysis.headermatcher;
  */
 
 public class OhosMatchUtils {
+
+    private static final String[] copyLeftLicenseName = new String[] {
+        "CeCILL", "GPL", "MPL", "EPL", "CDDL", "CPL", "IPL", "NPL", "OSL"
+    };
+
     public OhosMatchUtils() {
     }
 
@@ -60,14 +68,37 @@ public class OhosMatchUtils {
         return licenseName != null && licenseName.contains("GPL");
     }
 
-    /**
-     * stop if matched MPL&EPL license
-     *
-     * @param licenseName license name
-     * @return stop match or not
-     */
-    public static boolean stopWhileMatchedMPLEPL(final String licenseName) {
-        return licenseName != null && (licenseName.contains("MPL") || licenseName.contains("EPL"));
+    public static boolean needMatchAgain(final String matchedName, final String licenseNameToMatch) {
+        if (matchedName == null || (matchedName != null && matchedName.equals("InvalidLicense"))) {
+            return true;
+        }
+
+        for (final String name : copyLeftLicenseName) {
+            if (matchedName.contains(name)) {
+                return false;
+            }
+        }
+
+        for (final String name : copyLeftLicenseName) {
+            if (licenseNameToMatch.contains(name)) {
+                return true;
+            }
+        }
+        return false;
     }
 
+    public static void reportGPL(final Document subject, final String licenseFamilyName) {
+        final MetaData metaData = subject.getMetaData();
+        final String licenseName = metaData.value(MetaData.RAT_URL_LICENSE_FAMILY_NAME);
+        final String newName;
+        if (licenseName == null || licenseName.contains("InvalidLicense")) {
+            newName = licenseFamilyName;
+        } else {
+            newName = licenseName + "-with-" + licenseFamilyName;
+        }
+        metaData.set(new MetaData.Datum(MetaData.RAT_URL_HEADER_SAMPLE, ""));
+        metaData.set(new MetaData.Datum(MetaData.RAT_URL_HEADER_CATEGORY, newName));
+        metaData.set(new MetaData.Datum(MetaData.RAT_URL_LICENSE_FAMILY_CATEGORY, newName));
+        metaData.set(new MetaData.Datum(MetaData.RAT_URL_LICENSE_FAMILY_NAME, newName));
+    }
 }

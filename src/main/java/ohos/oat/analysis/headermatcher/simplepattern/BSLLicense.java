@@ -27,7 +27,7 @@ import org.apache.rat.api.MetaData;
  * @author chenyaxun
  * @since 1.0
  */
-public class BSLLicense extends OhosSimplePatternLicense {
+public class BSLLicense extends OhosDefaultSimplePatternLicenseMatcher {
     public BSLLicense() {
         super(new MetaData.Datum(RAT_URL_LICENSE_FAMILY_CATEGORY, "BSL-1.0"),
             new MetaData.Datum(RAT_URL_LICENSE_FAMILY_NAME, "BSL-1.0"), "",
