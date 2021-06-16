@@ -25,6 +25,7 @@ import org.apache.rat.api.MetaData;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Header matcher class to match spdx license exception texts
@@ -65,7 +66,7 @@ public class OhosSpdxTextLicenseExceptionMatcher extends OhosFullTextLicenseMatc
         final String licenseName = metaData.value(MetaData.RAT_URL_LICENSE_FAMILY_NAME);
         final String tmpStr = licenseName == null ? "" : licenseName;
         final String newName = tmpStr + "-with-" + this.getLicenseFamilyName();
-        if (tmpStr.contains("-with-")) {
+        if (tmpStr.toLowerCase(Locale.ENGLISH).contains("with")) {
             return;
         }
         metaData.set(new MetaData.Datum(MetaData.RAT_URL_HEADER_SAMPLE, ""));

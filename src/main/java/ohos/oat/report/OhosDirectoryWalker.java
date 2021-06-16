@@ -110,7 +110,7 @@ public class OhosDirectoryWalker extends Walker {
     private boolean needCheck(final File file) {
 
         final List<OhosProject> includedPrjList = this.ohosProject.getIncludedPrjList();
-        final String shortPath = OhosCfgUtil.getShortPath(this.ohosConfig, file);
+        String shortPath = OhosCfgUtil.getShortPath(this.ohosConfig, file);
         if (!this.ohosConfig.needCheck(file)) {
             return false;
         }
@@ -119,6 +119,10 @@ public class OhosDirectoryWalker extends Walker {
                 return false;
             }
         }
+        if (this.ohosConfig.isPluginMode()) {
+            shortPath = this.ohosProject.getPath() + shortPath;
+        }
+
         final List<String> ohosFilePathFilterItems = this.ohosProject.getFileFilterObj().getOhosFilePathFilterItems();
         for (final String ohosFilePathFilterItem : ohosFilePathFilterItems) {
             if (shortPath.startsWith(ohosFilePathFilterItem)) {

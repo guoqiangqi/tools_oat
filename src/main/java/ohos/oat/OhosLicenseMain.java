@@ -55,7 +55,6 @@ import org.apache.commons.cli.ParseException;
 import org.apache.commons.io.filefilter.NameFileFilter;
 import org.apache.commons.io.filefilter.NotFileFilter;
 import org.apache.commons.io.filefilter.OrFileFilter;
-import org.apache.commons.io.filefilter.RegexFileFilter;
 import org.apache.commons.io.filefilter.WildcardFileFilter;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang3.ArrayUtils;
@@ -355,7 +354,6 @@ public class OhosLicenseMain {
                 final String exclusion = exclude.trim();
                 orFilter.addFileFilter(new NameFileFilter(exclusion));
                 orFilter.addFileFilter(new WildcardFileFilter(exclusion));
-                orFilter.addFileFilter(new RegexFileFilter(exclusion));
             } catch (final PatternSyntaxException e) {
                 continue;
             }

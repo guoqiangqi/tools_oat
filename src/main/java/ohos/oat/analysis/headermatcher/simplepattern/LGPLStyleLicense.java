@@ -36,8 +36,8 @@ public class LGPLStyleLicense extends OhosSimplePatternLicenseMatcher {
     public LGPLStyleLicense() {
         super(new MetaData.Datum(RAT_URL_LICENSE_FAMILY_CATEGORY, "LGPLStyleLicense"),
             new MetaData.Datum(RAT_URL_LICENSE_FAMILY_NAME, "LGPLStyleLicense"), "", new String[] {
-                " LGPL ", " LGPL,", " LGPL.", " LGPLV", "GNU Lesser General Public License",
-                "GNU Library General Public License", "the GNU Library General Public"
+                " LGPL ", " LGPL,", " LGPL.", " LGPLV", "GNU Lesser General Public License", "GNU Lesser General",
+                "GNU Library General Public License", "GNU Library General Public", "GNU Library General"
             });
     }
 

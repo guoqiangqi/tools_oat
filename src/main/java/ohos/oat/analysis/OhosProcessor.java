@@ -92,7 +92,6 @@ import ohos.oat.analysis.headermatcher.simplepattern.OpenSSLLicense2;
 import ohos.oat.analysis.headermatcher.simplepattern.PublicDomainLicense;
 import ohos.oat.analysis.headermatcher.simplepattern.TMF854License;
 import ohos.oat.analysis.headermatcher.simplepattern.ThirdPartyNotice;
-import ohos.oat.analysis.headermatcher.simplepattern.UnicodeLicense;
 import ohos.oat.analysis.headermatcher.simplepattern.W3CDocLicense;
 import ohos.oat.analysis.headermatcher.simplepattern.W3CLicense;
 import ohos.oat.analysis.headermatcher.simplepattern.XConsortiumLicense;
@@ -257,7 +256,6 @@ public class OhosProcessor {
         this.definedHeaderMatchers_clean.add(new MITLicense1());
         this.definedHeaderMatchers_clean.add(new MulanLicense());
         this.definedHeaderMatchers_clean.add(new LibertyLicense2());
-        this.definedHeaderMatchers_clean.add(new UnicodeLicense());
         this.definedHeaderMatchers_clean.add(new XConsortiumLicense());
         this.definedHeaderMatchers_clean.add(new PublicDomainLicense());
         this.definedHeaderMatchers_clean.add(new CreativeCommonsAttribution4InternationalPublicLicense());
@@ -331,7 +329,9 @@ public class OhosProcessor {
     private void match() throws RatHeaderAnalysisException {
         for (final IOhosHeaderMatcher iOhosHeaderMatcher : this.defaultHeaderMatchers_ori) {
             for (final String line : this.oriHeaderTextList) {
-                this.matchLine(line, iOhosHeaderMatcher);
+                if (this.matchLine(line, iOhosHeaderMatcher)) {
+                    break;
+                }
             }
         }
         String licenseName = this.fileDocument.getMetaData().value(RAT_URL_LICENSE_FAMILY_NAME);
@@ -340,27 +340,37 @@ public class OhosProcessor {
         }
         for (final IOhosHeaderMatcher iOhosHeaderMatcher : this.defaultHeaderMatchers_clean) {
             for (final String line : this.cleanHeaderTextList) {
-                this.matchLine(line, iOhosHeaderMatcher);
+                if (this.matchLine(line, iOhosHeaderMatcher)) {
+                    break;
+                }
             }
         }
         for (final IOhosHeaderMatcher iOhosHeaderMatcher : this.definedHeaderMatchers_clean) {
             for (final String line : this.cleanHeaderTextList) {
-                this.matchLine(line, iOhosHeaderMatcher);
+                if (this.matchLine(line, iOhosHeaderMatcher)) {
+                    break;
+                }
             }
         }
         for (final IOhosHeaderMatcher iOhosHeaderMatcher : this.definedHeaderMatchers_ori) {
             for (final String line : this.oriHeaderTextList) {
-                this.matchLine(line, iOhosHeaderMatcher);
+                if (this.matchLine(line, iOhosHeaderMatcher)) {
+                    break;
+                }
             }
         }
         for (final IOhosHeaderMatcher iOhosHeaderMatcher : this.customizedHeaderMatchers_clean) {
             for (final String line : this.cleanHeaderTextList) {
-                this.matchLine(line, iOhosHeaderMatcher);
+                if (this.matchLine(line, iOhosHeaderMatcher)) {
+                    break;
+                }
             }
         }
         for (final IOhosHeaderMatcher iOhosHeaderMatcher : this.defaultHeaderMatchers_exception_clean) {
             for (final String line : this.cleanHeaderTextList) {
-                this.matchLine(line, iOhosHeaderMatcher);
+                if (this.matchLine(line, iOhosHeaderMatcher)) {
+                    break;
+                }
             }
         }
 
@@ -370,13 +380,14 @@ public class OhosProcessor {
         }
     }
 
-    private void matchLine(final String line, final IOhosHeaderMatcher matcher) throws RatHeaderAnalysisException {
-        final boolean isFinished = this.fileDocument.getMatchResult(matcher.getMatcherId());
-        if (isFinished) {
-            return;
-        }
+    private boolean matchLine(final String line, final IOhosHeaderMatcher matcher) throws RatHeaderAnalysisException {
+        // final boolean isFinished = this.fileDocument.getMatchResult(matcher.getMatcherId());
+        // if (isFinished) {
+        //     return;
+        // }
         final boolean result = matcher.match(this.fileDocument, line);
-        this.fileDocument.putMatchResult(matcher.getMatcherId(), result);
+        return result;
+        // this.fileDocument.putMatchResult(matcher.getMatcherId(), result);
     }
 
     private boolean readLine() throws IOException {

@@ -125,6 +125,7 @@ public final class OhosCfgUtil {
         ohosConfig.setBasedir(tmpDir);
         OhosLogUtil.logOatConfig(OhosCfgUtil.class.getSimpleName(), "basedir: " + tmpDir);
         OhosCfgUtil.initLicenseMatcher(ohosConfig, xmlconfig, null);
+        OhosCfgUtil.initCompatibilityLicense(ohosConfig, xmlconfig, null);
         OhosCfgUtil.initTask(ohosConfig, xmlconfig);
         OhosCfgUtil.initPolicy(ohosConfig, xmlconfig, null);
         OhosCfgUtil.initFilter(ohosConfig, xmlconfig, null);
@@ -158,17 +159,22 @@ public final class OhosCfgUtil {
      * @return String array
      */
     public static String[] getSplitStrings(final String configString) {
+        return getSplitStrings(configString, "\\|");
+    }
+
+    public static String[] getSplitStrings(final String configString, final String splitflag) {
         String[] strings = new String[] {};
         if (configString.trim().length() <= 0) {
             return strings;
         }
-        if (!configString.contains("|")) {
+        if ((splitflag.contains("|") && (!configString.contains("|"))) || (!splitflag.contains("|")
+            && (!configString.contains(splitflag)))) {
             strings = new String[] {configString};
             return strings;
         }
 
         try {
-            strings = configString.split("\\|");
+            strings = configString.split(splitflag);
         } catch (final Exception e) {
             OhosLogUtil.traceException(e);
         }
@@ -189,6 +195,7 @@ public final class OhosCfgUtil {
                 ohosProject.setLicenseFiles(licenselist);
             }
             OhosCfgUtil.initLicenseMatcher(ohosConfig, prjXmlconfig, ohosProject);
+            OhosCfgUtil.initCompatibilityLicense(ohosConfig, prjXmlconfig, ohosProject);
             OhosCfgUtil.initPolicy(ohosConfig, prjXmlconfig, ohosProject);
             OhosCfgUtil.initFilter(ohosConfig, prjXmlconfig, ohosProject);
         }
@@ -359,6 +366,32 @@ public final class OhosCfgUtil {
                     OhosLogUtil.logOatConfig(OhosCfgUtil.class.getSimpleName(),
                         ohosProject.getPath() + "\taddPrjLicenseText\t" + "customizedLicenseConfig\tName\t"
                             + licenseName + "\t \t \tLicenseText\t" + licenseText);
+                }
+            }
+        }
+    }
+
+    private static void initCompatibilityLicense(final OhosConfig ohosConfig, final XMLConfiguration xmlconfig,
+        final OhosProject ohosProject) {
+        final List<HierarchicalConfiguration<ImmutableNode>> compatibilityCfg = OhosCfgUtil.getElements(xmlconfig,
+            OhosCfgUtil.ROOTNODE, "licensecompatibilitylist.license");
+        for (final HierarchicalConfiguration<ImmutableNode> license : compatibilityCfg) {
+            final String licenseName = OhosCfgUtil.getElementAttrValue(license, "name");
+
+            final List<HierarchicalConfiguration<ImmutableNode>> compatibilityLicenseCfg = license.configurationsAt(
+                "compatibilitylicense");
+            for (final HierarchicalConfiguration<ImmutableNode> compatibilitylicense : compatibilityLicenseCfg) {
+                final String compatibilitylicenseName = OhosCfgUtil.getElementAttrValue(compatibilitylicense, "name");
+                if (ohosProject == null) {
+                    ohosConfig.addCompatibilityLicense(licenseName, compatibilitylicenseName);
+                    OhosLogUtil.logOatConfig(OhosCfgUtil.class.getSimpleName(),
+                        "GlobalConfig" + "\taddCompatibilityLicense\t" + "compatibilityLicenseConfig\tName\t"
+                            + licenseName + "\t \t \tLicenseText\t" + compatibilitylicenseName);
+                } else {
+                    ohosProject.addPrjCompatibilityLicense(licenseName, compatibilitylicenseName);
+                    OhosLogUtil.logOatConfig(OhosCfgUtil.class.getSimpleName(),
+                        ohosProject.getPath() + "\taddPrjCompatibilityLicense\t" + "compatibilityLicenseConfig\tName\t"
+                            + licenseName + "\t \t \tLicenseText\t" + compatibilitylicenseName);
                 }
             }
         }

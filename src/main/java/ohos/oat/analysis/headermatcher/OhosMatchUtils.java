@@ -94,7 +94,7 @@ public class OhosMatchUtils {
         if (licenseName == null || licenseName.contains("InvalidLicense")) {
             newName = licenseFamilyName;
         } else {
-            newName = licenseName + "-with-" + licenseFamilyName;
+            newName = licenseName + "|" + licenseFamilyName;
         }
         metaData.set(new MetaData.Datum(MetaData.RAT_URL_HEADER_SAMPLE, ""));
         metaData.set(new MetaData.Datum(MetaData.RAT_URL_HEADER_CATEGORY, newName));

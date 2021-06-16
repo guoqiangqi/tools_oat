@@ -36,7 +36,8 @@ public class GPLStyleLicense extends OhosSimplePatternLicenseMatcher {
     public GPLStyleLicense() {
         super(new MetaData.Datum(RAT_URL_LICENSE_FAMILY_CATEGORY, "GPLStyleLicense"),
             new MetaData.Datum(RAT_URL_LICENSE_FAMILY_NAME, "GPLStyleLicense"), "", new String[] {
-                " GPL ", " GPL,", " GPL.", " GPLV", " GNU General Public License", "GNU Public License", "(GPL)"
+                " GPL ", " GPL,", " GPL.", " GPLV", " GNU General Public License", " GNU General Public",
+                "GNU Public License", "(GPL)"
             });
     }
 
