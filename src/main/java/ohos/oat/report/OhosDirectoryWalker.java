@@ -41,6 +41,7 @@ import java.io.FilenameFilter;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Locale;
 import java.util.regex.Pattern;
 
 /**
@@ -109,7 +110,7 @@ public class OhosDirectoryWalker extends Walker {
     private boolean needCheck(final File file) {
 
         final List<OhosProject> includedPrjList = this.ohosProject.getIncludedPrjList();
-        final String shortPath = OhosCfgUtil.getShortPath(this.ohosConfig, file);
+        String shortPath = OhosCfgUtil.getShortPath(this.ohosConfig, file);
         if (!this.ohosConfig.needCheck(file)) {
             return false;
         }
@@ -118,6 +119,10 @@ public class OhosDirectoryWalker extends Walker {
                 return false;
             }
         }
+        if (this.ohosConfig.isPluginMode()) {
+            shortPath = this.ohosProject.getPath() + shortPath;
+        }
+
         final List<String> ohosFilePathFilterItems = this.ohosProject.getFileFilterObj().getOhosFilePathFilterItems();
         for (final String ohosFilePathFilterItem : ohosFilePathFilterItems) {
             if (shortPath.startsWith(ohosFilePathFilterItem)) {
@@ -143,18 +148,20 @@ public class OhosDirectoryWalker extends Walker {
     }
 
     private boolean notFilteredFile(final File file) {
-        final String fileName = file.getName().toLowerCase();
-        final String filePath = file.getPath().toLowerCase().replace("\\", "/");
+        final String fileName = file.getName().toLowerCase(Locale.ENGLISH);
+        final String filePath = file.getPath().toLowerCase(Locale.ENGLISH).replace("\\", "/");
 
         if ((fileName.contains("license") && (fileName.contains(".txt") || fileName.contains(".md")
             || fileName.contains(".htm"))) || fileName.equals("build.gn") || fileName.equals("license")
             || filePath.contains("/license/") || filePath.contains("/licenses/")) {
             return true;
         }
+
         final boolean notIgnored = this.isNotIgnored(file);
         if (!notIgnored) {
             if (this.ohosConfig.getData("TraceSkippedAndIgnoredFiles").equals("true")) {
-                OhosLogUtil.warn(this.getClass().getSimpleName(), this.ohosProject.getPath() + "\tIgnoredFile\t" + file.getPath());
+                OhosLogUtil.warn(this.getClass().getSimpleName(),
+                    this.ohosProject.getPath() + "\tIgnoredFile\t" + file.getPath());
             }
         }
         return notIgnored;
@@ -267,7 +274,7 @@ public class OhosDirectoryWalker extends Walker {
         for (final File file1 : files) {
             if ((!file1.isDirectory()) && this.needCheck(file) && this.notFilteredFile(file)) {
                 final String fileName = file1.getName();
-                final String shotFileName = fileName.toLowerCase().replace(" ", "");
+                final String shotFileName = fileName.toLowerCase(Locale.ENGLISH).replace(" ", "");
                 if (fileName.startsWith("LICENSE") || fileName.startsWith("LICENCE") || (fileName.startsWith("NOTICE"))
                     || (fileName.startsWith("COPYING")) || (fileName.startsWith("COPYRIGHT")) || (shotFileName.contains(
                     "licenseagreement")) || (shotFileName.contains("licenceagreement"))) {

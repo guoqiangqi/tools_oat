@@ -36,7 +36,6 @@
 
 package ohos.oat;
 
-import ohos.oat.analysis.headermatcher.OhosLicense;
 import ohos.oat.config.OhosConfig;
 import ohos.oat.config.OhosProject;
 import ohos.oat.config.OhosTask;
@@ -56,7 +55,6 @@ import org.apache.commons.cli.ParseException;
 import org.apache.commons.io.filefilter.NameFileFilter;
 import org.apache.commons.io.filefilter.NotFileFilter;
 import org.apache.commons.io.filefilter.OrFileFilter;
-import org.apache.commons.io.filefilter.RegexFileFilter;
 import org.apache.commons.io.filefilter.WildcardFileFilter;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang3.ArrayUtils;
@@ -91,9 +89,9 @@ public class OhosLicenseMain {
 
     private static final String PROMPT_MESSAGE_COPY = "Copyright (C) 2021 Huawei Device Co., Ltd.";
 
-    private static final String PROMPT_MESSAGE_FEEDBACK
-        = "If you have any questions or concerns, please create issue at https://gitee"
-        + ".com/openharmony-sig/tools_oat/issues";
+    private static final String PROMPT_MESSAGE_FEEDBACK =
+        "If you have any questions or concerns, please create issue at https://gitee"
+            + ".com/openharmony-sig/tools_oat/issues";
 
     /**
      * Private constructure to prevent new instance
@@ -109,6 +107,7 @@ public class OhosLicenseMain {
      * @throws Exception exception wile process
      */
     public static void main(final String[] args) throws Exception {
+        OhosLogUtil.println("", System.getProperty("file.encoding"));
         OhosLogUtil.println("", OhosLicenseMain.PROMPT_MESSAGE_SEPARATOR);
         OhosLogUtil.println("", OhosLicenseMain.PROMPT_MESSAGE_NAME);
         OhosLogUtil.println("", OhosLicenseMain.PROMPT_MESSAGE_COPY);
@@ -138,10 +137,15 @@ public class OhosLicenseMain {
             if (!sourceCodeRepoPath.endsWith("/")) {
                 sourceCodeRepoPath += "/";
             }
+            final String jarOatPkgPath = OhosLicenseMain.class.getResource("/ohos/oat").toString();
+            final String jarRootPath = jarOatPkgPath.substring(0, jarOatPkgPath.length() - 8);
             ohosConfig.setBasedir(sourceCodeRepoPath);
-            initOATCfgFile = OhosLicenseMain.class.getResource("/OAT-Default.xml").toString();
+            OhosLogUtil.println("", "jarRoot:\t" + jarRootPath);
+            ohosConfig.putData("JarRootPath", jarRootPath);
+            initOATCfgFile = jarRootPath + "OAT-Default.xml";
         }
-        OhosLogUtil.warn(OhosLicenseMain.class.getSimpleName(), "CommandLine" + "\tsourceCodeRepoPath\t" + sourceCodeRepoPath);
+        OhosLogUtil.warn(OhosLicenseMain.class.getSimpleName(),
+            "CommandLine" + "\tsourceCodeRepoPath\t" + sourceCodeRepoPath);
         String reportFile = "";
         if (cmd.hasOption("s") && cmd.hasOption("r")) {
             reportFile = OhosCfgUtil.formatPath(cmd.getOptionValue("r"));
@@ -155,7 +159,8 @@ public class OhosLicenseMain {
             nameOfRepository = "defaultProject";
         }
         ohosConfig.setRepositoryName(nameOfRepository);
-        OhosLogUtil.warn(OhosLicenseMain.class.getSimpleName(), "CommandLine" + "\tnameOfRepository\t" + nameOfRepository);
+        OhosLogUtil.warn(OhosLicenseMain.class.getSimpleName(),
+            "CommandLine" + "\tnameOfRepository\t" + nameOfRepository);
         String mode = "0";
         if (cmd.hasOption("s") && cmd.hasOption("m")) {
             final String tmpMode = cmd.getOptionValue("m");
@@ -189,8 +194,8 @@ public class OhosLicenseMain {
             ohosConfig.putData("IgnoreProjectOAT", "true");
         }
         OhosCfgUtil.initOhosConfig(ohosConfig, initOATCfgFile, sourceCodeRepoPath);
-        final List<OhosLicense> spdxLicenseList = OhosSpdxLicenseUtil.createSpdxLicenseList();
-        ohosConfig.setLicenseList(spdxLicenseList);
+        OhosSpdxLicenseUtil.initSpdxLicenseList(ohosConfig);
+
         OhosLicenseMain.oatCheck(reportFile, ohosConfig);
     }
 
@@ -349,7 +354,6 @@ public class OhosLicenseMain {
                 final String exclusion = exclude.trim();
                 orFilter.addFileFilter(new NameFileFilter(exclusion));
                 orFilter.addFileFilter(new WildcardFileFilter(exclusion));
-                orFilter.addFileFilter(new RegexFileFilter(exclusion));
             } catch (final PatternSyntaxException e) {
                 continue;
             }

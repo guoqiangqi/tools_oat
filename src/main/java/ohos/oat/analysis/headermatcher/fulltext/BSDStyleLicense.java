@@ -29,7 +29,7 @@ import org.apache.rat.api.MetaData;
  * @author chenyaxun
  * @since 1.0
  */
-public class BSDStyleLicense extends OhosFullTextMatchingLicense {
+public class BSDStyleLicense extends OhosDefaultFullTextLicenseMatcher {
     private static final String LICENSE_LINE_1 = "BSD-style license";
 
     public BSDStyleLicense() {

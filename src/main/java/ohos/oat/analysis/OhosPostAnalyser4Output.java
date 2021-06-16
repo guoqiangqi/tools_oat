@@ -51,6 +51,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.regex.Pattern;
 
@@ -62,15 +63,15 @@ import java.util.regex.Pattern;
  * @since 1.0
  */
 public class OhosPostAnalyser4Output implements IDocumentAnalyser {
-    private final OhosConfig ohosConfig;
+    private static OhosConfig ohosConfig;
 
     /**
      * Constructor
      *
-     * @param ohosConfig Data structure with OAT.xml information
+     * @param initOhosConfig Data structure with OAT.xml information
      */
-    public OhosPostAnalyser4Output(final OhosConfig ohosConfig) {
-        this.ohosConfig = ohosConfig;
+    public OhosPostAnalyser4Output(final OhosConfig initOhosConfig) {
+        ohosConfig = initOhosConfig;
     }
 
     @Override
@@ -123,7 +124,7 @@ public class OhosPostAnalyser4Output implements IDocumentAnalyser {
         }
 
         if (!findIt && !document.isDirectory()) {
-            final String fName = document.getFileName().toLowerCase();
+            final String fName = document.getFileName().toLowerCase(Locale.ENGLISH);
             if (!fName.contains(".") || fName.endsWith(".md") || fName.endsWith(".txt") || fName.endsWith(".html")
                 || fName.endsWith(".htm") || fName.endsWith(".pdf")) {
                 if (fName.contains("license") || fName.contains("licence") || fName.contains("copying")
@@ -145,7 +146,8 @@ public class OhosPostAnalyser4Output implements IDocumentAnalyser {
         final String isSkiped = document.getData("isSkipedFile");
         if (isSkiped.equals("true")) {
             if (this.ohosConfig.getData("TraceSkippedAndIgnoredFiles").equals("true")) {
-                OhosLogUtil.warn(this.getClass().getSimpleName(), ohosProject.getPath() + "\tSkipedFile\t" + shortFileUnderProject);
+                OhosLogUtil.warn(this.getClass().getSimpleName(),
+                    ohosProject.getPath() + "\tSkipedFile\t" + shortFileUnderProject);
 
             }
             return;
@@ -235,7 +237,7 @@ public class OhosPostAnalyser4Output implements IDocumentAnalyser {
                 OhosLogUtil.traceException(e);
                 return null;
             }
-            if (name.contains(piName)) {
+            if (isPolicyOk(name, piName, policyItem.getType())) {
                 validResult.valid = 2;
             } else {
                 validResult.valid = 1;
@@ -243,13 +245,35 @@ public class OhosPostAnalyser4Output implements IDocumentAnalyser {
             return validResult;
         }
 
-        if (name.contains(piName)) {
+        if (isPolicyOk(name, piName, policyItem.getType())) {
             validResult.valid = 1;
         } else {
             // not contains piName true false
             validResult.valid = 2;
         }
+
+        // For license and compatibility type
+
         return validResult;
+    }
+
+    private static boolean isPolicyOk(final String name, final String piName, final String policyType) {
+        final boolean result = name.contains(piName);
+        if (result) {
+            return true;
+        }
+        if ((!policyType.equals("license")) && (!policyType.equals("compatibility"))) {
+            return false;
+        }
+        final List<String> compatibilityLicenseList = ohosConfig.getLicenseCompatibilityMap().get(piName);
+        if (compatibilityLicenseList != null) {
+            for (final String compatibilityLicense : compatibilityLicenseList) {
+                if (name.contains(compatibilityLicense)) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     private static boolean isFiltered(final OhosFileFilter fileFilter, final String fullPathFromBasedir,

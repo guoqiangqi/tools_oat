@@ -27,7 +27,7 @@ import org.apache.rat.api.MetaData;
  * @author chenyaxun
  * @since 1.0
  */
-public class Apache2License2 extends OhosSimplePatternLicense {
+public class Apache2License2 extends OhosDefaultSimplePatternLicenseMatcher {
     public Apache2License2() {
         super(new MetaData.Datum(RAT_URL_LICENSE_FAMILY_CATEGORY, "Apache-2.0"),
             new MetaData.Datum(RAT_URL_LICENSE_FAMILY_NAME, "Apache-2.0"), "", new String[] {

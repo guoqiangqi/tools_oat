@@ -81,10 +81,10 @@
         </policylist>
         <filefilterlist>
             <filefilter name="defaultFilter" desc="Files that do not need to be scanned">
-                <filteritem type="filename" name="OAT.xml|zunit|signature|Makefile|MANIFEST.MF|Kconfig|*.crt|*.markdown|*.git"/>
-                <filteritem type="filename" name=".mk|.ld|.gitkeep|.gitignore|.gitattributes|.config|*.txt|*.te|*.svg|*.swp"/>
+                <filteritem type="filename" name="OAT*.xml|zunit|signature|Makefile|MANIFEST.MF|Kconfig|*.crt|*.markdown|*.git"/>
+                <filteritem type="filename" name=".mk|.ld|.gitkeep|.gitignore|.gitattributes|.config|*.te|*.svg|*.swp"/>
                 <filteritem type="filename" name="*.sandbox|*.rslp|*.rc|*.pydeps|*.properties|*.png|*.pluginmeta|*.php|*.sgml|.adoc|NEWS"/>
-                <filteritem type="filename" name="*.patch|*.p7b|*.md|*.log|*.json|*.jpg|*.ini|*.html|*.htm|*.hml|*.hcs|__init__.py|MANIFEST.in"/>
+                <filteritem type="filename" name="*.patch|*.p7b|*.md|*.log|*.jpg|*.ini|*.html|*.htm|*.hml|*.hcs|__init__.py|MANIFEST.in"/>
                 <filteritem type="filename" name="*.hcb|*.gradle|*.gif|*.gen|*.dic|*.d|*.css|*.cmake|*.cer|*.build|*.aff|*.err|*.pro|*.clang-format|*.ld"/>
                 <filteritem type="filename" name="*.babelrc|*.editorconfig|*.eslintignore|*.prettierrc|*.eslintrc.js|*.template|*.tmpl|*.vcproj|*.def|*.sln"/>
                 <filteritem type="filename" name="*_contexts|*.vcxproj|*.vcxproj.filters|*.vcxproj.user|*visual_studio.sln|*.bundle|CERTIFICATE|SIGNATURE"/>
@@ -243,5 +243,175 @@
             </licensematcher>
 
         </licensematcherlist>
+        <licensecompatibilitylist>
+            <license name="Apache-2.0" desc="">
+                <compatibilitylicense name="ApacheStyleLicense" desc=""/>
+            </license>
+            <license name="ApacheStyleLicense" desc="">
+                <compatibilitylicense name="Apache-2.0" desc=""/>
+            </license>
+            <license name="GPL-2.0+" desc="">
+                <compatibilitylicense name="GPL-2.0-or-later" desc=""/>
+            </license>
+            <license name="GPL-2.0-or-later" desc="">
+                <compatibilitylicense name="GPL-2.0+" desc=""/>
+            </license>
+            <license name="AGPL-1.0" desc="">
+                <compatibilitylicense name="AGPL-1.0-only" desc=""/>
+            </license>
+            <license name="AGPL-1.0-only" desc="">
+                <compatibilitylicense name="AGPL-1.0" desc=""/>
+            </license>
+            <license name="AGPL-1.0-or-later" desc="">
+                <compatibilitylicense name="AGPL-1.0" desc=""/>
+                <compatibilitylicense name="AGPL-1.0-only" desc=""/>
+            </license>
+            <license name="AGPL-3.0" desc="">
+                <compatibilitylicense name="AGPL-3.0-only" desc=""/>
+            </license>
+            <license name="AGPL-3.0-only" desc="">
+                <compatibilitylicense name="AGPL-3.0" desc=""/>
+            </license>
+            <license name="AGPL-3.0-or-later" desc="">
+                <compatibilitylicense name="AGPL-3.0" desc=""/>
+                <compatibilitylicense name="AGPL-3.0-only" desc=""/>
+            </license>
+            <license name="GFDL-1.1" desc="">
+                <compatibilitylicense name="GFDL-1.1-only" desc=""/>
+            </license>
+            <license name="GFDL-1.1-only" desc="">
+                <compatibilitylicense name="GFDL-1.1" desc=""/>
+            </license>
+            <license name="GFDL-1.1-or-later" desc="">
+                <compatibilitylicense name="GFDL-1.1" desc=""/>
+                <compatibilitylicense name="GFDL-1.1-only" desc=""/>
+            </license>
+            <license name="GFDL-1.2" desc="">
+                <compatibilitylicense name="GFDL-1.2-only" desc=""/>
+            </license>
+            <license name="GFDL-1.2-only" desc="">
+                <compatibilitylicense name="GFDL-1.2" desc=""/>
+            </license>
+            <license name="GFDL-1.2-or-later" desc="">
+                <compatibilitylicense name="GFDL-1.2" desc=""/>
+                <compatibilitylicense name="GFDL-1.2-only" desc=""/>
+            </license>
+            <license name="GFDL-1.3" desc="">
+                <compatibilitylicense name="GFDL-1.3-only" desc=""/>
+            </license>
+            <license name="GFDL-1.3-only" desc="">
+                <compatibilitylicense name="GFDL-1.3" desc=""/>
+            </license>
+            <license name="GFDL-1.3-or-later" desc="">
+                <compatibilitylicense name="GFDL-1.3" desc=""/>
+                <compatibilitylicense name="GFDL-1.3-only" desc=""/>
+            </license>
+            <license name="GPL-1.0" desc="">
+                <compatibilitylicense name="GPL-1.0-only" desc=""/>
+            </license>
+            <license name="GPL-1.0-only" desc="">
+                <compatibilitylicense name="GPL-1.0" desc=""/>
+            </license>
+            <license name="GPL-1.0-or-later" desc="">
+                <compatibilitylicense name="GPL-1.0" desc=""/>
+                <compatibilitylicense name="GPL-1.0-only" desc=""/>
+                <compatibilitylicense name="GPL-1.0+" desc=""/>
+            </license>
+            <license name="GPL-1.0+" desc="">
+                <compatibilitylicense name="GPL-1.0" desc=""/>
+                <compatibilitylicense name="GPL-1.0-only" desc=""/>
+                <compatibilitylicense name="GPL-1.0-or-later" desc=""/>
+            </license>
+            <license name="GPL-2.0" desc="">
+                <compatibilitylicense name="GPL-2.0-only" desc=""/>
+            </license>
+            <license name="GPL-2.0-only" desc="">
+                <compatibilitylicense name="GPL-2.0" desc=""/>
+            </license>
+            <license name="GPL-2.0-or-later" desc="">
+                <compatibilitylicense name="GPL-2.0" desc=""/>
+                <compatibilitylicense name="GPL-2.0-only" desc=""/>
+                <compatibilitylicense name="GPL-2.0+" desc=""/>
+            </license>
+            <license name="GPL-2.0+" desc="">
+                <compatibilitylicense name="GPL-2.0" desc=""/>
+                <compatibilitylicense name="GPL-2.0-only" desc=""/>
+                <compatibilitylicense name="GPL-2.0-or-later" desc=""/>
+            </license>
+            <license name="GPL-3.0" desc="">
+                <compatibilitylicense name="GPL-3.0-only" desc=""/>
+            </license>
+            <license name="GPL-3.0-only" desc="">
+                <compatibilitylicense name="GPL-3.0" desc=""/>
+            </license>
+            <license name="GPL-3.0-or-later" desc="">
+                <compatibilitylicense name="GPL-3.0" desc=""/>
+                <compatibilitylicense name="GPL-3.0-only" desc=""/>
+                <compatibilitylicense name="GPL-3.0+" desc=""/>
+            </license>
+            <license name="GPL-3.0+" desc="">
+                <compatibilitylicense name="GPL-3.0" desc=""/>
+                <compatibilitylicense name="GPL-3.0-only" desc=""/>
+                <compatibilitylicense name="GPL-3.0-or-later" desc=""/>
+            </license>
+            <license name="LGPL-2.0" desc="">
+                <compatibilitylicense name="LGPL-2.0-only" desc=""/>
+            </license>
+            <license name="LGPL-2.0-only" desc="">
+                <compatibilitylicense name="LGPL-2.0" desc=""/>
+            </license>
+            <license name="LGPL-2.0-or-later" desc="">
+                <compatibilitylicense name="LGPL-2.0" desc=""/>
+                <compatibilitylicense name="LGPL-2.0-only" desc=""/>
+                <compatibilitylicense name="LGPL-2.0+" desc=""/>
+            </license>
+            <license name="LGPL-2.0+" desc="">
+                <compatibilitylicense name="LGPL-2.0" desc=""/>
+                <compatibilitylicense name="LGPL-2.0-only" desc=""/>
+                <compatibilitylicense name="LGPL-2.0-or-later" desc=""/>
+            </license>
+            <license name="LGPL-2.1" desc="">
+                <compatibilitylicense name="LGPL-2.1-only" desc=""/>
+            </license>
+            <license name="LGPL-2.1-only" desc="">
+                <compatibilitylicense name="LGPL-2.1" desc=""/>
+            </license>
+            <license name="LGPL-2.1-or-later" desc="">
+                <compatibilitylicense name="LGPL-2.1" desc=""/>
+                <compatibilitylicense name="LGPL-2.1-only" desc=""/>
+                <compatibilitylicense name="LGPL-2.1+" desc=""/>
+            </license>
+            <license name="LGPL-2.1+" desc="">
+                <compatibilitylicense name="LGPL-2.1" desc=""/>
+                <compatibilitylicense name="LGPL-2.1-only" desc=""/>
+                <compatibilitylicense name="LGPL-2.1-or-later" desc=""/>
+            </license>
+            <license name="LGPL-3.0" desc="">
+                <compatibilitylicense name="LGPL-3.0-only" desc=""/>
+            </license>
+            <license name="LGPL-3.0-only" desc="">
+                <compatibilitylicense name="LGPL-3.0" desc=""/>
+            </license>
+            <license name="LGPL-3.0-or-later" desc="">
+                <compatibilitylicense name="LGPL-3.0" desc=""/>
+                <compatibilitylicense name="LGPL-3.0-only" desc=""/>
+                <compatibilitylicense name="LGPL-3.0+" desc=""/>
+            </license>
+            <license name="LGPL-3.0+" desc="">
+                <compatibilitylicense name="LGPL-3.0" desc=""/>
+                <compatibilitylicense name="LGPL-3.0-only" desc=""/>
+                <compatibilitylicense name="LGPL-3.0-or-later" desc=""/>
+            </license>
+            <license name="GPL-3.0+" desc="">
+                <compatibilitylicense name="GPL-3.0+-with-Libtool-exception" desc=""/>
+            </license>
+            <license name="XConsortiumLicense" desc="">
+                <compatibilitylicense name="X11" desc=""/>
+            </license>
+            <license name="X11" desc="">
+                <compatibilitylicense name="XConsortiumLicense" desc=""/>
+            </license>
+
+        </licensecompatibilitylist>
     </oatconfig>
 </configuration>

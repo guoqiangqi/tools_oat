@@ -50,7 +50,7 @@ public final class OhosLicenseTextUtil {
             final char at = text.charAt(i);
             if (at == '\n') {
                 final String tmpStr = buffer.toString();
-                lastindex = getLastindex(buffer, lastindex, at, tmpStr);
+                lastindex = getCopyrightLastindex(buffer, lastindex, at, tmpStr);
 
             } else {
                 buffer.append(at);
@@ -61,7 +61,8 @@ public final class OhosLicenseTextUtil {
         return text;
     }
 
-    private static int getLastindex(final StringBuilder buffer, int lastindex, final char at, final String tmpStr) {
+    private static int getCopyrightLastindex(final StringBuilder buffer, int lastindex, final char at,
+        final String tmpStr) {
         if (lastindex > -1) {
             // not first line
             final int index = tmpStr.substring(lastindex).indexOf("copyright (c)");
@@ -84,6 +85,54 @@ public final class OhosLicenseTextUtil {
             }
         }
         return lastindex;
+    }
+
+    /**
+     * Compress text, discard copyright characters
+     *
+     * @param licenseText License text to compress
+     * @return Compressed license text without copyright string
+     */
+    public static String cleanCopyrightString(final String licenseText) {
+        String compresssedLicenseText = licenseText;
+        if (compresssedLicenseText == null || compresssedLicenseText.length() <= 0) {
+            return "";
+        }
+        compresssedLicenseText = OhosLicenseTextUtil.cleanNoLetterAndCutTemplateFlag(compresssedLicenseText, true);
+        compresssedLicenseText = OhosLicenseTextUtil.cutString(compresssedLicenseText, "copyrightcyearnameofauthor");
+        compresssedLicenseText = OhosLicenseTextUtil.cutString(compresssedLicenseText, "copyrightcyearyourname");
+        compresssedLicenseText = OhosLicenseTextUtil.cutString(compresssedLicenseText,
+            "copyrightcyearcopyrightholders");
+        compresssedLicenseText = OhosLicenseTextUtil.cutString(compresssedLicenseText, "copyrightc19xxnameofauthor");
+        compresssedLicenseText = OhosLicenseTextUtil.cutString(compresssedLicenseText, "copyrightcyyyynameofauthor");
+        compresssedLicenseText = OhosLicenseTextUtil.cutString(compresssedLicenseText, "copyright2001myname");
+        compresssedLicenseText = OhosLicenseTextUtil.cutString(compresssedLicenseText, "pigstycopyright2001myname");
+        compresssedLicenseText = OhosLicenseTextUtil.cutString(compresssedLicenseText,
+            "copyrightyyyynameofcopyrightowner");
+        compresssedLicenseText = OhosLicenseTextUtil.cutString(compresssedLicenseText,
+            "copyrightc2019nameofcopyrightholder");
+        compresssedLicenseText = OhosLicenseTextUtil.cutString(compresssedLicenseText,
+            "copyrightc2019nameofcopyrightholder");
+        compresssedLicenseText = OhosLicenseTextUtil.cutString(compresssedLicenseText, "copyright2003myname");
+        return compresssedLicenseText;
+    }
+
+    /**
+     * Compress text, discard string before the copyrightText
+     *
+     * @param text License text to compress
+     * @param copyrightText copyright string
+     * @return Compressed license text without copyright string
+     */
+    private static String cutString(String text, final String copyrightText) {
+        final String cpstr;
+        final int index;
+        cpstr = copyrightText;
+        index = text.indexOf(cpstr);
+        if (index >= 0) {
+            text = text.substring(index + cpstr.length());
+        }
+        return text;
     }
 
     /**
@@ -114,55 +163,7 @@ public final class OhosLicenseTextUtil {
         return buffer.toString();
     }
 
-    /**
-     * Compress text, discard copyright characters
-     *
-     * @param licenseText License text to compress
-     * @return Compressed license text without copyright string
-     */
-    public static String cleanCopyrightString(final String licenseText) {
-        String compresssedLicenseText = licenseText;
-        if (compresssedLicenseText == null || compresssedLicenseText.length() <= 0) {
-            return "";
-        }
-        compresssedLicenseText = OhosLicenseTextUtil.cleanNoLetterAndCutTemplateFlag(compresssedLicenseText, true);
-        compresssedLicenseText = OhosLicenseTextUtil.getString(compresssedLicenseText, "copyrightcyearnameofauthor");
-        compresssedLicenseText = OhosLicenseTextUtil.getString(compresssedLicenseText, "copyrightcyearyourname");
-        compresssedLicenseText = OhosLicenseTextUtil.getString(compresssedLicenseText,
-            "copyrightcyearcopyrightholders");
-        compresssedLicenseText = OhosLicenseTextUtil.getString(compresssedLicenseText, "copyrightc19xxnameofauthor");
-        compresssedLicenseText = OhosLicenseTextUtil.getString(compresssedLicenseText, "copyrightcyyyynameofauthor");
-        compresssedLicenseText = OhosLicenseTextUtil.getString(compresssedLicenseText, "copyright2001myname");
-        compresssedLicenseText = OhosLicenseTextUtil.getString(compresssedLicenseText, "pigstycopyright2001myname");
-        compresssedLicenseText = OhosLicenseTextUtil.getString(compresssedLicenseText,
-            "copyrightyyyynameofcopyrightowner");
-        compresssedLicenseText = OhosLicenseTextUtil.getString(compresssedLicenseText,
-            "copyrightc2019nameofcopyrightholder");
-        compresssedLicenseText = OhosLicenseTextUtil.getString(compresssedLicenseText,
-            "copyrightc2019nameofcopyrightholder");
-        compresssedLicenseText = OhosLicenseTextUtil.getString(compresssedLicenseText, "copyright2003myname");
-        return compresssedLicenseText;
-    }
-
-    /**
-     * Compress text, discard string before the copyrightText
-     *
-     * @param text License text to compress
-     * @param copyrightText copyright string
-     * @return Compressed license text without copyright string
-     */
-    public static String getString(String text, final String copyrightText) {
-        final String cpstr;
-        final int index;
-        cpstr = copyrightText;
-        index = text.indexOf(cpstr);
-        if (index >= 0) {
-            text = text.substring(index + cpstr.length());
-        }
-        return text;
-    }
-
-    public static final String cleanLetter(final String licenseStr) {
+    public static final String cleanAndLowerCaseLetter(final String licenseStr) {
         if (null == licenseStr || licenseStr.length() <= 0) {
             return licenseStr;
         }
@@ -180,6 +181,14 @@ public final class OhosLicenseTextUtil {
         }
 
         return buffer.toString();
+    }
+
+    public static String[] cleanAndLowerCaseArray(final String[] patterns) {
+        final String[] purePatterns = new String[patterns.length];
+        for (int i = 0; i < patterns.length; i++) {
+            purePatterns[i] = OhosLicenseTextUtil.cleanAndLowerCaseLetter(patterns[i]);
+        }
+        return purePatterns;
     }
 
 }

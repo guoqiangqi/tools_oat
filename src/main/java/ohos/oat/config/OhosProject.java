@@ -44,6 +44,8 @@ import java.util.Map;
 public class OhosProject {
     private final Map<String, List<String>> prjLicenseText2NameMap = new HashMap<>();
 
+    private final Map<String, List<String>> prjLicenseCompatibilityMap = new HashMap<>();
+
     private final List<OhosProject> includedPrjList = new ArrayList<>();
 
     private OhosPolicy ohosPolicy;
@@ -154,6 +156,21 @@ public class OhosProject {
         } else {
             licenseTextList.add(licenseText);
         }
+    }
+
+    public void addPrjCompatibilityLicense(final String licenseName, final String compatibilityLicense) {
+        List<String> compatibilityLicenseList = this.prjLicenseCompatibilityMap.get(licenseName);
+        if (compatibilityLicenseList == null) {
+            compatibilityLicenseList = new ArrayList<>();
+            compatibilityLicenseList.add(compatibilityLicense);
+            this.prjLicenseCompatibilityMap.put(licenseName, compatibilityLicenseList);
+        } else {
+            compatibilityLicenseList.add(compatibilityLicense);
+        }
+    }
+
+    public Map<String, List<String>> getPrjLicenseCompatibilityMap() {
+        return this.prjLicenseCompatibilityMap;
     }
 
     @Override

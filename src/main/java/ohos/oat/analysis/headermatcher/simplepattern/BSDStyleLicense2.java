@@ -27,7 +27,7 @@ import org.apache.rat.api.MetaData;
  * @author chenyaxun
  * @since 1.0
  */
-public class BSDStyleLicense2 extends OhosSimplePatternLicense {
+public class BSDStyleLicense2 extends OhosDefaultSimplePatternLicenseMatcher {
     public BSDStyleLicense2() {
         super(new MetaData.Datum(RAT_URL_LICENSE_FAMILY_CATEGORY, "BSDStyleLicense"),
             new MetaData.Datum(RAT_URL_LICENSE_FAMILY_NAME, "BSDStyleLicense"), "", new String[] {

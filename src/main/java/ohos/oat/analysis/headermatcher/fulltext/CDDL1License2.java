@@ -27,7 +27,7 @@ import org.apache.rat.api.MetaData;
  * @author chenyaxun
  * @since 1.0
  */
-public class CDDL1License2 extends OhosFullTextMatchingLicense {
+public class CDDL1License2 extends OhosDefaultFullTextLicenseMatcher {
     private static final String LICENSE_LINE_1 = "The contents of this file are subject to the terms of the\n"
         + "Common Development and Distribution License (the \"License\")\n"
         + "You may not use this file except in compliance with the License.\n";

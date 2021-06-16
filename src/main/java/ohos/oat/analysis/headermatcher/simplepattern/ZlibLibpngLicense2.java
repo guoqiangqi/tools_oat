@@ -27,7 +27,7 @@ import org.apache.rat.api.MetaData;
  * @author chenyaxun
  * @since 1.0
  */
-public class ZlibLibpngLicense2 extends OhosSimplePatternLicense {
+public class ZlibLibpngLicense2 extends OhosDefaultSimplePatternLicenseMatcher {
     public ZlibLibpngLicense2() {
         super(new MetaData.Datum(RAT_URL_LICENSE_FAMILY_CATEGORY, "zlib-acknowledgement"),
             new MetaData.Datum(RAT_URL_LICENSE_FAMILY_NAME, "zlib-acknowledgement"), "",

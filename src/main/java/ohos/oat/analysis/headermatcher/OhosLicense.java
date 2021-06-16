@@ -19,8 +19,6 @@
 
 package ohos.oat.analysis.headermatcher;
 
-import org.spdx.library.model.license.SpdxListedLicense;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,8 +31,6 @@ import java.util.List;
 public class OhosLicense {
     private final List<String> urls = new ArrayList<>();
 
-    private String licenseFamily;
-
     private String licenseName;
 
     private String licenseId;
@@ -43,18 +39,14 @@ public class OhosLicense {
 
     private String licenseHeaderText;
 
-    private SpdxListedLicense spdxListedLicense;
+    public int getLicenseHeaderTextLength() {
+        return this.licenseHeaderTextLength;
+    }
+
+    private int licenseHeaderTextLength;
 
     public void addUrls(final String url) {
         this.urls.add(url);
-    }
-
-    public String getLicenseFamily() {
-        return this.licenseFamily;
-    }
-
-    public void setLicenseFamily(final String licenseFamily) {
-        this.licenseFamily = licenseFamily;
     }
 
     public String getLicenseHeaderText() {
@@ -63,6 +55,9 @@ public class OhosLicense {
 
     public void setLicenseHeaderText(final String licenseHeaderText) {
         this.licenseHeaderText = licenseHeaderText;
+        if (null != licenseHeaderText) {
+            this.licenseHeaderTextLength = licenseHeaderText.length();
+        }
     }
 
     public String getLicenseId() {
@@ -89,15 +84,13 @@ public class OhosLicense {
         this.licenseText = licenseText;
     }
 
-    public SpdxListedLicense getSpdxListedLicense() {
-        return this.spdxListedLicense;
-    }
-
-    public void setSpdxListedLicense(final SpdxListedLicense spdxListedLicense) {
-        this.spdxListedLicense = spdxListedLicense;
-    }
-
     public List<String> getUrls() {
         return this.urls;
+    }
+
+    @Override
+    public String toString() {
+        return "OhosLicense{" + "licenseId='" + this.licenseId + '\'' + ", licenseHeaderTextLength="
+            + this.licenseHeaderTextLength + '}';
     }
 }

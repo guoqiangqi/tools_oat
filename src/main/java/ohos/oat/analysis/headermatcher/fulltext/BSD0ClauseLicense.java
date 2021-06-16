@@ -27,7 +27,7 @@ import org.apache.rat.api.MetaData;
  * @author chenyaxun
  * @since 1.0
  */
-public class BSD0ClauseLicense extends OhosFullTextMatchingLicense {
+public class BSD0ClauseLicense extends OhosDefaultFullTextLicenseMatcher {
     private static final String LICENSE_TEXT =
         "Permission to use, copy, modify, and/or distribute this software for any purpose with or without fee is"
             + " hereby granted.THE SOFTWARE IS PROVIDED \"AS IS\" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH"

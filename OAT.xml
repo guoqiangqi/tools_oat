@@ -58,8 +58,10 @@
 
         <filefilterlist>
             <filefilter name="defaultFilter" desc="Files not to check">
-                <filteritem type="filename" name="*.iml" desc="Project files"/>
+                <filteritem type="filename" name="*.iml|*.json|*.txt" desc="desc files"/>
                 <filteritem type="filepath" name="target/.*" desc="Compile output files"/>
+                <filteritem type="filepath" name="out/.*" desc="Compile output files"/>
+                <filteritem type="filepath" name="log/.*" desc="log files"/>
                 <filteritem type="filepath" name=".idea/.*" desc="IDE temp files"/>
             </filefilter>
             <filefilter name="defaultPolicyFilter" desc="Filters for compatibility，license header policies">

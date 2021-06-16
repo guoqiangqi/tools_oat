@@ -27,7 +27,7 @@ import org.apache.rat.api.MetaData;
  * @author chenyaxun
  * @since 1.0
  */
-public class FreeTypeProjectLicense extends OhosSimplePatternLicense {
+public class FreeTypeProjectLicense extends OhosDefaultSimplePatternLicenseMatcher {
     public FreeTypeProjectLicense() {
         super(new MetaData.Datum(RAT_URL_LICENSE_FAMILY_CATEGORY, "FTL"),
             new MetaData.Datum(RAT_URL_LICENSE_FAMILY_NAME, "FTL"), "", new String[] {

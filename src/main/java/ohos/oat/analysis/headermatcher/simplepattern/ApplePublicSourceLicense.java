@@ -27,7 +27,7 @@ import org.apache.rat.api.MetaData;
  * @author chenyaxun
  * @since 1.0
  */
-public class ApplePublicSourceLicense extends OhosSimplePatternLicense {
+public class ApplePublicSourceLicense extends OhosDefaultSimplePatternLicenseMatcher {
     public ApplePublicSourceLicense() {
         super(new MetaData.Datum(RAT_URL_LICENSE_FAMILY_CATEGORY, "APSL-1.0+"),
             new MetaData.Datum(RAT_URL_LICENSE_FAMILY_NAME, "APSL-1.0+"), "",

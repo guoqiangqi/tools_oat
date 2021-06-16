@@ -27,7 +27,7 @@ import org.apache.rat.api.MetaData;
  * @author chenyaxun
  * @since 1.0
  */
-public class GPL1License extends OhosFullTextMatchingLicense {
+public class GPL1License extends OhosDefaultFullTextLicenseMatcher {
     private static final String LICENSE_LINE_1 =
         "This program is free software; you can redistribute it and/or modify\n"
             + " it under the terms of the GNU General Public License as published by\n"

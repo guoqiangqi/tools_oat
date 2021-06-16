@@ -41,6 +41,7 @@ import org.apache.commons.configuration2.tree.ImmutableNode;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Stateless utility class for OAT config file
@@ -124,6 +125,7 @@ public final class OhosCfgUtil {
         ohosConfig.setBasedir(tmpDir);
         OhosLogUtil.logOatConfig(OhosCfgUtil.class.getSimpleName(), "basedir: " + tmpDir);
         OhosCfgUtil.initLicenseMatcher(ohosConfig, xmlconfig, null);
+        OhosCfgUtil.initCompatibilityLicense(ohosConfig, xmlconfig, null);
         OhosCfgUtil.initTask(ohosConfig, xmlconfig);
         OhosCfgUtil.initPolicy(ohosConfig, xmlconfig, null);
         OhosCfgUtil.initFilter(ohosConfig, xmlconfig, null);
@@ -157,17 +159,22 @@ public final class OhosCfgUtil {
      * @return String array
      */
     public static String[] getSplitStrings(final String configString) {
+        return getSplitStrings(configString, "\\|");
+    }
+
+    public static String[] getSplitStrings(final String configString, final String splitflag) {
         String[] strings = new String[] {};
         if (configString.trim().length() <= 0) {
             return strings;
         }
-        if (!configString.contains("|")) {
+        if ((splitflag.contains("|") && (!configString.contains("|"))) || (!splitflag.contains("|")
+            && (!configString.contains(splitflag)))) {
             strings = new String[] {configString};
             return strings;
         }
 
         try {
-            strings = configString.split("\\|");
+            strings = configString.split(splitflag);
         } catch (final Exception e) {
             OhosLogUtil.traceException(e);
         }
@@ -188,6 +195,7 @@ public final class OhosCfgUtil {
                 ohosProject.setLicenseFiles(licenselist);
             }
             OhosCfgUtil.initLicenseMatcher(ohosConfig, prjXmlconfig, ohosProject);
+            OhosCfgUtil.initCompatibilityLicense(ohosConfig, prjXmlconfig, ohosProject);
             OhosCfgUtil.initPolicy(ohosConfig, prjXmlconfig, ohosProject);
             OhosCfgUtil.initFilter(ohosConfig, prjXmlconfig, ohosProject);
         }
@@ -363,6 +371,32 @@ public final class OhosCfgUtil {
         }
     }
 
+    private static void initCompatibilityLicense(final OhosConfig ohosConfig, final XMLConfiguration xmlconfig,
+        final OhosProject ohosProject) {
+        final List<HierarchicalConfiguration<ImmutableNode>> compatibilityCfg = OhosCfgUtil.getElements(xmlconfig,
+            OhosCfgUtil.ROOTNODE, "licensecompatibilitylist.license");
+        for (final HierarchicalConfiguration<ImmutableNode> license : compatibilityCfg) {
+            final String licenseName = OhosCfgUtil.getElementAttrValue(license, "name");
+
+            final List<HierarchicalConfiguration<ImmutableNode>> compatibilityLicenseCfg = license.configurationsAt(
+                "compatibilitylicense");
+            for (final HierarchicalConfiguration<ImmutableNode> compatibilitylicense : compatibilityLicenseCfg) {
+                final String compatibilitylicenseName = OhosCfgUtil.getElementAttrValue(compatibilitylicense, "name");
+                if (ohosProject == null) {
+                    ohosConfig.addCompatibilityLicense(licenseName, compatibilitylicenseName);
+                    OhosLogUtil.logOatConfig(OhosCfgUtil.class.getSimpleName(),
+                        "GlobalConfig" + "\taddCompatibilityLicense\t" + "compatibilityLicenseConfig\tName\t"
+                            + licenseName + "\t \t \tLicenseText\t" + compatibilitylicenseName);
+                } else {
+                    ohosProject.addPrjCompatibilityLicense(licenseName, compatibilitylicenseName);
+                    OhosLogUtil.logOatConfig(OhosCfgUtil.class.getSimpleName(),
+                        ohosProject.getPath() + "\taddPrjCompatibilityLicense\t" + "compatibilityLicenseConfig\tName\t"
+                            + licenseName + "\t \t \tLicenseText\t" + compatibilitylicenseName);
+                }
+            }
+        }
+    }
+
     private static void initTask(final OhosConfig ohosConfig, final XMLConfiguration xmlconfig) {
         final List<HierarchicalConfiguration<ImmutableNode>> tasklistCfg = OhosCfgUtil.getElements(xmlconfig,
             OhosCfgUtil.ROOTNODE, "tasklist.task");
@@ -437,7 +471,7 @@ public final class OhosCfgUtil {
     }
 
     private static void initProjectDefaultPolicy(final OhosConfig ohosConfig, final OhosProject ohosProject) {
-        if (ohosConfig.getRepositoryName().toLowerCase().contains("third_party")) {
+        if (ohosConfig.getRepositoryName().toLowerCase(Locale.ENGLISH).contains("third_party")) {
             ohosProject.setPolicy("3rdDefaultPolicy");
         } else {
             ohosProject.setPolicy("defaultPolicy");

@@ -27,7 +27,7 @@ import org.apache.rat.api.MetaData;
  * @author chenyaxun
  * @since 1.0
  */
-public class PublicDomainLicense extends OhosSimplePatternLicense {
+public class PublicDomainLicense extends OhosDefaultSimplePatternLicenseMatcher {
     public PublicDomainLicense() {
         super(new MetaData.Datum(RAT_URL_LICENSE_FAMILY_CATEGORY, "PublicDomainLicense"),
             new MetaData.Datum(RAT_URL_LICENSE_FAMILY_NAME, "PublicDomainLicense"), "",

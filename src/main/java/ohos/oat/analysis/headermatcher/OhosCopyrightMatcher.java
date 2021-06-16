@@ -21,7 +21,6 @@ package ohos.oat.analysis.headermatcher;
 
 import ohos.oat.utils.OhosLogUtil;
 
-import org.apache.rat.analysis.IHeaderMatcher;
 import org.apache.rat.analysis.RatHeaderAnalysisException;
 import org.apache.rat.api.Document;
 import org.apache.rat.api.MetaData;
@@ -36,8 +35,10 @@ import java.util.regex.Pattern;
  * @author chenyaxun
  * @since 1.0
  */
-public class OhosCopyrightMatcher implements IHeaderMatcher {
+public class OhosCopyrightMatcher implements IOhosHeaderMatcher {
     private final ArrayList<Pattern> copyrightPatternList = new ArrayList<>();
+
+    private int line;
 
     public OhosCopyrightMatcher() {
         this.copyrightPatternList.add(
@@ -46,6 +47,10 @@ public class OhosCopyrightMatcher implements IHeaderMatcher {
 
     @Override
     public boolean match(final Document subject, final String licensHeaderText) throws RatHeaderAnalysisException {
+        this.line++;
+        if (this.line > 50) {
+            // return true;
+        }
         String tmpText = licensHeaderText;
         final MetaData metaData = subject.getMetaData();
         String owner = metaData.value("copyright-owner");
@@ -93,5 +98,10 @@ public class OhosCopyrightMatcher implements IHeaderMatcher {
     @Override
     public void reset() {
         this.copyrightPatternList.clear();
+    }
+
+    @Override
+    public String getMatcherId() {
+        return this.getClass().getSimpleName();
     }
 }

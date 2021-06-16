@@ -19,15 +19,30 @@
  * ChangeLog:
  * 2021.1 -  Add license file names to discard copyright header matching.
  * 2021.3 -  Change file names and extensions according to the openharmony architecture.
+ * 2021.6 -  Add saveJson2File, readJsonFromFile util methods to support store and load spdx license texts.
  * Modified by jalenchen
  */
 
 package ohos.oat.utils;
 
+import com.alibaba.fastjson.JSONException;
+import com.alibaba.fastjson.JSONObject;
+
+import ohos.oat.analysis.headermatcher.OhosLicense;
+
 import org.apache.rat.api.Document;
 import org.apache.rat.document.impl.guesser.BinaryGuesser;
 import org.apache.rat.document.impl.guesser.GuessUtils;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.net.URL;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
@@ -111,6 +126,60 @@ public class OhosFileUtils {
     }
 
     public static boolean isBinaryFile(final Document document) {
+        final String fileName = GuessUtils.normalise(document.getName());
+        final boolean isNotBinary = BinaryGuesser.isNonBinary(fileName);
+        if (isNotBinary) {
+            return false;
+        }
         return BinaryGuesser.isBinary(document);
     }
+
+    public static void saveJson2File(final String jsonString, final String filePath) {
+        final File file = new File(filePath);
+        if (!file.exists()) {
+            try {
+                file.createNewFile();
+            } catch (final IOException e) {
+                OhosLogUtil.traceException(e);
+            }
+        }
+        try (final BufferedWriter writer = new BufferedWriter(
+            new OutputStreamWriter(new FileOutputStream(file, false), "UTF-8"));) {
+            writer.write("");
+            writer.write(jsonString);
+        } catch (final IOException e) {
+            OhosLogUtil.traceException(e);
+        }
+    }
+
+    public static <T> List<T> readJsonFromFile(final String filePath, final Class<OhosLicense> t) {
+        final File file = new File(filePath);
+        // if (!file.exists()) {
+        //     return null;
+        // }
+        final URL url = OhosFileUtils.class.getResource(filePath);
+        if (null == url) {
+            return null;
+        }
+
+        String readJson = "";
+        try (final InputStream fileInputStream = OhosFileUtils.class.getResourceAsStream(filePath);
+            final InputStreamReader inputStreamReader = new InputStreamReader(fileInputStream, "UTF-8");
+            final BufferedReader reader = new BufferedReader(inputStreamReader);) {
+            String tempString = null;
+            while ((tempString = reader.readLine()) != null) {
+                readJson += tempString;
+            }
+        } catch (final IOException e) {
+            OhosLogUtil.traceException(e);
+        }
+        try {
+            final List<T> jsonObject = (List<T>) JSONObject.parseArray(readJson, t);
+            return jsonObject;
+        } catch (final JSONException e) {
+            OhosLogUtil.traceException(e);
+        }
+        return null;
+    }
+
 }

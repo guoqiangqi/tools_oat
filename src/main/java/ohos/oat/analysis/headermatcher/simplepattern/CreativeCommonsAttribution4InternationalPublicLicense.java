@@ -27,7 +27,7 @@ import org.apache.rat.api.MetaData;
  * @author chenyaxun
  * @since 1.0
  */
-public class CreativeCommonsAttribution4InternationalPublicLicense extends OhosSimplePatternLicense {
+public class CreativeCommonsAttribution4InternationalPublicLicense extends OhosDefaultSimplePatternLicenseMatcher {
     public CreativeCommonsAttribution4InternationalPublicLicense() {
         super(new MetaData.Datum(RAT_URL_LICENSE_FAMILY_CATEGORY, "CC-BY-4.0"),
             new MetaData.Datum(RAT_URL_LICENSE_FAMILY_NAME, "CC-BY-4.0"), "",

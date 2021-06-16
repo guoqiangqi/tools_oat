@@ -48,11 +48,15 @@ public class OhosConfig {
 
     private final Map<String, List<String>> licenseText2NameMap;
 
+    private final Map<String, List<String>> licenseCompatibilityMap;
+
     private String basedir;
 
     private String repositoryName;
 
     private List<OhosLicense> licenseList;
+
+    private List<OhosLicense> exceptionLicenseList;
 
     private boolean isPluginMode = false;
 
@@ -67,6 +71,7 @@ public class OhosConfig {
         this.fileFilterMap = new HashMap<>();
         this.taskList = new ArrayList<>();
         this.licenseText2NameMap = new HashMap<>();
+        this.licenseCompatibilityMap = new HashMap<>();
         this.srcFileList = new ArrayList<>();
     }
 
@@ -124,6 +129,10 @@ public class OhosConfig {
         return this.licenseText2NameMap;
     }
 
+    public Map<String, List<String>> getLicenseCompatibilityMap() {
+        return this.licenseCompatibilityMap;
+    }
+
     public OhosFileFilter getOhosFileFilter(final String filterName) {
         return this.fileFilterMap.get(filterName);
     }
@@ -173,6 +182,17 @@ public class OhosConfig {
         }
     }
 
+    public void addCompatibilityLicense(final String licenseName, final String compatibilityLicense) {
+        List<String> compatibilityLicenseList = this.licenseCompatibilityMap.get(licenseName);
+        if (compatibilityLicenseList == null) {
+            compatibilityLicenseList = new ArrayList<>();
+            compatibilityLicenseList.add(compatibilityLicense);
+            this.licenseCompatibilityMap.put(licenseName, compatibilityLicenseList);
+        } else {
+            compatibilityLicenseList.add(compatibilityLicense);
+        }
+    }
+
     public String getBasedir() {
         return this.basedir;
     }
@@ -191,6 +211,14 @@ public class OhosConfig {
 
     public void setLicenseList(final List<OhosLicense> licenseList) {
         this.licenseList = licenseList;
+    }
+
+    public List<OhosLicense> getExceptionLicenseList() {
+        return this.exceptionLicenseList;
+    }
+
+    public void setExceptionLicenseList(final List<OhosLicense> exceptionLicenseList) {
+        this.exceptionLicenseList = exceptionLicenseList;
     }
 
     public List<OhosTask> getTaskList() {
