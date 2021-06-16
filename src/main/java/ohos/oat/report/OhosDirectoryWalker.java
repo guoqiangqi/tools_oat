@@ -156,9 +156,7 @@ public class OhosDirectoryWalker extends Walker {
             || filePath.contains("/license/") || filePath.contains("/licenses/")) {
             return true;
         }
-        if (null != file && file.isDirectory()) {
-            return true;
-        }
+
         final boolean notIgnored = this.isNotIgnored(file);
         if (!notIgnored) {
             if (this.ohosConfig.getData("TraceSkippedAndIgnoredFiles").equals("true")) {
