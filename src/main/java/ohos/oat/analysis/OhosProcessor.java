@@ -60,6 +60,8 @@ import ohos.oat.analysis.headermatcher.fulltext.GPL2WithClassPathExceptionLicens
 import ohos.oat.analysis.headermatcher.fulltext.GPL3License;
 import ohos.oat.analysis.headermatcher.fulltext.GPLStyleLicense2;
 import ohos.oat.analysis.headermatcher.fulltext.LGPLLicense;
+import ohos.oat.analysis.headermatcher.fulltext.LGPLStyleLicense2;
+import ohos.oat.analysis.headermatcher.fulltext.LGPLStyleLicense3;
 import ohos.oat.analysis.headermatcher.fulltext.LibertyLicense2;
 import ohos.oat.analysis.headermatcher.fulltext.MITLicense;
 import ohos.oat.analysis.headermatcher.fulltext.MITLicense2;
@@ -154,6 +156,8 @@ public class OhosProcessor {
     private final List<IOhosHeaderMatcher> definedHeaderMatchers_ori = new ArrayList<>();
 
     private final List<IOhosHeaderMatcher> definedHeaderMatchers_clean = new ArrayList<>();
+
+    private final List<IOhosHeaderMatcher> definedHeaderMatchers_clean_gpl = new ArrayList<>();
 
     private final List<IOhosHeaderMatcher> customizedHeaderMatchers_clean = new ArrayList<>();
 
@@ -279,8 +283,10 @@ public class OhosProcessor {
         this.definedHeaderMatchers_clean.add(new GPL2License2());
         this.definedHeaderMatchers_clean.add(new GPL3License());
         this.definedHeaderMatchers_clean.add(new LGPLLicense());
-        this.definedHeaderMatchers_clean.add(new LGPLStyleLicense());
-        this.definedHeaderMatchers_clean.add(new GPLStyleLicense2());
+        this.definedHeaderMatchers_clean_gpl.add(new GPLStyleLicense2());
+        this.definedHeaderMatchers_clean_gpl.add(new LGPLStyleLicense2());
+        this.definedHeaderMatchers_clean_gpl.add(new LGPLStyleLicense3());
+        this.definedHeaderMatchers_ori.add(new LGPLStyleLicense());
         this.definedHeaderMatchers_ori.add(new GPLStyleLicense());
 
     }
@@ -289,16 +295,16 @@ public class OhosProcessor {
         for (final Map.Entry<String, List<String>> stringListEntry : this.ohosConfig.getLicenseText2NameMap()
             .entrySet()) {
             for (final String licenseTxt : stringListEntry.getValue()) {
-                this.customizedHeaderMatchers_clean.add(
-                    new OhosCustomizedTextLicenseMatcher(stringListEntry.getKey(), licenseTxt));
+                this.customizedHeaderMatchers_clean.add(new OhosCustomizedTextLicenseMatcher(stringListEntry.getKey(),
+                    OhosLicenseTextUtil.cleanAndLowerCaseLetter(licenseTxt)));
             }
         }
         for (final Map.Entry<String, List<String>> stringListEntry : this.fileDocument.getOhosProject()
             .getPrjLicenseText2NameMap()
             .entrySet()) {
             for (final String licenseTxt : stringListEntry.getValue()) {
-                this.customizedHeaderMatchers_clean.add(
-                    new OhosCustomizedTextLicenseMatcher(stringListEntry.getKey(), licenseTxt));
+                this.customizedHeaderMatchers_clean.add(new OhosCustomizedTextLicenseMatcher(stringListEntry.getKey(),
+                    OhosLicenseTextUtil.cleanAndLowerCaseLetter(licenseTxt)));
             }
         }
     }
@@ -359,6 +365,14 @@ public class OhosProcessor {
                 }
             }
         }
+        for (final IOhosHeaderMatcher iOhosHeaderMatcher : this.definedHeaderMatchers_clean_gpl) {
+            for (final String line : this.cleanHeaderTextList) {
+                if (this.matchLine(line, iOhosHeaderMatcher)) {
+                    break;
+                }
+            }
+        }
+
         for (final IOhosHeaderMatcher iOhosHeaderMatcher : this.customizedHeaderMatchers_clean) {
             for (final String line : this.cleanHeaderTextList) {
                 if (this.matchLine(line, iOhosHeaderMatcher)) {
