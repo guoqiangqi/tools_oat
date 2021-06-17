@@ -278,19 +278,21 @@ public class OhosPostAnalyser4Output implements IDocumentAnalyser {
 
     private static boolean isFiltered(final OhosFileFilter fileFilter, final String fullPathFromBasedir,
         final String fileName, final OhosFileDocument subject) {
-        for (String fileFilterItem : fileFilter.getFileFilterItems()) {
-            // 用文件名匹配，如果匹配成功，则本策略要忽略此文件，故返回false
-            Pattern pattern = null;
-            try {
-                fileFilterItem = fileFilterItem.replace("*", ".*");
-                pattern = Pattern.compile(fileFilterItem, Pattern.CASE_INSENSITIVE);
-            } catch (final Exception e) {
-                OhosLogUtil.traceException(e);
-            }
-            final boolean needFilter = pattern.matcher(fileName).matches();
-            if (needFilter) {
-                // need add reason desc to print all message in output file future
-                return true;
+        if (fileName != null && fileName.length() > 0) {
+            for (String fileFilterItem : fileFilter.getFileFilterItems()) {
+                // 用文件名匹配，如果匹配成功，则本策略要忽略此文件，故返回false
+                Pattern pattern = null;
+                try {
+                    fileFilterItem = fileFilterItem.replace("*", ".*");
+                    pattern = Pattern.compile(fileFilterItem, Pattern.CASE_INSENSITIVE);
+                } catch (final Exception e) {
+                    OhosLogUtil.traceException(e);
+                }
+                final boolean needFilter = pattern.matcher(fileName).matches();
+                if (needFilter) {
+                    // need add reason desc to print all message in output file future
+                    return true;
+                }
             }
         }
 
@@ -393,13 +395,14 @@ public class OhosPostAnalyser4Output implements IDocumentAnalyser {
             // in default OAT.xml
             piPath = subject.getOhosProject().getPath();
         }
-
         final boolean canusepath = !piPath.startsWith("!");
         final OhosFileFilter fileFilter = policyItem.getFileFilterObj();
-        String fullPathFromBasedir = OhosCfgUtil.getShortPath(this.ohosConfig, subject.getName());
+        String subjectname = subject.getName();
         if (subject.isDirectory()) {
-            fullPathFromBasedir = fullPathFromBasedir + "/";
+            subjectname = subjectname + "/";
         }
+        String fullPathFromBasedir = OhosCfgUtil.getShortPath(this.ohosConfig, subjectname);
+
         if (this.ohosConfig.isPluginMode()) {
             fullPathFromBasedir = subject.getOhosProject().getPath() + fullPathFromBasedir;
         }
@@ -410,27 +413,44 @@ public class OhosPostAnalyser4Output implements IDocumentAnalyser {
 
         // process filter operations
         if (fileFilter != null) {
-            if (OhosPostAnalyser4Output.isFiltered(fileFilter, fullPathFromBasedir, fileName, subject)) {
-                return false;
+            final String lastFilterResult = subject.getData("FilterResult:" + fileFilter.getName());
+            if (null != lastFilterResult && lastFilterResult.length() > 0) {
+                if (lastFilterResult.equals("true")) {
+                    return false;
+                }
+            } else {
+                if (OhosPostAnalyser4Output.isFiltered(fileFilter, fullPathFromBasedir, fileName, subject)) {
+                    subject.putData("FilterResult:" + fileFilter.getName(), "true");
+                    return false;
+                } else {
+                    subject.putData("FilterResult:" + fileFilter.getName(), "false");
+                }
             }
         }
 
         boolean mached = false;
-        if (!canusepath) {
-            try {
-                piPath = piPath.substring(1);
-            } catch (final Exception e) {
-                OhosLogUtil.warn(this.getClass().getSimpleName(),
-                    subject.getOhosProject().getPath() + "\tisMatched failed\t" + shortFilePathUnderPrj);
-                OhosLogUtil.traceException(e);
-            }
-
-            final Pattern pattern = Pattern.compile(piPath, Pattern.CASE_INSENSITIVE);
-            mached = !pattern.matcher(fullPathFromBasedir).matches();
+        final String lastMatchResult = subject.getData("MatchResult:" + policyItem.getPath());
+        if (null != lastMatchResult && lastMatchResult.length() > 0) {
+            mached = lastMatchResult.equals("true");
         } else {
-            final Pattern pattern = Pattern.compile(piPath, Pattern.CASE_INSENSITIVE);
-            mached = pattern.matcher(fullPathFromBasedir).matches();
+            if (!canusepath) {
+                try {
+                    piPath = piPath.substring(1);
+                } catch (final Exception e) {
+                    OhosLogUtil.warn(this.getClass().getSimpleName(),
+                        subject.getOhosProject().getPath() + "\tisMatched failed\t" + shortFilePathUnderPrj);
+                    OhosLogUtil.traceException(e);
+                }
+
+                final Pattern pattern = Pattern.compile(piPath, Pattern.CASE_INSENSITIVE);
+                mached = !pattern.matcher(fullPathFromBasedir).matches();
+            } else {
+                final Pattern pattern = Pattern.compile(piPath, Pattern.CASE_INSENSITIVE);
+                mached = pattern.matcher(fullPathFromBasedir).matches();
+            }
+            subject.putData("MatchResult:" + policyItem.getPath(), mached ? "true" : "false");
         }
+
         return mached;
     }
 
@@ -469,10 +489,13 @@ public class OhosPostAnalyser4Output implements IDocumentAnalyser {
     private void checkFileInDir(final OhosFileDocument subject, final String filePath,
         final List<OhosPolicyItem> fileNamePolicyItems, final String policyFileName, final String outputName) {
         final List<String> list = subject.getOhosProject().getProjectFileDocument().getListData(policyFileName);
+        final String thisDir = OhosCfgUtil.getShortPath(this.ohosConfig, subject.getName() + "/");
         String name = "";
         if (list != null && list.size() > 0) {
             for (final String fileName : list) {
-                final String thisDir = OhosCfgUtil.getShortPath(this.ohosConfig, subject.getName()) + "/";
+                if (!fileName.contains(thisDir)) {
+                    continue;
+                }
                 final String tmpStr = fileName.replace(thisDir, "");
                 if (!tmpStr.contains("/")) {
                     // only check files in this dir layer
