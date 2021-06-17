@@ -67,7 +67,10 @@ public final class OhosCfgUtil {
      */
     public static String getShortPath(final OhosConfig ohosConfig, final File file) {
         try {
-            final String filepath = file.getCanonicalPath();
+            String filepath = file.getCanonicalPath();
+            if (file.isDirectory()) {
+                filepath = filepath + "/";
+            }
             final String tmpFilepath = OhosCfgUtil.formatPath(filepath);
             return tmpFilepath.replace(ohosConfig.getBasedir(), "");
         } catch (final IOException e) {
