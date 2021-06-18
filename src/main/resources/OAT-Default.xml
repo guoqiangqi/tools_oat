@@ -89,7 +89,13 @@
                 <filteritem type="filename" name="*.babelrc|*.editorconfig|*.eslintignore|*.prettierrc|*.eslintrc.js|*.template|*.tmpl|*.vcproj|*.def|*.sln"/>
                 <filteritem type="filename" name="*_contexts|*.vcxproj|*.vcxproj.filters|*.vcxproj.user|*visual_studio.sln|*.bundle|CERTIFICATE|SIGNATURE"/>
                 <filteritem type="filename" name="*.lds|SConscript|*.pod|*.arb|*.repo"/>
-
+                <filteritem type="filepath" name="projectroot/target/.*" desc="out put files"/>
+                <filteritem type="filepath" name="projectroot/output/.*" desc="out put files"/>
+                <filteritem type="filepath" name="projectroot/out/.*" desc="out put files"/>
+                <filteritem type="filepath" name="projectroot/log/.*" desc="out put files"/>
+                <filteritem type="filepath" name="projectroot/logs/.*" desc="out put files"/>
+                <filteritem type="filepath" name="projectroot/.idea/.*" desc="out put files"/>
+                <filteritem type="filepath" name="projectroot/.git/.*" desc="out put files"/>
             </filefilter>
             <filefilter name="defaultPolicyFilter" desc="Files that do not need to be applied specified policy, will be merged with the filter items which has the same filefilter name">
                 <filteritem type="filename" name="README.OpenSource"/>
