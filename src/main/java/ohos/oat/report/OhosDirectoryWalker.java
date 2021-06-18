@@ -125,7 +125,14 @@ public class OhosDirectoryWalker extends Walker {
 
         final List<String> ohosFilePathFilterItems = this.ohosProject.getFileFilterObj().getOhosFilePathFilterItems();
         for (final String ohosFilePathFilterItem : ohosFilePathFilterItems) {
-            if (shortPath.startsWith(ohosFilePathFilterItem)) {
+            String piPath = ohosFilePathFilterItem;
+            if (piPath.startsWith("projectroot/")) {
+                piPath = piPath.replace("projectroot/", this.ohosProject.getPath());
+            }
+            if (piPath.equals("projectroot")) {
+                piPath = this.ohosProject.getPath();
+            }
+            if (shortPath.startsWith(piPath)) {
                 if (this.ohosConfig.getData("TraceSkippedAndIgnoredFiles").equals("true")) {
                     OhosLogUtil.warn(this.getClass().getSimpleName(),
                         this.ohosProject.getPath() + "\t:" + "\tstartsWith-skip\t" + this.name + "\t:"
@@ -133,7 +140,7 @@ public class OhosDirectoryWalker extends Walker {
                 }
                 return false;
             }
-            final Pattern pattern = Pattern.compile(ohosFilePathFilterItem, Pattern.CASE_INSENSITIVE);
+            final Pattern pattern = Pattern.compile(piPath, Pattern.CASE_INSENSITIVE);
             final boolean needFilter = pattern.matcher(shortPath).matches();
             if (needFilter) {
                 if (this.ohosConfig.getData("TraceSkippedAndIgnoredFiles").equals("true")) {
