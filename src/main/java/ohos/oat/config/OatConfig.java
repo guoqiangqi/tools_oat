@@ -133,7 +133,7 @@ public class OatConfig {
         return this.licenseCompatibilityMap;
     }
 
-    public OatFileFilter getOhosFileFilter(final String filterName) {
+    public OatFileFilter getOatFileFilter(final String filterName) {
         return this.fileFilterMap.get(filterName);
     }
 
@@ -252,10 +252,10 @@ public class OatConfig {
                     oatProject.setFileFilterObj(this.fileFilterMap.get(prjFileFilter));
                 }
                 if (prjPolicy == null || prjPolicy.trim().equals("")) {
-                    oatProject.setOhosPolicy(policy);
+                    oatProject.setOatPolicy(policy);
                     oatProject.setPolicy(policy.getNamne());
                 } else {
-                    oatProject.setOhosPolicy(this.policyMap.get(prjPolicy));
+                    oatProject.setOatPolicy(this.policyMap.get(prjPolicy));
                 }
             }
             oatTask.reArrangeProject();

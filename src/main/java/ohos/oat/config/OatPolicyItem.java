@@ -109,7 +109,7 @@ public class OatPolicyItem {
 
     @Override
     public String toString() {
-        return "OhosPolicyItem{" + "name='" + this.name + '\'' + ", type='" + this.type + '\'' + ", path='" + this.path
+        return "OatPolicyItem{" + "name='" + this.name + '\'' + ", type='" + this.type + '\'' + ", path='" + this.path
             + '\'' + ", rule='" + this.rule + '\'' + ", group='" + this.group + '\'' + ", desc='" + this.desc + '\''
             + ", fileFilter=" + this.fileFilter + '}';
     }

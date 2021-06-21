@@ -52,7 +52,7 @@ public final class OatSpdxLicenseUtil {
     /**
      * Use spdx library apis to get all license texts and store them in a unmodifiableList and return
      *
-     * @param oatConfig Ohos config data structure
+     * @param oatConfig Oat config data structure
      */
     public static void initSpdxLicenseList(final OatConfig oatConfig) {
         // List for store spdx licenses
@@ -71,7 +71,7 @@ public final class OatSpdxLicenseUtil {
                 for (final String standardLicenseId : standardLicenseIds) {
                     final SpdxListedLicense spdxListedLicense = ListedLicenses.getListedLicenses()
                         .getListedLicenseById(standardLicenseId);
-                    convertSpdx2OhoslicenseList(licenseList, spdxListedLicense);
+                    convertSpdx2OatlicenseList(licenseList, spdxListedLicense);
                 }
             } catch (final InvalidSPDXAnalysisException e) {
                 OatLogUtil.traceException(e);
@@ -100,7 +100,7 @@ public final class OatSpdxLicenseUtil {
                 for (final String standardExceptionLicenseId : standardExceptionLicenseIds) {
                     final ListedLicenseException spdxListedException = ListedLicenses.getListedLicenses()
                         .getListedExceptionById(standardExceptionLicenseId);
-                    convertSpdxException2OhoslicenseList(exceptionLicenseList, spdxListedException);
+                    convertSpdxException2OatlicenseList(exceptionLicenseList, spdxListedException);
                 }
             } catch (final InvalidSPDXAnalysisException e) {
                 OatLogUtil.traceException(e);
@@ -136,7 +136,7 @@ public final class OatSpdxLicenseUtil {
 
     }
 
-    private static void convertSpdx2OhoslicenseList(final List<OatLicense> licenseList,
+    private static void convertSpdx2OatlicenseList(final List<OatLicense> licenseList,
         final SpdxListedLicense spdxListedLicense) throws InvalidSPDXAnalysisException {
         final OatLicense oatLicense = new OatLicense();
         oatLicense.setLicenseName(spdxListedLicense.getName());
@@ -150,10 +150,10 @@ public final class OatSpdxLicenseUtil {
         final String licenseHeaderText = spdxListedLicense.getStandardLicenseHeader().toLowerCase(Locale.ENGLISH);
         oatLicense.setLicenseText(licenseText);
         oatLicense.setLicenseHeaderText(licenseHeaderText);
-        simplifyOhosLicense(licenseList, oatLicense);
+        simplifyOatLicense(licenseList, oatLicense);
     }
 
-    private static void convertSpdxException2OhoslicenseList(final List<OatLicense> licenseList,
+    private static void convertSpdxException2OatlicenseList(final List<OatLicense> licenseList,
         final ListedLicenseException spdxListedLicense) throws InvalidSPDXAnalysisException {
         final OatLicense oatLicense = new OatLicense();
         oatLicense.setLicenseName(spdxListedLicense.getName());
@@ -167,10 +167,10 @@ public final class OatSpdxLicenseUtil {
         final String licenseHeaderText = spdxListedLicense.getLicenseExceptionText().toLowerCase(Locale.ENGLISH);
         oatLicense.setLicenseText(licenseText);
         oatLicense.setLicenseHeaderText(licenseHeaderText);
-        simplifyOhosLicense(licenseList, oatLicense);
+        simplifyOatLicense(licenseList, oatLicense);
     }
 
-    private static void simplifyOhosLicense(final List<OatLicense> licenseList, final OatLicense oatLicense) {
+    private static void simplifyOatLicense(final List<OatLicense> licenseList, final OatLicense oatLicense) {
         final String licenseText = oatLicense.getLicenseText();
         final String licenseHeaderText = oatLicense.getLicenseHeaderText();
         if (licenseHeaderText.trim().length() <= 9) {

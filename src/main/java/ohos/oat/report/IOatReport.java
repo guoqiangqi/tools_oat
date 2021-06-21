@@ -23,7 +23,7 @@ import org.apache.rat.api.RatException;
 import org.apache.rat.report.RatReport;
 
 /**
- * New ohos report interface to support concurrent reporting process
+ * New oat report interface to support concurrent reporting process
  *
  * @author chenyaxun
  * @since 1.0

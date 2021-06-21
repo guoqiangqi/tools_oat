@@ -88,7 +88,7 @@ public class OatPolicy {
 
     @Override
     public String toString() {
-        return "OhosPolicy{" + "policyItemListMap=" + this.policyItemListMap + ", namne='" + this.namne + '\''
+        return "OatPolicy{" + "policyItemListMap=" + this.policyItemListMap + ", namne='" + this.namne + '\''
             + ", desc='" + this.desc + '\'' + '}';
     }
 }

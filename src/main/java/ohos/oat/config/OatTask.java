@@ -131,7 +131,7 @@ public class OatTask {
 
     @Override
     public String toString() {
-        return "OhosTask{" + "namne='" + this.namne + '\'' + ", policy='" + this.policy + '\'' + ", desc='" + this.desc
+        return "OatTask{" + "namne='" + this.namne + '\'' + ", policy='" + this.policy + '\'' + ", desc='" + this.desc
             + '\'' + '}';
     }
 }

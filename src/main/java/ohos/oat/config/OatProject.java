@@ -95,11 +95,11 @@ public class OatProject {
         this.fileFilterObj = fileFilterObj;
     }
 
-    public OatPolicy getOhosPolicy() {
+    public OatPolicy getOatPolicy() {
         return this.oatPolicy;
     }
 
-    public void setOhosPolicy(final OatPolicy oatPolicy) {
+    public void setOatPolicy(final OatPolicy oatPolicy) {
         this.oatPolicy = oatPolicy;
     }
 
@@ -175,7 +175,7 @@ public class OatProject {
 
     @Override
     public String toString() {
-        return "OhosProject{" + "namne='" + this.name + '\'' + ", licenseFiles=" + Arrays.toString(this.licenseFiles)
+        return "OatProject{" + "namne='" + this.name + '\'' + ", licenseFiles=" + Arrays.toString(this.licenseFiles)
             + ", path='" + this.path + '\'' + ", fileFilter='" + this.fileFilter + '\'' + ", policy='" + this.policy
             + '\'' + '}';
     }

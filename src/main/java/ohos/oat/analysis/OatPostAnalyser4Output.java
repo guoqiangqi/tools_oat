@@ -89,8 +89,8 @@ public class OatPostAnalyser4Output implements IDocumentAnalyser {
 
         final MetaData metaData = document.getMetaData();
         final String baseDir = this.oatConfig.getBasedir();
-        final OatProject oatProject = document.getOhosProject();
-        final OatPolicy oatPolicy = oatProject.getOhosPolicy();
+        final OatProject oatProject = document.getOatProject();
+        final OatPolicy oatPolicy = oatProject.getOatPolicy();
         String prjPath = oatProject.getPath();
         if (this.oatConfig.isPluginMode()) {
             prjPath = "";
@@ -296,7 +296,7 @@ public class OatPostAnalyser4Output implements IDocumentAnalyser {
             }
         }
 
-        for (final String filePathFilterItem : fileFilter.getOhosFilePathFilterItems()) {
+        for (final String filePathFilterItem : fileFilter.getOatFilePathFilterItems()) {
             // 用从根目录开始的路径匹配，如果匹配成功，则本策略要忽略此文件，故返回false
             final Pattern pattern = Pattern.compile(filePathFilterItem, Pattern.CASE_INSENSITIVE);
             final boolean needFilter = pattern.matcher(fullPathFromBasedir).matches();
@@ -393,7 +393,7 @@ public class OatPostAnalyser4Output implements IDocumentAnalyser {
         String piPath = policyItem.getPath();
         if ("projectroot".equals(piPath)) {
             // in default OAT.xml
-            piPath = subject.getOhosProject().getPath();
+            piPath = subject.getOatProject().getPath();
         }
         final boolean canusepath = !piPath.startsWith("!");
         final OatFileFilter fileFilter = policyItem.getFileFilterObj();
@@ -404,7 +404,7 @@ public class OatPostAnalyser4Output implements IDocumentAnalyser {
         String fullPathFromBasedir = OatCfgUtil.getShortPath(this.oatConfig, subjectname);
 
         if (this.oatConfig.isPluginMode()) {
-            fullPathFromBasedir = subject.getOhosProject().getPath() + fullPathFromBasedir;
+            fullPathFromBasedir = subject.getOatProject().getPath() + fullPathFromBasedir;
         }
         String fileName = shortFilePathUnderPrj;
         if (shortFilePathUnderPrj.indexOf("/") >= 0) {
@@ -438,7 +438,7 @@ public class OatPostAnalyser4Output implements IDocumentAnalyser {
                     piPath = piPath.substring(1);
                 } catch (final Exception e) {
                     OatLogUtil.warn(this.getClass().getSimpleName(),
-                        subject.getOhosProject().getPath() + "\tisMatched failed\t" + shortFilePathUnderPrj);
+                        subject.getOatProject().getPath() + "\tisMatched failed\t" + shortFilePathUnderPrj);
                     OatLogUtil.traceException(e);
                 }
 
@@ -488,7 +488,7 @@ public class OatPostAnalyser4Output implements IDocumentAnalyser {
 
     private void checkFileInDir(final OatFileDocument subject, final String filePath,
         final List<OatPolicyItem> fileNamePolicyItems, final String policyFileName, final String outputName) {
-        final List<String> list = subject.getOhosProject().getProjectFileDocument().getListData(policyFileName);
+        final List<String> list = subject.getOatProject().getProjectFileDocument().getListData(policyFileName);
         final String thisDir = OatCfgUtil.getShortPath(this.oatConfig, subject.getName() + "/");
         String name = "";
         if (list != null && list.size() > 0) {

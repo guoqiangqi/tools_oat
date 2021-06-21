@@ -98,11 +98,11 @@ public class OatFileDocument extends FileDocument {
         this.isDirectory = directory;
     }
 
-    public OatProject getOhosProject() {
+    public OatProject getOatProject() {
         return this.oatProject;
     }
 
-    public void setOhosProject(final OatProject oatProject) {
+    public void setOatProject(final OatProject oatProject) {
         this.oatProject = oatProject;
         this.getMetaData().set(new MetaData.Datum("ProjectName", oatProject.getName()));
     }

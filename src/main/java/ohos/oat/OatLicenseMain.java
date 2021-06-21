@@ -193,7 +193,7 @@ public class OatLicenseMain {
         if (cmd.hasOption("g")) {
             oatConfig.putData("IgnoreProjectOAT", "true");
         }
-        OatCfgUtil.initOhosConfig(oatConfig, initOATCfgFile, sourceCodeRepoPath);
+        OatCfgUtil.initOatConfig(oatConfig, initOATCfgFile, sourceCodeRepoPath);
         OatSpdxLicenseUtil.initSpdxLicenseList(oatConfig);
 
         OatLicenseMain.oatCheck(reportFile, oatConfig);
