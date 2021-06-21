@@ -27,7 +27,7 @@ import org.apache.rat.api.MetaData;
  * @author chenyaxun
  * @since 1.0
  */
-public class CurlLicense extends OhosDefaultSimplePatternLicenseMatcher {
+public class CurlLicense extends OatDefaultSimplePatternLicenseMatcher {
     public CurlLicense() {
         super(new MetaData.Datum(RAT_URL_LICENSE_FAMILY_CATEGORY, "curl"),
             new MetaData.Datum(RAT_URL_LICENSE_FAMILY_NAME, "curl"), "",

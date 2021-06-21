@@ -27,7 +27,7 @@ import org.apache.rat.api.MetaData;
  * @author chenyaxun
  * @since 1.0
  */
-public class LGPLLicense extends OhosDefaultFullTextLicenseMatcher {
+public class LGPLLicense extends OatDefaultFullTextLicenseMatcher {
     private static final String LICENSE_LINE_1 = "This library is free software; you can redistribute it and/or "
         + "modify it under the terms of the GNU Library General Public "
         + "License as published by the Free Software Foundation; either "

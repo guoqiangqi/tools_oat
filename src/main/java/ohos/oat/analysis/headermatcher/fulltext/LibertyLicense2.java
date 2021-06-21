@@ -27,7 +27,7 @@ import org.apache.rat.api.MetaData;
  * @author chenyaxun
  * @since 1.0
  */
-public class LibertyLicense2 extends OhosDefaultFullTextLicenseMatcher {
+public class LibertyLicense2 extends OatDefaultFullTextLicenseMatcher {
     private static final String LICENSE_LINE_1
         = "Licensed under MCD-ST Liberty SW License Agreement V2, (the \"License\");";
 

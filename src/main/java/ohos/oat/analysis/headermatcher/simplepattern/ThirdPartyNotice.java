@@ -27,7 +27,7 @@ import org.apache.rat.api.MetaData;
  * @author chenyaxun
  * @since 1.0
  */
-public class ThirdPartyNotice extends OhosDefaultSimplePatternLicenseMatcher {
+public class ThirdPartyNotice extends OatDefaultSimplePatternLicenseMatcher {
     public ThirdPartyNotice() {
         super(new MetaData.Datum(RAT_URL_LICENSE_FAMILY_CATEGORY, "ThirdPartyNotice"),
             new MetaData.Datum(RAT_URL_LICENSE_FAMILY_NAME, "ThirdPartyNotice"), "", new String[] {

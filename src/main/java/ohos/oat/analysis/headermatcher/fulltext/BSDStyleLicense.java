@@ -19,7 +19,7 @@ package ohos.oat.analysis.headermatcher.fulltext;
 import static org.apache.rat.api.MetaData.RAT_URL_LICENSE_FAMILY_CATEGORY;
 import static org.apache.rat.api.MetaData.RAT_URL_LICENSE_FAMILY_NAME;
 
-import ohos.oat.analysis.headermatcher.OhosMatchUtils;
+import ohos.oat.analysis.headermatcher.OatMatchUtils;
 
 import org.apache.rat.api.MetaData;
 
@@ -29,7 +29,7 @@ import org.apache.rat.api.MetaData;
  * @author chenyaxun
  * @since 1.0
  */
-public class BSDStyleLicense extends OhosDefaultFullTextLicenseMatcher {
+public class BSDStyleLicense extends OatDefaultFullTextLicenseMatcher {
     private static final String LICENSE_LINE_1 = "BSD-style license";
 
     public BSDStyleLicense() {
@@ -39,6 +39,6 @@ public class BSDStyleLicense extends OhosDefaultFullTextLicenseMatcher {
 
     @Override
     protected boolean stopWhileMatched(final String licenseName) {
-        return OhosMatchUtils.stopWhileMatchedAny(licenseName);
+        return OatMatchUtils.stopWhileMatchedAny(licenseName);
     }
 }

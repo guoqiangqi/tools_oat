@@ -19,7 +19,7 @@ package ohos.oat.analysis.headermatcher.simplepattern;
 import static org.apache.rat.api.MetaData.RAT_URL_LICENSE_FAMILY_CATEGORY;
 import static org.apache.rat.api.MetaData.RAT_URL_LICENSE_FAMILY_NAME;
 
-import ohos.oat.analysis.headermatcher.OhosSimplePatternLicenseMatcher;
+import ohos.oat.analysis.headermatcher.OatSimplePatternLicenseMatcher;
 
 import org.apache.rat.analysis.RatHeaderAnalysisException;
 import org.apache.rat.api.Document;
@@ -31,7 +31,7 @@ import org.apache.rat.api.MetaData;
  * @author chenyaxun
  * @since 1.0
  */
-public class InvalidLicense extends OhosSimplePatternLicenseMatcher {
+public class InvalidLicense extends OatSimplePatternLicenseMatcher {
     private int line;
 
     public InvalidLicense() {

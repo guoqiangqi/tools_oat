@@ -27,7 +27,7 @@ import org.apache.rat.api.MetaData;
  * @author chenyaxun
  * @since 1.0
  */
-public class ZlibLicense extends OhosDefaultFullTextLicenseMatcher {
+public class ZlibLicense extends OatDefaultFullTextLicenseMatcher {
     private static final String LICENSE_LINE_1 =
         "This software is provided 'as-is', without any express or implied warranty. In no event will "
             + "the authors be "
