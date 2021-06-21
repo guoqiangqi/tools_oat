@@ -27,7 +27,7 @@ import org.apache.rat.api.MetaData;
  * @author chenyaxun
  * @since 1.0
  */
-public class GPL2License2 extends OhosDefaultSimplePatternLicenseMatcher {
+public class GPL2License2 extends OatDefaultSimplePatternLicenseMatcher {
     public GPL2License2() {
         super(new MetaData.Datum(RAT_URL_LICENSE_FAMILY_CATEGORY, "GPL-2.0+"),
             new MetaData.Datum(RAT_URL_LICENSE_FAMILY_NAME, "GPL-2.0+"), "", new String[] {

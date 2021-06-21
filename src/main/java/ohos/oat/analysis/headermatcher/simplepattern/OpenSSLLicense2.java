@@ -27,7 +27,7 @@ import org.apache.rat.api.MetaData;
  * @author chenyaxun
  * @since 1.0
  */
-public class OpenSSLLicense2 extends OhosDefaultSimplePatternLicenseMatcher {
+public class OpenSSLLicense2 extends OatDefaultSimplePatternLicenseMatcher {
     public OpenSSLLicense2() {
         super(new MetaData.Datum(RAT_URL_LICENSE_FAMILY_CATEGORY, "OpenSSL"),
             new MetaData.Datum(RAT_URL_LICENSE_FAMILY_NAME, "OpenSSL"), "",

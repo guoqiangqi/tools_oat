@@ -27,7 +27,7 @@ import org.apache.rat.api.MetaData;
  * @author chenyaxun
  * @since 1.0
  */
-public class MITLicense1 extends OhosDefaultSimplePatternLicenseMatcher {
+public class MITLicense1 extends OatDefaultSimplePatternLicenseMatcher {
     public MITLicense1() {
         super(new MetaData.Datum(RAT_URL_LICENSE_FAMILY_CATEGORY, "MIT"),
             new MetaData.Datum(RAT_URL_LICENSE_FAMILY_NAME, "MIT"), "", new String[] {

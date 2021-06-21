@@ -27,7 +27,7 @@ import org.apache.rat.api.MetaData;
  * @author chenyaxun
  * @since 1.0
  */
-public class OpenSSLLicense extends OhosDefaultFullTextLicenseMatcher {
+public class OpenSSLLicense extends OatDefaultFullTextLicenseMatcher {
     private static final String LICENSE_LINE_1
         = "Licensed under the OpenSSL license (the \"License\").  You may not use";
 

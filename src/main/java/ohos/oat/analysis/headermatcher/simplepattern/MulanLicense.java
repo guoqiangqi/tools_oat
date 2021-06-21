@@ -27,7 +27,7 @@ import org.apache.rat.api.MetaData;
  * @author chenyaxun
  * @since 1.0
  */
-public class MulanLicense extends OhosDefaultSimplePatternLicenseMatcher {
+public class MulanLicense extends OatDefaultSimplePatternLicenseMatcher {
     public MulanLicense() {
         super(new MetaData.Datum(RAT_URL_LICENSE_FAMILY_CATEGORY, "MulanPSL-2.0"),
             new MetaData.Datum(RAT_URL_LICENSE_FAMILY_NAME, "MulanPSL-2.0"), "", new String[] {

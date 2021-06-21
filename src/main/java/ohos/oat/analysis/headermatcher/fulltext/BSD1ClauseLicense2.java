@@ -27,7 +27,7 @@ import org.apache.rat.api.MetaData;
  * @author chenyaxun
  * @since 1.0
  */
-public class BSD1ClauseLicense2 extends OhosDefaultFullTextLicenseMatcher {
+public class BSD1ClauseLicense2 extends OatDefaultFullTextLicenseMatcher {
     private static final String LICENSE_LINE_1 =
         "in source and binary forms, with or without modification, are permitted provided that the following"
             + " condition is met:";

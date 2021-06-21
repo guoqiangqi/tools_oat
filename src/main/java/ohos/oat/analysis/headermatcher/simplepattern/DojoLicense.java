@@ -27,7 +27,7 @@ import org.apache.rat.api.MetaData;
  * @author chenyaxun
  * @since 1.0
  */
-public class DojoLicense extends OhosDefaultSimplePatternLicenseMatcher {
+public class DojoLicense extends OatDefaultSimplePatternLicenseMatcher {
     public DojoLicense() {
         super(new MetaData.Datum(RAT_URL_LICENSE_FAMILY_CATEGORY, "DojoLicense"),
             new MetaData.Datum(RAT_URL_LICENSE_FAMILY_NAME, "DojoLicense"), "",

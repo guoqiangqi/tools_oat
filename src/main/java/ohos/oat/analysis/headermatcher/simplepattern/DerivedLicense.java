@@ -29,7 +29,7 @@ import org.apache.rat.api.MetaData;
  * @author chenyaxun
  * @since 1.0
  */
-public class DerivedLicense extends OhosDefaultSimplePatternLicenseMatcher {
+public class DerivedLicense extends OatDefaultSimplePatternLicenseMatcher {
     public DerivedLicense() {
         super(new MetaData.Datum(RAT_URL_LICENSE_FAMILY_CATEGORY, "DerivedLicense"),
             new MetaData.Datum(RAT_URL_LICENSE_FAMILY_NAME, "DerivedLicense"), "", new String[] {

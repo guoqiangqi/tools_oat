@@ -27,7 +27,7 @@ import org.apache.rat.api.MetaData;
  * @author chenyaxun
  * @since 1.0
  */
-public class EndUserLicenseAgreement extends OhosDefaultSimplePatternLicenseMatcher {
+public class EndUserLicenseAgreement extends OatDefaultSimplePatternLicenseMatcher {
     public EndUserLicenseAgreement() {
         super(new MetaData.Datum(RAT_URL_LICENSE_FAMILY_CATEGORY, "EndUserLicenseAgreement"),
             new MetaData.Datum(RAT_URL_LICENSE_FAMILY_NAME, "EndUserLicenseAgreement"), "",

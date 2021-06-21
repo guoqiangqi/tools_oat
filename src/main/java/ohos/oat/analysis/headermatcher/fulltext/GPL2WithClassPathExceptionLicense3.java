@@ -27,7 +27,7 @@ import org.apache.rat.api.MetaData;
  * @author chenyaxun
  * @since 1.0
  */
-public class GPL2WithClassPathExceptionLicense3 extends OhosDefaultFullTextLicenseMatcher {
+public class GPL2WithClassPathExceptionLicense3 extends OatDefaultFullTextLicenseMatcher {
     private static final String FIRST_LICENSE_LINE =
         "This code is free software; you can redistribute it and/or modify it "
             + " under the terms of the GNU General Public License version 2 only, as "
