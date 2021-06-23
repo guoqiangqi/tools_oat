@@ -38,10 +38,10 @@
     8. filefilter: Filter rules, the type filename is used to filter file name, the type filepath is used to filter file path.
 
     Note:If the text contains special characters, please escape them according to the following rules:
-    " == &gt;
-    & == &gt;
-    ' == &gt;
-    < == &gt;
+    " == &quot;
+    & == &amp;
+    ' == &apos;
+    < == &lt;
     > == &gt;
 -->
 
