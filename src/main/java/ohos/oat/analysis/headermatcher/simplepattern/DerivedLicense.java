@@ -46,11 +46,11 @@ public class DerivedLicense extends OatDefaultSimplePatternLicenseMatcher {
             // this.setLicenseFamilyName(licenseName);
             final boolean matched = super.match(pSubject, pLine);
             if (matched) {
-                return false;
+                return true;
             }
             return false;
         } else {
-            return false;
+            return true;
         }
     }
 

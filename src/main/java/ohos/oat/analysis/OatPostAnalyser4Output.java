@@ -168,7 +168,7 @@ public class OatPostAnalyser4Output implements IDocumentAnalyser {
             this.verifyFileType(document, oatPolicy, shortFileUnderProject);
         }
 
-        if (!docType.equals("standard")) {
+        if (docType == null || !docType.equals("standard")) {
             return;
         }
 

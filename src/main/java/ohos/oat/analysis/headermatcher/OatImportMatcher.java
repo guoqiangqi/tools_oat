@@ -36,7 +36,7 @@ public class OatImportMatcher implements IOatHeaderMatcher {
     public boolean match(final Document subject, final String licensHeaderText) throws RatHeaderAnalysisException {
         this.line++;
         if (this.line > 80) {
-            return false;
+            return true;
         }
         final MetaData metaData = subject.getMetaData();
         String tmp = metaData.value("import-name");

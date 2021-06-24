@@ -375,14 +375,15 @@ public class OatLicenseMain {
 
         // add files in the base dir but not defined in tasklist in oat config file to allfiles list
         OatLicenseMain.readFiles(rootfile, allfiles, definedfiles);
-
         final File missedFiles = new File(resultfolder + "/oat_missed_files.txt");
-        final FileWriter fileWriter = new FileWriter(missedFiles);
-        for (final String allfile : allfiles) {
-            fileWriter.write(allfile + "\n");
+        try (final FileWriter fileWriter = new FileWriter(missedFiles)) {
+            for (final String allfile : allfiles) {
+                fileWriter.write(allfile + "\n");
+            }
+            fileWriter.flush();
+        } catch (final Exception ex) {
+            OatLogUtil.traceException(ex);
         }
-        fileWriter.flush();
-        fileWriter.close();
     }
 
     /**

@@ -72,6 +72,9 @@ public final class OatCfgUtil {
                 filepath = filepath + "/";
             }
             final String tmpFilepath = OatCfgUtil.formatPath(filepath);
+            if (tmpFilepath == null) {
+                return "";
+            }
             return tmpFilepath.replace(oatConfig.getBasedir(), "");
         } catch (final IOException e) {
             OatLogUtil.traceException(e);
@@ -101,6 +104,9 @@ public final class OatCfgUtil {
      */
     public static String getShortPath(final OatConfig oatConfig, final String filepath) {
         final String tmpFilepath = OatCfgUtil.formatPath(filepath);
+        if (tmpFilepath == null) {
+            return "";
+        }
         return tmpFilepath.replace(oatConfig.getBasedir(), "");
     }
 
