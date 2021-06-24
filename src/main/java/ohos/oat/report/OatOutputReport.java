@@ -74,7 +74,7 @@ public class OatOutputReport implements RatReport {
      * Constructor
      *
      * @param writer FilterWriter to write result text
-     * @param oatConfig Ohos config  information data structure
+     * @param oatConfig Oat config  information data structure
      */
     public OatOutputReport(final FileWriter writer, final OatConfig oatConfig) {
         this.writer = writer;
@@ -190,7 +190,7 @@ public class OatOutputReport implements RatReport {
 
     @Override
     public String toString() {
-        return "OhosOutputReport{" + "archiveList=" + this.archiveList + ", compatibilityList=" + this.compatibilityList
+        return "OatOutputReport{" + "archiveList=" + this.archiveList + ", compatibilityList=" + this.compatibilityList
             + ", licenseHeaderList=" + this.licenseHeaderList + ", copyrightHeaderList=" + this.copyrightHeaderList
             + ", licenseFileList=" + this.licenseFileList + ", readmeOpenSourceList=" + this.readmeOpenSourceList
             + ", readmeList=" + this.readmeList + ", importList=" + this.importList + ", redundantLicenseList="
@@ -214,7 +214,7 @@ public class OatOutputReport implements RatReport {
             this.content = content;
             this.line = line;
             this.file = oatFileDocument.getName();
-            this.project = oatFileDocument.getOhosProject().getName();
+            this.project = oatFileDocument.getOatProject().getName();
         }
 
         @Override

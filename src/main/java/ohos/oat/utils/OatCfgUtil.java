@@ -105,14 +105,14 @@ public final class OatCfgUtil {
     }
 
     /**
-     * Read OAT config file and init OhosConfig data structure
+     * Read OAT config file and init OatConfig data structure
      *
-     * @param oatConfig Ohosconfig data structure to be initiate
+     * @param oatConfig OatConfig data structure to be initiate
      * @param defaultOatConfigFilePath OAT config file path
      * @param rootDir Root dir, while the run mode is plugin, this parameter is the single project root dir, otherwise
      * it is empty
      */
-    public static void initOhosConfig(final OatConfig oatConfig, final String defaultOatConfigFilePath,
+    public static void initOatConfig(final OatConfig oatConfig, final String defaultOatConfigFilePath,
         final String rootDir) {
         final XMLConfiguration xmlconfig = OatCfgUtil.getXmlConfiguration(defaultOatConfigFilePath);
 
@@ -252,10 +252,10 @@ public final class OatCfgUtil {
 
     private static void initFilterItems2Policy(final OatProject oatProject, final OatFileFilter oatFileFilter) {
         // Merge filter items to policy filter
-        if (!(oatProject != null && oatProject.getOhosPolicy() != null)) {
+        if (!(oatProject != null && oatProject.getOatPolicy() != null)) {
             return;
         }
-        for (final OatPolicyItem allPolicyItem : oatProject.getOhosPolicy().getAllPolicyItems()) {
+        for (final OatPolicyItem allPolicyItem : oatProject.getOatPolicy().getAllPolicyItems()) {
             if (allPolicyItem.getFileFilter().equals(oatFileFilter.getName())) {
                 final OatFileFilter fileFilter = allPolicyItem.getFileFilterObj();
                 if (fileFilter != null) {
@@ -331,8 +331,8 @@ public final class OatCfgUtil {
                 oatPolicyItem.setDesc(OatCfgUtil.getElementAttrValue(policyitemCfg, "desc"));
                 if (oatProject != null) {
                     // Project OAT XML
-                    oatPolicyItem.setFileFilterObj(oatConfig.getOhosFileFilter(oatPolicyItem.getFileFilter()));
-                    oatProject.getOhosPolicy().addPolicyItem(oatPolicyItem);
+                    oatPolicyItem.setFileFilterObj(oatConfig.getOatFileFilter(oatPolicyItem.getFileFilter()));
+                    oatProject.getOatPolicy().addPolicyItem(oatPolicyItem);
                     if (oatProject != null) {
                         // Project OAT XML
                         OatLogUtil.logOatConfig(OatCfgUtil.class.getSimpleName(),

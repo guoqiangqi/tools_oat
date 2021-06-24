@@ -19,8 +19,13 @@
 
 package ohos.oat.analysis.headermatcher;
 
+import ohos.oat.utils.OatLogUtil;
+
 import org.apache.rat.api.Document;
 import org.apache.rat.api.MetaData;
+
+import java.util.regex.Pattern;
+import java.util.regex.PatternSyntaxException;
 
 /**
  * Stateless utility class for determining whether to continue matching.
@@ -100,5 +105,26 @@ public class OatMatchUtils {
         metaData.set(new MetaData.Datum(MetaData.RAT_URL_HEADER_CATEGORY, newName));
         metaData.set(new MetaData.Datum(MetaData.RAT_URL_LICENSE_FAMILY_CATEGORY, newName));
         metaData.set(new MetaData.Datum(MetaData.RAT_URL_LICENSE_FAMILY_NAME, newName));
+    }
+
+    public static Pattern compilePattern(final String patternStr) {
+        if (null == patternStr || patternStr.trim().length() <= 0) {
+            return null;
+        }
+        final Pattern pattern;
+        try {
+            pattern = Pattern.compile(patternStr, Pattern.CASE_INSENSITIVE);
+        } catch (final PatternSyntaxException e) {
+            OatLogUtil.traceException(e);
+            return null;
+        }
+        return pattern;
+    }
+
+    public static boolean matchPattern(final String strToMatch, final Pattern pattern) {
+        if (strToMatch == null || strToMatch.trim().length() <= 0) {
+            return false;
+        }
+        return pattern.matcher(strToMatch).matches();
     }
 }

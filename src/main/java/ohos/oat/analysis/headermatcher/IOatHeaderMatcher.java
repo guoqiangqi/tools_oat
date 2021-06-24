@@ -22,7 +22,7 @@ package ohos.oat.analysis.headermatcher;
 import org.apache.rat.analysis.IHeaderMatcher;
 
 /**
- * New ohos matcher interface to support return the header matcher id.
+ * New oat matcher interface to support return the header matcher id.
  *
  * @author chenyaxun
  * @since 1.0

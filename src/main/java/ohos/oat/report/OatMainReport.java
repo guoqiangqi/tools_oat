@@ -69,7 +69,7 @@ public class OatMainReport implements IOatReport {
     /**
      * Constructor
      *
-     * @param oatConfig ohos config information
+     * @param oatConfig oat config information
      * @param writer filewriter to write report
      */
     public OatMainReport(final OatConfig oatConfig, final FileWriter writer) {

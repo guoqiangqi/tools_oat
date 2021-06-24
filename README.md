@@ -262,10 +262,10 @@ to identify the licenses. In this case, you can define the matching rule as foll
 2. **licensetext name**: specifies the license text. The license text can be displayed in a new line, but special characters must be escaped based on the following rules:
 
 ```
-" == &gt;
-& == &gt;
-' == &gt;
-< == &gt;
+" == &quot;
+& == &amp;
+' == &apos;
+< == &lt;
 > == &gt;
 ```
 

@@ -38,10 +38,10 @@
     8. filefilter: Filter rules, the type filename is used to filter file name, the type filepath is used to filter file path.
 
     Note:If the text contains special characters, please escape them according to the following rules:
-    " == &gt;
-    & == &gt;
-    ' == &gt;
-    < == &gt;
+    " == &quot;
+    & == &amp;
+    ' == &apos;
+    < == &lt;
     > == &gt;
 -->
 
@@ -63,6 +63,7 @@
                 <filteritem type="filepath" name="out/.*" desc="Compile output files"/>
                 <filteritem type="filepath" name="log/.*" desc="log files"/>
                 <filteritem type="filepath" name=".idea/.*" desc="IDE temp files"/>
+                <filteritem type="filepath" name="projectroot/[a-zA-Z0-9]{20,}.sh" desc="Temp files"/>
             </filefilter>
             <filefilter name="defaultPolicyFilter" desc="Filters for compatibility，license header policies">
                 <filteritem type="filepath" name="src/main/java/ohos/oat/analysis/headermatcher/.*" desc="License matcher rules, not license header"/>

@@ -26,6 +26,7 @@
 
 package ohos.oat.report;
 
+import ohos.oat.analysis.headermatcher.OatMatchUtils;
 import ohos.oat.config.OatConfig;
 import ohos.oat.config.OatProject;
 import ohos.oat.document.OatFileDocument;
@@ -54,17 +55,17 @@ public class OatDirectoryWalker extends Walker {
     // FileComparator to sort projects
     private final FileNameComparator COMPARATOR = new FileNameComparator();
 
-    // Ohos project of this walker
+    // project of this walker
     private final OatProject oatProject;
 
-    // Ohos config of this process
+    // config of this process
     private final OatConfig oatConfig;
 
     /**
      * Constructor method
      *
-     * @param oatConfig Ohos config of this process
-     * @param oatProject Ohos project of this walker
+     * @param oatConfig Oat config of this process
+     * @param oatProject Oat project of this walker
      * @param projectRootDir Root dir of current scanning project
      * @param filter Filter information
      */
@@ -123,9 +124,9 @@ public class OatDirectoryWalker extends Walker {
             shortPath = this.oatProject.getPath() + shortPath;
         }
 
-        final List<String> ohosFilePathFilterItems = this.oatProject.getFileFilterObj().getOhosFilePathFilterItems();
-        for (final String ohosFilePathFilterItem : ohosFilePathFilterItems) {
-            String piPath = ohosFilePathFilterItem;
+        final List<String> oatFilePathFilterItems = this.oatProject.getFileFilterObj().getOatFilePathFilterItems();
+        for (final String oatFilePathFilterItem : oatFilePathFilterItems) {
+            String piPath = oatFilePathFilterItem;
             if (piPath.startsWith("projectroot/")) {
                 piPath = piPath.replace("projectroot/", this.oatProject.getPath());
             }
@@ -139,8 +140,11 @@ public class OatDirectoryWalker extends Walker {
                 }
                 return false;
             }
-            final Pattern pattern = Pattern.compile(piPath, Pattern.CASE_INSENSITIVE);
-            final boolean needFilter = pattern.matcher(shortPath).matches();
+            final Pattern pattern = OatMatchUtils.compilePattern(piPath);
+            if (pattern == null) {
+                return true;
+            }
+            final boolean needFilter = OatMatchUtils.matchPattern(shortPath, pattern);
             if (needFilter) {
                 if (this.oatConfig.getData("TraceSkippedAndIgnoredFiles").equals("true")) {
                     OatLogUtil.warn(this.getClass().getSimpleName(),
@@ -239,7 +243,7 @@ public class OatDirectoryWalker extends Walker {
             return;
         }
         final OatFileDocument document = new OatFileDocument(file);
-        document.setOhosProject(this.oatProject);
+        document.setOatProject(this.oatProject);
         if (this.file.getPath().equals(file.getPath())) {
             document.setProjectRoot(true);
             this.oatProject.setProjectFileDocument(document);
@@ -266,11 +270,11 @@ public class OatDirectoryWalker extends Walker {
             final File file1 = new File(licensepath);
             if (file1.exists() && this.needCheck(file) && this.notFilteredFile(file)) {
                 final String licensefilename = OatCfgUtil.getShortPath(this.oatConfig, file1);
-                if (!document.getOhosProject()
+                if (!document.getOatProject()
                     .getProjectFileDocument()
                     .getListData("LICENSEFILE")
                     .contains(licensefilename)) {
-                    document.getOhosProject().getProjectFileDocument().addListData("LICENSEFILE", licensefilename);
+                    document.getOatProject().getProjectFileDocument().addListData("LICENSEFILE", licensefilename);
                 }
             }
         }
@@ -284,16 +288,16 @@ public class OatDirectoryWalker extends Walker {
                 if (fileName.startsWith("LICENSE") || fileName.startsWith("LICENCE") || (fileName.startsWith("NOTICE"))
                     || (fileName.startsWith("COPYING")) || (fileName.startsWith("COPYRIGHT")) || (shotFileName.contains(
                     "licenseagreement")) || (shotFileName.contains("licenceagreement"))) {
-                    document.getOhosProject()
+                    document.getOatProject()
                         .getProjectFileDocument()
                         .addListData("LICENSEFILE", OatCfgUtil.getShortPath(this.oatConfig, file1));
                 } else if (fileName.equals("README.OpenSource")) {
-                    document.getOhosProject()
+                    document.getOatProject()
                         .getProjectFileDocument()
                         .addListData("README.OpenSource", OatCfgUtil.getShortPath(this.oatConfig, file1));
                 } else if (fileName.equals("README") || fileName.equals("README.md") || fileName.equals(
                     "README_zh.md")) {
-                    document.getOhosProject()
+                    document.getOatProject()
                         .getProjectFileDocument()
                         .addListData("README", OatCfgUtil.getShortPath(this.oatConfig, file1));
                 } else {

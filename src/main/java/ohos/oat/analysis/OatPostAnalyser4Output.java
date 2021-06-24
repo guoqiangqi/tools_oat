@@ -31,6 +31,7 @@ package ohos.oat.analysis;
 import static org.apache.rat.api.MetaData.RAT_URL_DOCUMENT_CATEGORY;
 import static org.apache.rat.api.MetaData.RAT_URL_LICENSE_FAMILY_NAME;
 
+import ohos.oat.analysis.headermatcher.OatMatchUtils;
 import ohos.oat.config.OatConfig;
 import ohos.oat.config.OatFileFilter;
 import ohos.oat.config.OatMetaData;
@@ -89,8 +90,8 @@ public class OatPostAnalyser4Output implements IDocumentAnalyser {
 
         final MetaData metaData = document.getMetaData();
         final String baseDir = this.oatConfig.getBasedir();
-        final OatProject oatProject = document.getOhosProject();
-        final OatPolicy oatPolicy = oatProject.getOhosPolicy();
+        final OatProject oatProject = document.getOatProject();
+        final OatPolicy oatPolicy = oatProject.getOatPolicy();
         String prjPath = oatProject.getPath();
         if (this.oatConfig.isPluginMode()) {
             prjPath = "";
@@ -284,11 +285,15 @@ public class OatPostAnalyser4Output implements IDocumentAnalyser {
                 Pattern pattern = null;
                 try {
                     fileFilterItem = fileFilterItem.replace("*", ".*");
-                    pattern = Pattern.compile(fileFilterItem, Pattern.CASE_INSENSITIVE);
+                    pattern = OatMatchUtils.compilePattern(fileFilterItem);
                 } catch (final Exception e) {
                     OatLogUtil.traceException(e);
+                    return false;
                 }
-                final boolean needFilter = pattern.matcher(fileName).matches();
+                if (pattern == null) {
+                    return false;
+                }
+                final boolean needFilter = OatMatchUtils.matchPattern(fileName, pattern);
                 if (needFilter) {
                     // need add reason desc to print all message in output file future
                     return true;
@@ -296,10 +301,13 @@ public class OatPostAnalyser4Output implements IDocumentAnalyser {
             }
         }
 
-        for (final String filePathFilterItem : fileFilter.getOhosFilePathFilterItems()) {
+        for (final String filePathFilterItem : fileFilter.getOatFilePathFilterItems()) {
             // 用从根目录开始的路径匹配，如果匹配成功，则本策略要忽略此文件，故返回false
-            final Pattern pattern = Pattern.compile(filePathFilterItem, Pattern.CASE_INSENSITIVE);
-            final boolean needFilter = pattern.matcher(fullPathFromBasedir).matches();
+            final Pattern pattern = OatMatchUtils.compilePattern(filePathFilterItem);
+            if (pattern == null) {
+                return false;
+            }
+            final boolean needFilter = OatMatchUtils.matchPattern(fullPathFromBasedir, pattern);
             if (needFilter) {
                 // need add reason desc to print all message in output file future
                 return true;
@@ -393,7 +401,7 @@ public class OatPostAnalyser4Output implements IDocumentAnalyser {
         String piPath = policyItem.getPath();
         if ("projectroot".equals(piPath)) {
             // in default OAT.xml
-            piPath = subject.getOhosProject().getPath();
+            piPath = subject.getOatProject().getPath();
         }
         final boolean canusepath = !piPath.startsWith("!");
         final OatFileFilter fileFilter = policyItem.getFileFilterObj();
@@ -404,7 +412,7 @@ public class OatPostAnalyser4Output implements IDocumentAnalyser {
         String fullPathFromBasedir = OatCfgUtil.getShortPath(this.oatConfig, subjectname);
 
         if (this.oatConfig.isPluginMode()) {
-            fullPathFromBasedir = subject.getOhosProject().getPath() + fullPathFromBasedir;
+            fullPathFromBasedir = subject.getOatProject().getPath() + fullPathFromBasedir;
         }
         String fileName = shortFilePathUnderPrj;
         if (shortFilePathUnderPrj.indexOf("/") >= 0) {
@@ -438,15 +446,21 @@ public class OatPostAnalyser4Output implements IDocumentAnalyser {
                     piPath = piPath.substring(1);
                 } catch (final Exception e) {
                     OatLogUtil.warn(this.getClass().getSimpleName(),
-                        subject.getOhosProject().getPath() + "\tisMatched failed\t" + shortFilePathUnderPrj);
+                        subject.getOatProject().getPath() + "\tisMatched failed\t" + shortFilePathUnderPrj);
                     OatLogUtil.traceException(e);
                 }
 
-                final Pattern pattern = Pattern.compile(piPath, Pattern.CASE_INSENSITIVE);
-                mached = !pattern.matcher(fullPathFromBasedir).matches();
+                final Pattern pattern = OatMatchUtils.compilePattern(piPath);
+                if (pattern == null) {
+                    return false;
+                }
+                mached = !OatMatchUtils.matchPattern(fullPathFromBasedir, pattern);
             } else {
-                final Pattern pattern = Pattern.compile(piPath, Pattern.CASE_INSENSITIVE);
-                mached = pattern.matcher(fullPathFromBasedir).matches();
+                final Pattern pattern = OatMatchUtils.compilePattern(piPath);
+                if (pattern == null) {
+                    return false;
+                }
+                mached = OatMatchUtils.matchPattern(fullPathFromBasedir, pattern);
             }
             subject.putData("MatchResult:" + policyItem.getPath(), mached ? "true" : "false");
         }
@@ -488,7 +502,7 @@ public class OatPostAnalyser4Output implements IDocumentAnalyser {
 
     private void checkFileInDir(final OatFileDocument subject, final String filePath,
         final List<OatPolicyItem> fileNamePolicyItems, final String policyFileName, final String outputName) {
-        final List<String> list = subject.getOhosProject().getProjectFileDocument().getListData(policyFileName);
+        final List<String> list = subject.getOatProject().getProjectFileDocument().getListData(policyFileName);
         final String thisDir = OatCfgUtil.getShortPath(this.oatConfig, subject.getName() + "/");
         String name = "";
         if (list != null && list.size() > 0) {

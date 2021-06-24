@@ -35,7 +35,7 @@ import java.util.regex.Pattern;
  * @since 1.0
  */
 public class OatSpdxLabelLicenseMatcher extends BaseLicense implements IOatHeaderMatcher {
-    private final Pattern pattern = Pattern.compile("(SPDX-License-Identifier:(.*))", Pattern.CASE_INSENSITIVE);
+    private final Pattern pattern = OatMatchUtils.compilePattern("(SPDX-License-Identifier:(.*))");
 
     private int line;
 

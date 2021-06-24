@@ -187,7 +187,7 @@ public class OatProcessor {
             OatLogUtil.error(this.getClass().getSimpleName(), "Document invalid: " + fileDocument.getClass().getName());
         }
         this.oatConfig = oatConfig;
-        this.repoDisplayName = this.fileDocument.getOhosProject().getPath();
+        this.repoDisplayName = this.fileDocument.getOatProject().getPath();
         if (this.repoDisplayName.endsWith("/")) {
             this.repoDisplayName = this.repoDisplayName.substring(0, this.repoDisplayName.length() - 1);
         }
@@ -298,7 +298,7 @@ public class OatProcessor {
                     OatLicenseTextUtil.cleanAndLowerCaseLetter(licenseTxt)));
             }
         }
-        for (final Map.Entry<String, List<String>> stringListEntry : this.fileDocument.getOhosProject()
+        for (final Map.Entry<String, List<String>> stringListEntry : this.fileDocument.getOatProject()
             .getPrjLicenseText2NameMap()
             .entrySet()) {
             for (final String licenseTxt : stringListEntry.getValue()) {

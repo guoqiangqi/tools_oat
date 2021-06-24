@@ -90,7 +90,7 @@ public class OatLicense {
 
     @Override
     public String toString() {
-        return "OhosLicense{" + "licenseId='" + this.licenseId + '\'' + ", licenseHeaderTextLength="
+        return "OatLicense{" + "licenseId='" + this.licenseId + '\'' + ", licenseHeaderTextLength="
             + this.licenseHeaderTextLength + '}';
     }
 }
