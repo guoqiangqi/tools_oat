@@ -20,7 +20,7 @@
         <basedir>/home/OpenHarmony</basedir>
         <tasklist>
             <task name="defaultTask" policy="defaultPolicy" filefilter="defaultFilter" desc="">
-                <project name="defaultProject" path=""/>
+                <project name="defaultProject" path="defaultProject/"/>
             </task>
         </tasklist>
         <policylist>
