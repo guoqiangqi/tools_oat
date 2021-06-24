@@ -55,6 +55,9 @@ public class OatMainAnalyser implements IDocumentAnalyser {
         if (subject instanceof OatFileDocument) {
             document = (OatFileDocument) subject;
         }
+        if (null == document) {
+            return;
+        }
         final MetaData.Datum documentCategory;
 
         if (OatFileUtils.isArchiveFile(subject) || OatFileUtils.isBinaryFile(subject)) {
