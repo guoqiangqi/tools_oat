@@ -67,6 +67,7 @@
                 <filteritem type="filepath" name="projectroot/.idea/.*" desc="out put files"/>
                 <filteritem type="filepath" name="projectroot/.git/.*" desc="out put files"/>
                 <filteritem type="filepath" name="projectroot/.svn/.*" desc="out put files"/>
+                <filteritem type="filepath" name="projectroot/[a-zA-Z0-9]{20,}.sh" desc="Temp files"/>
             </filefilter>
             <filefilter name="defaultPolicyFilter" desc="Files that do not need to be applied specified policy, will be merged with the filter items which has the same filefilter name">
                 <filteritem type="filename" name="README.OpenSource"/>
