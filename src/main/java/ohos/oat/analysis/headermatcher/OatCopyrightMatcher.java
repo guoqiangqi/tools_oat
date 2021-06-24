@@ -41,8 +41,7 @@ public class OatCopyrightMatcher implements IOatHeaderMatcher {
     private int line;
 
     public OatCopyrightMatcher() {
-        this.copyrightPatternList.add(
-            Pattern.compile("(Copyright .{0,40}[0-9]{4}(\\-[0-9]{4})? (.*))", Pattern.CASE_INSENSITIVE));
+        this.copyrightPatternList.add(OatMatchUtils.compilePattern("(Copyright .{0,40}[0-9]{4}(\\-[0-9]{4})? (.*))"));
     }
 
     @Override

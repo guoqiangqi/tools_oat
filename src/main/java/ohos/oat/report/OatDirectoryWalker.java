@@ -26,6 +26,7 @@
 
 package ohos.oat.report;
 
+import ohos.oat.analysis.headermatcher.OatMatchUtils;
 import ohos.oat.config.OatConfig;
 import ohos.oat.config.OatProject;
 import ohos.oat.document.OatFileDocument;
@@ -139,8 +140,11 @@ public class OatDirectoryWalker extends Walker {
                 }
                 return false;
             }
-            final Pattern pattern = Pattern.compile(piPath, Pattern.CASE_INSENSITIVE);
-            final boolean needFilter = pattern.matcher(shortPath).matches();
+            final Pattern pattern = OatMatchUtils.compilePattern(piPath);
+            if (pattern == null) {
+                return true;
+            }
+            final boolean needFilter = OatMatchUtils.matchPattern(shortPath, pattern);
             if (needFilter) {
                 if (this.oatConfig.getData("TraceSkippedAndIgnoredFiles").equals("true")) {
                     OatLogUtil.warn(this.getClass().getSimpleName(),

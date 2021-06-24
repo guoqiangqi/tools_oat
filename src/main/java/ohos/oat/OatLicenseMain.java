@@ -71,7 +71,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.regex.PatternSyntaxException;
 
 /**
  * Main class of the license and copyright analyser
@@ -345,18 +344,13 @@ public class OatLicenseMain {
         final OrFileFilter orFilter = new OrFileFilter();
 
         for (final String exclude : excludes) {
-            try {
-                // skip comments
-                if (exclude.startsWith("#") || StringUtils.isEmpty(exclude)) {
-                    continue;
-                }
-
-                final String exclusion = exclude.trim();
-                orFilter.addFileFilter(new NameFileFilter(exclusion));
-                orFilter.addFileFilter(new WildcardFileFilter(exclusion));
-            } catch (final PatternSyntaxException e) {
+            // skip comments
+            if (exclude.startsWith("#") || StringUtils.isEmpty(exclude)) {
                 continue;
             }
+            final String exclusion = exclude.trim();
+            orFilter.addFileFilter(new NameFileFilter(exclusion));
+            orFilter.addFileFilter(new WildcardFileFilter(exclusion));
         }
         return new NotFileFilter(orFilter);
     }
