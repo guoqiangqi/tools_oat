@@ -64,7 +64,7 @@ import java.util.regex.Pattern;
  * @since 1.0
  */
 public class OatPostAnalyser4Output implements IDocumentAnalyser {
-    private static OatConfig oatConfig;
+    private final OatConfig oatConfig;
 
     /**
      * Constructor
@@ -72,7 +72,7 @@ public class OatPostAnalyser4Output implements IDocumentAnalyser {
      * @param initOatConfig Data structure with OAT.xml information
      */
     public OatPostAnalyser4Output(final OatConfig initOatConfig) {
-        oatConfig = initOatConfig;
+        this.oatConfig = initOatConfig;
     }
 
     @Override
@@ -218,7 +218,7 @@ public class OatPostAnalyser4Output implements IDocumentAnalyser {
         }
     }
 
-    private static ValidResult isValid(final Document subject, final String name, final OatPolicyItem policyItem) {
+    private ValidResult isValid(final Document subject, final String name, final OatPolicyItem policyItem) {
         final int tmp = 0; // 0:init,1:true,2:false
         String piName = policyItem.getName();
         final ValidResult validResult = new ValidResult(policyItem);
@@ -238,7 +238,7 @@ public class OatPostAnalyser4Output implements IDocumentAnalyser {
                 OatLogUtil.traceException(e);
                 return null;
             }
-            if (isPolicyOk(name, piName, policyItem.getType())) {
+            if (this.isPolicyOk(name, piName, policyItem.getType())) {
                 validResult.valid = 2;
             } else {
                 validResult.valid = 1;
@@ -246,7 +246,7 @@ public class OatPostAnalyser4Output implements IDocumentAnalyser {
             return validResult;
         }
 
-        if (isPolicyOk(name, piName, policyItem.getType())) {
+        if (this.isPolicyOk(name, piName, policyItem.getType())) {
             validResult.valid = 1;
         } else {
             // not contains piName true false
@@ -258,7 +258,7 @@ public class OatPostAnalyser4Output implements IDocumentAnalyser {
         return validResult;
     }
 
-    private static boolean isPolicyOk(final String name, final String piName, final String policyType) {
+    private boolean isPolicyOk(final String name, final String piName, final String policyType) {
         final boolean result = name.contains(piName);
         if (result) {
             return true;
@@ -266,7 +266,7 @@ public class OatPostAnalyser4Output implements IDocumentAnalyser {
         if ((!policyType.equals("license")) && (!policyType.equals("compatibility"))) {
             return false;
         }
-        final List<String> compatibilityLicenseList = oatConfig.getLicenseCompatibilityMap().get(piName);
+        final List<String> compatibilityLicenseList = this.oatConfig.getLicenseCompatibilityMap().get(piName);
         if (compatibilityLicenseList != null) {
             for (final String compatibilityLicense : compatibilityLicenseList) {
                 if (name.contains(compatibilityLicense)) {
@@ -378,7 +378,7 @@ public class OatPostAnalyser4Output implements IDocumentAnalyser {
             final boolean matched = this.isMatched(subject, filePath, policyItem);
 
             if (matched) {
-                final ValidResult validResult = OatPostAnalyser4Output.isValid(subject, name, policyItem);
+                final ValidResult validResult = this.isValid(subject, name, policyItem);
                 // Add reason desc to print all message in output file
                 if (validResult.valid == 1 && (!policyItem.getName().startsWith("!"))) {
                     final String key = policyItem.getType() + "-ApprovedReason";
