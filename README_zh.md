@@ -293,6 +293,12 @@ OpenHarmony社区开源仓中不应当存放过多二进制文件，如因业务
 <policyitem type="license" name="BSD" path="abc/.*" rule="may" group="defaultGroup" filefilter="defaultPolicyFilter" desc=""/>
 ```
 
+如果本项目不需要该类型检测，如上游开源软件不需检测许可头是否完整，可通过如下方式配置：
+
+```
+<policyitem type="license" name="*" path=".*" rule="may" group="defaultGroup" filefilter="defaultPolicyFilter" desc=""/>
+```
+
 如若某些文件无法添加许可头，则可以在defaultPolicyFilter中配置过滤规则，并且在desc字段中详细说明过滤的理由。
 
 - 源代码版权头
@@ -301,6 +307,12 @@ OpenHarmony社区开源仓中不应当存放过多二进制文件，如因业务
 
 ```
 <policyitem type="copyright" name="Copyright Owner" path="efg/.*" rule="may" group="defaultGroup" filefilter="copyrightPolicyFilter" desc=""/>
+```
+
+如果本项目不需要该类型检测，如上游开源软件不需检测版权头是否完整，可通过如下方式配置：
+
+```
+<policyitem type="copyright" name="*" path=".*" rule="may" group="defaultGroup" filefilter="copyrightPolicyFilter" desc=""/>
 ```
 
 如若某些文件无法添加版权头，则可以在copyrightPolicyFilter中配置过滤规则，并且在desc字段中详细说明过滤的理由。

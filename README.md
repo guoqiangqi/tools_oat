@@ -333,6 +333,12 @@ Similar to license compatibility, you can add a license type as follows:
 <policyitem type="license" name="BSD" path="abc/.*" rule="may" group="defaultGroup" filefilter="defaultPolicyFilter" desc=""/>
 ```
 
+If this project do not need check license headers, such as third party software, you can configure policy as follows：
+
+```
+<policyitem type="license" name="*" path=".*" rule="may" group="defaultGroup" filefilter="defaultPolicyFilter" desc=""/>
+```
+
 If some files do not support license headers, you can configure filtering rules in  **defaultPolicyFilter**  and specify the filtering reason in the  **desc**  field.
 
 - Source code copyright headers
@@ -341,6 +347,12 @@ You can add a copyright owner as follows:
 
 ```
 <policyitem type="copyright" name="Copyright Owner" path="efg/.*" rule="may" group="defaultGroup" filefilter="copyrightPolicyFilter" desc=""/>
+```
+
+If this project do not need check copyright headers, such as third party software, you can configure policy as follows：
+
+```
+<policyitem type="copyright" name="*" path=".*" rule="may" group="defaultGroup" filefilter="copyrightPolicyFilter" desc=""/>
 ```
 
 If some files do not support copyright headers, you can configure filtering rules in  **copyrightPolicyFilter**  and specify the filtering reason in the  **desc**  field.
