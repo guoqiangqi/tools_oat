@@ -355,6 +355,7 @@ public class OatLicenseMain {
         return new NotFileFilter(orFilter);
     }
 
+    @SuppressWarnings("unused")
     private static void printMissedFiles(final OatConfig oatConfig, final List<OatTask> taskList,
         final String resultfolder) throws IOException {
         if (oatConfig.isPluginMode()) {
