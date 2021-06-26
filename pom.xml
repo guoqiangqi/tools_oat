@@ -32,6 +32,14 @@
                 </includes>
             </resource>
             <resource>
+                <directory>template/</directory>
+                <targetPath>template/</targetPath>
+                <filtering>true</filtering>
+                <includes>
+                    <include>**/*.xml</include>
+                </includes>
+            </resource>
+            <resource>
                 <directory>./</directory>
                 <targetPath>META-INF/</targetPath>
                 <filtering>true</filtering>

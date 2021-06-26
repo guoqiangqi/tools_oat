@@ -52,7 +52,7 @@
         <filefilterlist>
             <filefilter name="defaultFilter" desc="Files that do not need to be scanned">
                 <filteritem type="filename" name="OAT*.xml|zunit|signature|Makefile|MANIFEST.MF|Kconfig|*.crt|*.markdown|*.git"/>
-                <filteritem type="filename" name=".mk|.ld|.gitkeep|.gitignore|.gitattributes|.config|*.te|*.svg|*.swp"/>
+                <filteritem type="filename" name=".mk|.ld|.gitkeep|.gitignore|.gitattributes|.config|*.te|*.json|*.svg|*.swp"/>
                 <filteritem type="filename" name="*.sandbox|*.rslp|*.rc|*.pydeps|*.properties|*.pluginmeta|*.php|*.sgml|.adoc|NEWS"/>
                 <filteritem type="filename" name="*.patch|*.p7b|*.md|*.log|*.ini|*.html|*.htm|*.hml|*.hcs|__init__.py|MANIFEST.in"/>
                 <filteritem type="filename" name="*.hcb|*.gradle|*.gen|*.dic|*.d|*.css|*.cmake|*.cer|*.build|*.aff|*.err|*.pro|*.clang-format|*.ld"/>
