@@ -27,12 +27,10 @@ public class OatCfgUtilTest {
 
     @org.junit.Before
     public void setUp() throws Exception {
-        System.out.println("setUp");
     }
 
     @org.junit.After
     public void tearDown() throws Exception {
-        System.out.println("teardown");
     }
 
     @org.junit.Test
