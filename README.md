@@ -110,7 +110,7 @@ Available options
 ```
 
 In this mode, the report is generated in the running directory of OAT. The  **OAT-ALL.xml**  file is used to configure the list of projects to be scanned, the default license and copyright policy, and
-the default filtering rule.
+the default filtering rule, you can copy resources/OAT-Default.xml, define projects and save as OAT-ALL.xml.
 
 Configure the projects to be scanned and their paths as follows:
 
