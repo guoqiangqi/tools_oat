@@ -20,6 +20,8 @@
 
 package ohos.oat.config;
 
+import java.util.Objects;
+
 /**
  * Data Structure of policy items defined in OAT.xml
  *
@@ -42,6 +44,27 @@ public class OatPolicyItem {
     private OatFileFilter fileFilterObj;
 
     private String fileFilter;
+
+    public OatPolicyItem() {
+
+    }
+
+    public OatPolicyItem(final String type, final String name, final String path, final String rule, final String group,
+        final String fileFilter, final String desc) {
+        this.setType(type);
+        this.setName(name);
+        this.setPath(path);
+        this.setRule(rule);
+        this.setGroup(group);
+        this.setFileFilter(fileFilter);
+        this.setDesc(desc);
+    }
+
+    public OatPolicyItem(final String type, final String name, final String path, final String rule, final String group,
+        final String fileFilter, final String desc, final OatFileFilter fileFilterObj) {
+        this(type, name, path, rule, group, fileFilter, desc);
+        this.setFileFilterObj(fileFilterObj);
+    }
 
     public String getGroup() {
         return this.group;
@@ -111,6 +134,26 @@ public class OatPolicyItem {
     public String toString() {
         return "OatPolicyItem{" + "name='" + this.name + '\'' + ", type='" + this.type + '\'' + ", path='" + this.path
             + '\'' + ", rule='" + this.rule + '\'' + ", group='" + this.group + '\'' + ", desc='" + this.desc + '\''
-            + ", fileFilter=" + this.fileFilter + '}';
+            + ", fileFilterObj=" + this.fileFilterObj + ", fileFilter='" + this.fileFilter + '\'' + '}';
+    }
+
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || this.getClass() != o.getClass()) {
+            return false;
+        }
+        final OatPolicyItem that = (OatPolicyItem) o;
+        return this.name.equals(that.name) && this.type.equals(that.type) && this.path.equals(that.path)
+            && this.rule.equals(that.rule) && this.group.equals(that.group) && this.desc.equals(that.desc)
+            && this.fileFilterObj.equals(that.fileFilterObj) && this.fileFilter.equals(that.fileFilter);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(this.name, this.type, this.path, this.rule, this.group, this.desc, this.fileFilterObj,
+            this.fileFilter);
     }
 }

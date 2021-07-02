@@ -34,6 +34,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * Data Structure of oat scanning project defined in OAT.xml
@@ -63,6 +64,21 @@ public class OatProject {
     private String policy;
 
     private OatFileDocument projectFileDocument;
+
+    public OatProject() {
+
+    }
+
+    public OatProject(final String name, final String path) {
+        this.setName(name);
+        this.setPath(path);
+    }
+
+    public OatProject(final String name, final String path, final String policy, final String fileFilter) {
+        this(name, path);
+        this.setPolicy(policy);
+        this.setFileFilter(fileFilter);
+    }
 
     public OatFileDocument getProjectFileDocument() {
         if (this.projectFileDocument == null) {
@@ -175,8 +191,38 @@ public class OatProject {
 
     @Override
     public String toString() {
-        return "OatProject{" + "namne='" + this.name + '\'' + ", licenseFiles=" + Arrays.toString(this.licenseFiles)
-            + ", path='" + this.path + '\'' + ", fileFilter='" + this.fileFilter + '\'' + ", policy='" + this.policy
-            + '\'' + '}';
+        return "OatProject{" + "prjLicenseText2NameMap=" + this.prjLicenseText2NameMap + ", prjLicenseCompatibilityMap="
+            + this.prjLicenseCompatibilityMap + ", includedPrjList=" + this.includedPrjList
+            + ", oatPolicy=" + this.oatPolicy
+            + ", name='" + this.name + '\'' + ", licenseFiles=" + Arrays.toString(
+            this.licenseFiles) + ", path='" + this.path + '\''
+            + ", fileFilterObj=" + this.fileFilterObj + ", fileFilter='" + this.fileFilter
+            + '\'' + ", policy='" + this.policy + '\''
+            + '}';
+    }
+
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || this.getClass() != o.getClass()) {
+            return false;
+        }
+        final OatProject project = (OatProject) o;
+        return this.prjLicenseText2NameMap.equals(project.prjLicenseText2NameMap) && this.prjLicenseCompatibilityMap.equals(
+            project.prjLicenseCompatibilityMap) && this.includedPrjList.equals(project.includedPrjList) && this.oatPolicy
+            .equals(
+            project.oatPolicy) && this.name.equals(project.name) && Arrays.equals(this.licenseFiles, project.licenseFiles) && this.path
+            .equals(project.path) && this.fileFilterObj.equals(project.fileFilterObj) && this.fileFilter.equals(
+            project.fileFilter) && this.policy.equals(project.policy);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = Objects.hash(this.prjLicenseText2NameMap, this.prjLicenseCompatibilityMap, this.includedPrjList,
+            this.oatPolicy, this.name, this.path, this.fileFilterObj, this.fileFilter, this.policy);
+        result = 31 * result + Arrays.hashCode(this.licenseFiles);
+        return result;
     }
 }

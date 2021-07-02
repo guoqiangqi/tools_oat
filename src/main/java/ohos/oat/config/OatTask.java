@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Data Structure of oat scanning task defined in OAT.xml
@@ -49,6 +50,14 @@ public class OatTask {
 
     public OatTask() {
         this.projectList = new ArrayList<>();
+    }
+
+    public OatTask(final String name, final String policy, final String fileFilter, final String desc) {
+        this();
+        this.setNamne(name);
+        this.setPolicy(policy);
+        this.setFileFilter(fileFilter);
+        this.setDesc(desc);
     }
 
     public String getFileFilter() {
@@ -131,7 +140,29 @@ public class OatTask {
 
     @Override
     public String toString() {
-        return "OatTask{" + "namne='" + this.namne + '\'' + ", policy='" + this.policy + '\'' + ", desc='" + this.desc
-            + '\'' + '}';
+        return "OatTask{" + "namne='" + this.namne + '\'' + ", policy='" + this.policy + '\'' + ", policyData="
+            + this.policyData + ", desc='" + this.desc + '\'' + ", fileFilter='" + this.fileFilter + '\''
+            + ", fileFilterObj=" + this.fileFilterObj + ", projectList=" + this.projectList + '}';
+    }
+
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) {
+            return true;
+        }
+
+        if (o == null || this.getClass() != o.getClass()) {
+            return false;
+        }
+        final OatTask task = (OatTask) o;
+        return this.namne.equals(task.namne) && this.policy.equals(task.policy) && this.policyData.equals(
+            task.policyData) && this.desc.equals(task.desc) && this.fileFilter.equals(task.fileFilter)
+            && this.fileFilterObj.equals(task.fileFilterObj) && this.projectList.equals(task.projectList);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(this.namne, this.policy, this.policyData, this.desc, this.fileFilter, this.fileFilterObj,
+            this.projectList);
     }
 }

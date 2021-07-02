@@ -26,6 +26,7 @@ import ohos.oat.utils.OatLogUtil;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Data Structure of file filter defined in OAT.xml
@@ -41,6 +42,15 @@ public class OatFileFilter {
     private String name;
 
     private String desc;
+
+    public OatFileFilter() {
+
+    }
+
+    public OatFileFilter(final String name, final String desc) {
+        this.setName(name);
+        this.setDesc(desc);
+    }
 
     /**
      * Merge a filter to another
@@ -122,6 +132,24 @@ public class OatFileFilter {
     @Override
     public String toString() {
         return "OatFileFilter{" + "oatFileFilterItems=" + this.oatFileFilterItems + ", oatFilePathFilterItems="
-            + this.oatFilePathFilterItems + ", namne='" + this.name + '\'' + ", desc='" + this.desc + '\'' + '}';
+            + this.oatFilePathFilterItems + ", name='" + this.name + '\'' + ", desc='" + this.desc + '\'' + '}';
+    }
+
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || this.getClass() != o.getClass()) {
+            return false;
+        }
+        final OatFileFilter that = (OatFileFilter) o;
+        return this.oatFileFilterItems.equals(that.oatFileFilterItems) && this.oatFilePathFilterItems.equals(
+            that.oatFilePathFilterItems) && this.name.equals(that.name) && this.desc.equals(that.desc);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(this.oatFileFilterItems, this.oatFilePathFilterItems, this.name, this.desc);
     }
 }
