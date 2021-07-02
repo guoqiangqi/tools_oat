@@ -313,7 +313,7 @@ public final class OatCfgUtil {
             OatCfgUtil.ROOTNODE, "policylist.policy");
         for (final HierarchicalConfiguration<ImmutableNode> policyCfg : policylistCfg) {
             final OatPolicy oatPolicy = new OatPolicy();
-            oatPolicy.setNamne(OatCfgUtil.getElementAttrValue(policyCfg, "name"));
+            oatPolicy.setName(OatCfgUtil.getElementAttrValue(policyCfg, "name"));
             oatPolicy.setDesc(OatCfgUtil.getElementAttrValue(policyCfg, "desc"));
             if (oatProject == null) {
                 // Global OAT XML

@@ -32,6 +32,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * Data Structure of oat tool configuration defined in OAT.xml, this contains all information in OAT.xml
@@ -161,9 +162,9 @@ public class OatConfig {
     }
 
     public void addPolicy(final OatPolicy oatPolicy) {
-        final OatPolicy oatPolicy1 = this.policyMap.get(oatPolicy.getNamne());
+        final OatPolicy oatPolicy1 = this.policyMap.get(oatPolicy.getName());
         if (oatPolicy1 == null) {
-            this.policyMap.put(oatPolicy.getNamne(), oatPolicy);
+            this.policyMap.put(oatPolicy.getName(), oatPolicy);
         }
     }
 
@@ -253,7 +254,7 @@ public class OatConfig {
                 }
                 if (prjPolicy == null || prjPolicy.trim().equals("")) {
                     oatProject.setOatPolicy(policy);
-                    oatProject.setPolicy(policy.getNamne());
+                    oatProject.setPolicy(policy.getName());
                 } else {
                     oatProject.setOatPolicy(this.policyMap.get(prjPolicy));
                 }
@@ -274,4 +275,37 @@ public class OatConfig {
         }
     }
 
+    @Override
+    public String toString() {
+        return "OatConfig{" + "taskList=" + this.taskList + ", licenseText2NameMap=" + this.licenseText2NameMap
+            + ", licenseCompatibilityMap=" + this.licenseCompatibilityMap + ", basedir='" + this.basedir + '\''
+            + ", repositoryName='" + this.repositoryName + '\'' + ", licenseList=" + this.licenseList
+            + ", exceptionLicenseList=" + this.exceptionLicenseList + ", isPluginMode=" + this.isPluginMode + ", data="
+            + this.data + ", pluginCheckMode='" + this.pluginCheckMode + '\'' + ", srcFileList=" + this.srcFileList
+            + '}';
+    }
+
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || this.getClass() != o.getClass()) {
+            return false;
+        }
+        final OatConfig oatConfig = (OatConfig) o;
+        return this.isPluginMode == oatConfig.isPluginMode && this.taskList.equals(oatConfig.taskList)
+            && this.licenseText2NameMap.equals(oatConfig.licenseText2NameMap) && this.licenseCompatibilityMap.equals(
+            oatConfig.licenseCompatibilityMap) && this.basedir.equals(oatConfig.basedir) && this.repositoryName.equals(
+            oatConfig.repositoryName) && this.licenseList.equals(oatConfig.licenseList)
+            && this.exceptionLicenseList.equals(oatConfig.exceptionLicenseList) && this.data.equals(oatConfig.data)
+            && this.pluginCheckMode.equals(oatConfig.pluginCheckMode) && this.srcFileList.equals(oatConfig.srcFileList);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(this.taskList, this.licenseText2NameMap, this.licenseCompatibilityMap, this.basedir,
+            this.repositoryName, this.licenseList, this.exceptionLicenseList, this.isPluginMode, this.data,
+            this.pluginCheckMode, this.srcFileList);
+    }
 }

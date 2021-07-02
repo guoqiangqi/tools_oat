@@ -29,6 +29,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * Data Structure of policy defined in OAT.xml
@@ -39,9 +40,18 @@ import java.util.Map;
 public class OatPolicy {
     private final Map<String, List<OatPolicyItem>> policyItemListMap = new HashMap<>();
 
-    private String namne;
+    private String name;
 
     private String desc;
+
+    public OatPolicy() {
+
+    }
+
+    public OatPolicy(final String name, final String desc) {
+        this.setName(name);
+        this.setDesc(desc);
+    }
 
     public List<OatPolicyItem> getPolicyItems(final String policyType) {
         List<OatPolicyItem> policyItemList = this.policyItemListMap.get(policyType);
@@ -70,12 +80,12 @@ public class OatPolicy {
         return allPolicyItems;
     }
 
-    public String getNamne() {
-        return this.namne;
+    public String getName() {
+        return this.name;
     }
 
-    public void setNamne(final String namne) {
-        this.namne = namne;
+    public void setName(final String name) {
+        this.name = name;
     }
 
     public String getDesc() {
@@ -88,7 +98,25 @@ public class OatPolicy {
 
     @Override
     public String toString() {
-        return "OatPolicy{" + "policyItemListMap=" + this.policyItemListMap + ", namne='" + this.namne + '\''
+        return "OatPolicy{" + "policyItemListMap=" + this.policyItemListMap + ", namne='" + this.name + '\''
             + ", desc='" + this.desc + '\'' + '}';
+    }
+
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || this.getClass() != o.getClass()) {
+            return false;
+        }
+        final OatPolicy oatPolicy = (OatPolicy) o;
+        return this.policyItemListMap.equals(oatPolicy.policyItemListMap) && this.name.equals(oatPolicy.name)
+            && this.desc.equals(oatPolicy.desc);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(this.policyItemListMap, this.name, this.desc);
     }
 }
