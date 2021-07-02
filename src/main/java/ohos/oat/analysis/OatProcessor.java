@@ -100,6 +100,7 @@ import ohos.oat.analysis.headermatcher.simplepattern.XConsortiumLicense;
 import ohos.oat.analysis.headermatcher.simplepattern.ZlibLibpngLicense2;
 import ohos.oat.config.OatConfig;
 import ohos.oat.document.OatFileDocument;
+import ohos.oat.utils.OatCfgUtil;
 import ohos.oat.utils.OatLicenseTextUtil;
 import ohos.oat.utils.OatLogUtil;
 
@@ -121,7 +122,7 @@ import java.util.Map;
  * @since 1.0
  */
 public class OatProcessor {
-    private static final int PROCESS_LINE_COUNT = 150;
+    private int PROCESS_LINE_COUNT = 150;
 
     private static final String[] SKIP_STRINGS = {
 
@@ -192,6 +193,14 @@ public class OatProcessor {
             this.repoDisplayName = this.repoDisplayName.substring(0, this.repoDisplayName.length() - 1);
         }
         this.repoDisplayName = this.repoDisplayName.replace("/", "_");
+        final String licensefilename = OatCfgUtil.getShortPath(this.oatConfig, fileDocument.getName());
+        if (this.fileDocument.getOatProject()
+            .getProjectFileDocument()
+            .getListData("LICENSEFILE")
+            .contains(licensefilename)) {
+            this.PROCESS_LINE_COUNT = 3000;
+        }
+
         this.initMatchers();
     }
 
@@ -310,7 +319,7 @@ public class OatProcessor {
 
     public void read() throws RatHeaderAnalysisException {
 
-        this.headerLinesToRead = OatProcessor.PROCESS_LINE_COUNT;
+        this.headerLinesToRead = this.PROCESS_LINE_COUNT;
         try {
             while (this.readLine()) {
                 // do nothing
@@ -319,7 +328,7 @@ public class OatProcessor {
             throw new RatHeaderAnalysisException("Read file failed: " + this.fileDocument, e);
         }
         IOUtils.closeQuietly(this.fileReader);
-        if (OatProcessor.PROCESS_LINE_COUNT - this.headerLinesToRead < 3) {
+        if (this.PROCESS_LINE_COUNT - this.headerLinesToRead < 3) {
             this.fileDocument.putData("isSkipedFile", "true");
         }
         final String tmp = this.fileDocument.getData("isSkipedFile");
@@ -457,7 +466,7 @@ public class OatProcessor {
         if (this.oatConfig.isPluginMode()) {
             lineToProcess = 10;
         }
-        if (OatProcessor.PROCESS_LINE_COUNT - this.headerLinesToRead > lineToProcess) {
+        if (this.PROCESS_LINE_COUNT - this.headerLinesToRead > lineToProcess) {
             final String fileName = this.fileDocument.getName();
             if (fileName.endsWith(".java")) {
                 return !line.startsWith("public class ") && !line.startsWith("public final ") && !line.startsWith(
