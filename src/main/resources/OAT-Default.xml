@@ -150,7 +150,7 @@
                 2. Redistributions in binary form must reproduce the above copyright notice,
                    this list of conditions and the following disclaimer in the documentation
                    and/or other materials provided with the distribution.
-                THIS SOFTWARE IS PROVIDED BY T
+                THIS SOFTWARE IS PROVIDED BY THE
                  " desc=""/>
             </licensematcher>
             <licensematcher name="BSD-3-Clause" desc="">
@@ -165,18 +165,7 @@
                  *    and/or other materials provided with the distribution.
                  * 3. The name of the author may not be used to endorse or promote products
                  *    derived from this software without specific prior written permission.
-                 *
-                 " desc=""/>
-            </licensematcher>
-            <licensematcher name="HarmonyOS Sans Fonts License Agreement" desc="">
-                <licensetext name="
-                    HarmonyOS Sans Fonts License Agreement
-                    THIS HARMONYOS SANS FONTS LICENSE AGREEMENT (&gt;AGREEMENT&gt;) IS A LEGAL AGREEMENT BETWEEN YOU (EITHER
-                    A SINGLE INDIVIDUAL, OR SINGLE LEGAL ENTITY) AND HUAWEI DEVICE CO., LTD.( &gt; LICENSOR&gt;)FOR THE USE OF
-                    THE HARMONYOS SANS FONTS ACCOMPANYING THIS AGREEMENT.BY DOWNLOADING,COPYING OR OTHERWISE USING HARMONYOS
-                    SANS FONTS YOU INDICATE THAT YOU AGREE TO BE BOUND BY ALL OF THE TERMS OF THIS AGREEMENT. IF YOU DO NOT
-                    AGREE TO THE TERMS OF THIS AGREEMENT, YOU MAY NOT DOWNLOAD, COPY OR OTHERWISE USE THE HARMONYOS SANS FONTS,
-                    AND YOU SHALL PROMPTLY DESTROY AND DELETE ALL THE HARMONYOS SANS FONTS.
+                 * THIS SOFTWARE IS PROVIDED BY THE
                  " desc=""/>
             </licensematcher>
             <licensematcher name="ISC License" desc="">
