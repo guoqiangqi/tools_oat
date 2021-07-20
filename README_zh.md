@@ -97,7 +97,7 @@ Available options
  -t         Trace project license list only
 ```
 
-批量模式生成的报告位于OAT的运行目录，其中OAT-ALL.xml用于配置待扫描的项目清单及默认的许可证、Copyright等策略及默认的过滤规则，您可基于resources/OAT-Default.xml修改生成OAT-ALL.xml。
+批量模式生成的报告位于OAT的运行目录，其中OAT-ALL.xml用于配置待扫描的项目清单及默认的许可证、Copyright等策略及默认的过滤规则，您可基于resources/OAT-Default.xml修改生成OAT-ALL.xml，请注意在tasklist中新增task并配置您要扫描的project信息，不要修改默认的defaultTask。
 
 扫描项目及路径配置说明：
 
