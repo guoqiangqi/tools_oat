@@ -24,10 +24,10 @@ package ohos.oat.config;
 
 import ohos.oat.analysis.headermatcher.OatLicense;
 import ohos.oat.utils.OatCfgUtil;
+import ohos.oat.utils.OatFileUtils;
 import ohos.oat.utils.OatLogUtil;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -111,12 +111,8 @@ public class OatConfig {
         if (!this.pluginCheckMode.equals("1")) {
             return true;
         }
-        String absolutePath = "";
-        try {
-            absolutePath = file.getCanonicalPath();
-        } catch (final IOException e) {
-            OatLogUtil.traceException(e);
-        }
+        String absolutePath = OatFileUtils.getFileCanonicalPath(file);
+    
         final String formatedPath = absolutePath.replace("\\", "/");
         for (final String srcFile : this.srcFileList) {
             if (srcFile.startsWith(formatedPath)) {
