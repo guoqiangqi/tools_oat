@@ -128,11 +128,12 @@ public final class OatSpdxLicenseUtil {
                 if ((!oatLicense.getLicenseId().equals(license.getLicenseId())) && oatLicense.getLicenseHeaderText()
                     .equals(license.getLicenseHeaderText())) {
                     count++;
-                    OatLogUtil.println("", oatLicense.getLicenseId() + "\t" + license.getLicenseId());
+                    OatLogUtil.warn(OatSpdxLicenseUtil.class.getSimpleName(),
+                        oatLicense.getLicenseId() + "\t" + license.getLicenseId());
                 }
             }
         }
-        OatLogUtil.println("", count + "");
+        OatLogUtil.warn(OatSpdxLicenseUtil.class.getSimpleName(), count + "");
 
     }
 

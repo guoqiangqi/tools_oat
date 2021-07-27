@@ -182,4 +182,14 @@ public class OatFileUtils {
         return null;
     }
 
+    public static String getFileCanonicalPath(final File file) {
+        String filepath = "";
+        try {
+            filepath = file.getCanonicalPath();
+        } catch (final IOException e) {
+            OatLogUtil.traceException(e);
+        }
+        return filepath;
+    }
+
 }

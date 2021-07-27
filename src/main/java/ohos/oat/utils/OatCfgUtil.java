@@ -39,7 +39,6 @@ import org.apache.commons.configuration2.tree.DefaultExpressionEngineSymbols;
 import org.apache.commons.configuration2.tree.ImmutableNode;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
 
@@ -66,20 +65,16 @@ public final class OatCfgUtil {
      * @return File path without base dir
      */
     public static String getShortPath(final OatConfig oatConfig, final File file) {
-        try {
-            String filepath = file.getCanonicalPath();
-            if (file.isDirectory()) {
-                filepath = filepath + "/";
-            }
-            final String tmpFilepath = OatCfgUtil.formatPath(filepath);
-            if (tmpFilepath == null) {
-                return "";
-            }
-            return tmpFilepath.replace(oatConfig.getBasedir(), "");
-        } catch (final IOException e) {
-            OatLogUtil.traceException(e);
+        String filepath = OatFileUtils.getFileCanonicalPath(file);
+        if (file.isDirectory()) {
+            filepath = filepath + "/";
         }
-        return "";
+        final String tmpFilepath = OatCfgUtil.formatPath(filepath);
+        if (tmpFilepath == null) {
+            return "";
+        }
+        return tmpFilepath.replace(oatConfig.getBasedir(), "");
+        
     }
 
     /**
