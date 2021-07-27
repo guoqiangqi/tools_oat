@@ -43,6 +43,7 @@ import ohos.oat.report.IOatReport;
 import ohos.oat.report.OatDirectoryWalker;
 import ohos.oat.report.OatMainReport;
 import ohos.oat.utils.OatCfgUtil;
+import ohos.oat.utils.OatFileUtils;
 import ohos.oat.utils.OatLogUtil;
 import ohos.oat.utils.OatSpdxLicenseUtil;
 
@@ -176,7 +177,7 @@ public class OatLicenseMain {
         oatConfig.setSrcFileList(fileList);
         OatLogUtil.warn(OatLicenseMain.class.getSimpleName(), "CommandLine" + "\tfileList\t" + fileList);
         if (cmd.hasOption("s")) {
-            if (!cmd.hasOption("r") || !cmd.hasOption("n")) {
+            if ((!cmd.hasOption("r") || !cmd.hasOption("n")) && (!cmd.hasOption("c"))) {
                 OatLogUtil.println("", "Args invalid, the valid args is: [-s sourceCodeRepoPath -r "
                     + "reportFilePath -n nameOfRepo -m 0] or [-s sourceCodeRepoPath -r reportFilePath -n nameOfRepo -m "
                     + "1 -f filelistSeparatedBy|]" + " ");
@@ -192,7 +193,13 @@ public class OatLicenseMain {
         if (cmd.hasOption("g")) {
             oatConfig.putData("IgnoreProjectOAT", "true");
         }
+
         OatCfgUtil.initOatConfig(oatConfig, initOATCfgFile, sourceCodeRepoPath);
+        if (cmd.hasOption("s") && cmd.hasOption("c")) {
+            OatLogUtil.setDebugMode(true);
+            logSubProjects(oatConfig);
+            System.exit(0);
+        }
         OatSpdxLicenseUtil.initSpdxLicenseList(oatConfig);
 
         OatLicenseMain.oatCheck(reportFile, oatConfig);
@@ -210,6 +217,7 @@ public class OatLicenseMain {
         options.addOption("f", true, "File list to check, separated by |, must be used together with -s option");
         options.addOption("h", false, "Help message");
         options.addOption("l", false, "Log switch, used to enable the logger");
+        options.addOption("c", false, "Collect and log sub projects only, must be used together with -s option");
         options.addOption("t", false, "Trace project license list only");
         options.addOption("k", false, "Trace skipped files and ignored files");
         options.addOption("g", false,
@@ -321,14 +329,7 @@ public class OatLicenseMain {
 
     private static IReportable getDirectoryWalker(final OatConfig oatConfig, final OatProject oatProject,
         final FilenameFilter inputFileFilter) {
-        final String prjDirectory;
-        if (oatConfig.isPluginMode()) {
-            // 如果是插件模式，直接扫描根目录下所有
-            prjDirectory = oatConfig.getBasedir();
-        } else {
-            final String prjPath = oatProject.getPath();
-            prjDirectory = oatConfig.getBasedir() + prjPath;
-        }
+        final String prjDirectory = getPrjDirectory(oatConfig, oatProject);
         final File base = new File(prjDirectory);
         if (!base.exists()) {
             return null;
@@ -338,6 +339,18 @@ public class OatLicenseMain {
             return new OatDirectoryWalker(oatConfig, oatProject, base, inputFileFilter);
         }
         return null;
+    }
+
+    private static String getPrjDirectory(final OatConfig oatConfig, final OatProject oatProject) {
+        final String prjDirectory;
+        if (oatConfig.isPluginMode()) {
+            // 如果是插件模式，直接扫描根目录下所有
+            prjDirectory = oatConfig.getBasedir();
+        } else {
+            final String prjPath = oatProject.getPath();
+            prjDirectory = oatConfig.getBasedir() + prjPath;
+        }
+        return prjDirectory;
     }
 
     private static FilenameFilter parseFileExclusions(final List<String> excludes) {
@@ -353,6 +366,67 @@ public class OatLicenseMain {
             orFilter.addFileFilter(new WildcardFileFilter(exclusion));
         }
         return new NotFileFilter(orFilter);
+    }
+
+    private static void logSubProjects(final OatConfig oatConfig) {
+        if (!oatConfig.isPluginMode()) {
+            return;
+        }
+        final List<OatTask> taskList = oatConfig.getTaskList();
+        if (taskList == null || taskList.size() <= 0) {
+            return;
+        }
+        final OatTask task = taskList.get(0);
+        final List<OatProject> projectList = task.getProjectList();
+        if (projectList == null || projectList.size() <= 0) {
+            return;
+        }
+        final OatProject oatProject = projectList.get(0);
+        final String prjDirectory = getPrjDirectory(oatConfig, oatProject);
+        final File prjFile = new File(prjDirectory);
+        if (!prjFile.exists() || prjFile.isFile()) {
+            return;
+        }
+        final String prjPath = OatCfgUtil.formatPath(OatFileUtils.getFileCanonicalPath(prjFile)) + "/";
+        final List<String> subProjects = new ArrayList<>();
+
+        final File[] files = prjFile.listFiles();
+        for (final File file : files) {
+            if (!file.isDirectory()) {
+                continue;
+            }
+            if (file.getName().equals(".git")) {
+                continue;
+            }
+            collectSubPrjects(subProjects, prjPath, file, 1);
+        }
+
+        for (final String subProject : subProjects) {
+            OatLogUtil.warn(OatLicenseMain.class.getSimpleName(),
+                oatProject.getPath() + "\tsubProject\t" + "<project name=\"" + subProject + "\" path=\"" + subProject
+                    + "\"/>");
+        }
+    }
+
+    private static void collectSubPrjects(final List<String> subProjects, final String prjPath, final File file,
+        final int depth) {
+        if (depth > 4) {
+            return;
+        }
+        final int nextDepth = depth + 1;
+        final File[] subFiles = file.listFiles();
+        for (final File subFile : subFiles) {
+            if (!subFile.isDirectory()) {
+                continue;
+            }
+            if (subFile.getName().equals(".git")) {
+                final String subPath = OatCfgUtil.formatPath(OatFileUtils.getFileCanonicalPath(file)) + "/";
+                final String subPrjPath = subPath.replace(prjPath, "");
+                subProjects.add(subPrjPath);
+                continue;
+            }
+            collectSubPrjects(subProjects, prjPath, subFile, nextDepth);
+        }
     }
 
     @SuppressWarnings("unused")
@@ -406,11 +480,8 @@ public class OatLicenseMain {
 
         for (final File file1 : files) {
             String filePath = "";
-            try {
-                filePath = file1.getCanonicalPath().replace('\\', '/');
-            } catch (final IOException e) {
-                OatLogUtil.traceException(e);
-            }
+            filePath = OatFileUtils.getFileCanonicalPath(file1).replace('\\', '/');
+
             if (filePath.contains(".repo") || filePath.contains(".git")) {
                 continue;
             }
@@ -432,4 +503,5 @@ public class OatLicenseMain {
             }
         }
     }
+
 }

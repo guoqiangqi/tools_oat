@@ -107,12 +107,16 @@ Available options
  -r <arg>   Report file path, must be used together with -s option
  -s <arg>   Source code repository path
  -t         Trace project license list only
+ -c         Collect and log sub projects only, must be used together with
+            -s option 
 ```
 
 In this mode, the report is generated in the running directory of OAT. The  **OAT-ALL.xml**  file is used to configure the list of projects to be scanned, the default license and copyright policy, and
 the default filtering rule, you can copy resources/OAT-Default.xml, define projects and save as OAT-ALL.xml. 
 
-Note: Please add a new task in the **tasklist** and configure the project information you want to scan. Do not modify the **defaultTask**.
+Note: 
+- Please add a new task in the **tasklist** and configure the project information you want to scan. Do not modify the **defaultTask**.
+- You can use **java -jar ohos_ossaudittool-VERSION.jar -s sourcedir -c** to generate all projects and write into the OAT.log file.
 
 Configure the projects to be scanned and their paths as follows:
 

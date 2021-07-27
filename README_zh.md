@@ -95,9 +95,16 @@ Available options
  -r <arg>   Report file path, must be used together with -s option
  -s <arg>   Source code repository path
  -t         Trace project license list only
+ -c         Collect and log sub projects only, must be used together with
+            -s option
 ```
 
-批量模式生成的报告位于OAT的运行目录，其中OAT-ALL.xml用于配置待扫描的项目清单及默认的许可证、Copyright等策略及默认的过滤规则，您可基于resources/OAT-Default.xml修改生成OAT-ALL.xml，请注意在tasklist中新增task并配置您要扫描的project信息，不要修改默认的defaultTask。
+批量模式生成的报告位于OAT的运行目录，其中OAT-ALL.xml用于配置待扫描的项目清单及默认的许可证、Copyright等策略及默认的过滤规则，您可基于resources/OAT-Default.xml修改生成OAT-ALL.xml。
+
+注意：
+- 在tasklist中新增task并配置您要扫描的project信息，不要修改默认的defaultTask。
+- 可以使用 **java -jar ohos_ossaudittool-VERSION.jar -s sourcedir -c** 命令行生成该源码目录下所有projects，结果会写入OAT.log文件，您可参考这些信息来配置OAT-ALL.xml中新增的task。
+
 
 扫描项目及路径配置说明：
 
