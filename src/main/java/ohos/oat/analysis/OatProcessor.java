@@ -403,13 +403,8 @@ public class OatProcessor {
     }
 
     private boolean matchLine(final String line, final IOatHeaderMatcher matcher) throws RatHeaderAnalysisException {
-        // final boolean isFinished = this.fileDocument.getMatchResult(matcher.getMatcherId());
-        // if (isFinished) {
-        //     return;
-        // }
         final boolean result = matcher.match(this.fileDocument, line);
         return result;
-        // this.fileDocument.putMatchResult(matcher.getMatcherId(), result);
     }
 
     private boolean readLine() throws IOException {
@@ -482,9 +477,11 @@ public class OatProcessor {
                 return !line.startsWith("import ") && !line.startsWith("from ") && !line.startsWith("def ")
                     && !line.startsWith("try: ");
             } else if (fileName.endsWith(".js")) {
-                return !line.startsWith("function ") && !line.startsWith("var ") && !line.startsWith("class ");
+                return !line.startsWith("function ") && !line.startsWith("var ") && !line.startsWith("class ")
+                    && !line.startsWith("export ") && !line.startsWith("import ");
             } else if (fileName.endsWith(".ts")) {
-                return !line.startsWith("import ") && !line.startsWith("export ") && !line.startsWith("class ");
+                return !line.startsWith("import ") && !line.startsWith("export ") && !line.startsWith("class ") && !line
+                    .startsWith("export ");
             }
         }
         return true;

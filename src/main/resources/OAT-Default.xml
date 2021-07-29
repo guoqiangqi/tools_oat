@@ -58,7 +58,7 @@
                 <filteritem type="filename" name="*.hcb|*.gradle|*.gen|*.dic|*.d|*.css|*.cmake|*.cer|*.build|*.aff|*.err|*.pro|*.clang-format|*.ld"/>
                 <filteritem type="filename" name="*.babelrc|*.editorconfig|*.eslintignore|*.prettierrc|*.eslintrc.js|*.template|*.tmpl|*.vcproj|*.def|*.sln"/>
                 <filteritem type="filename" name="*_contexts|*.vcxproj|*.vcxproj.filters|*.vcxproj.user|*visual_studio.sln|*.bundle|CERTIFICATE|SIGNATURE"/>
-                <filteritem type="filename" name="*.lds|SConscript|*.pod|*.arb|*.repo"/>
+                <filteritem type="filename" name="*.lds|SConscript|*.pod|*.arb|*.repo|*.map"/>
                 <!--filteritem type="filename" name="*.png|*.jpg|*.jpeg|*.tif|*.tiff|*.gif|*.bmp|*.heic|*.ico"/-->
                 <filteritem type="filepath" name="projectroot/target/.*" desc="out put files"/>
                 <filteritem type="filepath" name="projectroot/output/.*" desc="out put files"/>
@@ -67,6 +67,7 @@
                 <filteritem type="filepath" name="projectroot/logs/.*" desc="out put files"/>
                 <filteritem type="filepath" name="projectroot/.idea/.*" desc="out put files"/>
                 <filteritem type="filepath" name="projectroot/.git/.*" desc="out put files"/>
+                <filteritem type="filepath" name="projectroot/.gitee/.*" desc="out put files"/>
                 <filteritem type="filepath" name="projectroot/.svn/.*" desc="out put files"/>
                 <filteritem type="filepath" name="projectroot/[a-zA-Z0-9]{20,}.sh" desc="Temp files"/>
             </filefilter>
@@ -169,7 +170,7 @@
                  * THIS SOFTWARE IS PROVIDED BY THE
                  " desc=""/>
             </licensematcher>
-            <licensematcher name="ISC License" desc="">
+            <licensematcher name="ISC" desc="">
                 <licensetext name="
                     Permission to use, copy, modify, and/or distribute this software for any purpose with or without fee is hereby granted,
                     provided that the above copyright notice and this permission notice appear in all copies.  THE SOFTWARE IS PROVIDED
@@ -213,8 +214,57 @@
 
         </licensematcherlist>
         <licensecompatibilitylist>
+            <license name="Apache" desc="">
+                <compatibilitylicense name="ApacheStyleLicense" desc=""/>
+                <compatibilitylicense name="FSFAP" desc=""/>
+                <compatibilitylicense name="FSFUL" desc=""/>
+                <compatibilitylicense name="FSFULLR" desc=""/>
+                <compatibilitylicense name="curl" desc=""/>
+                <compatibilitylicense name="ISC" desc=""/>
+                <compatibilitylicense name="diffmark" desc=""/>
+                <compatibilitylicense name="Beerware" desc=""/>
+                <compatibilitylicense name="blessing" desc=""/>
+                <compatibilitylicense name="NLPL" desc=""/>
+                <compatibilitylicense name="Unlicense" desc=""/>
+            </license>
+            <license name="MIT" desc="">
+                <compatibilitylicense name="ApacheStyleLicense" desc=""/>
+                <compatibilitylicense name="FSFAP" desc=""/>
+                <compatibilitylicense name="FSFUL" desc=""/>
+                <compatibilitylicense name="FSFULLR" desc=""/>
+                <compatibilitylicense name="curl" desc=""/>
+                <compatibilitylicense name="ISC" desc=""/>
+                <compatibilitylicense name="diffmark" desc=""/>
+                <compatibilitylicense name="Beerware" desc=""/>
+                <compatibilitylicense name="blessing" desc=""/>
+                <compatibilitylicense name="NLPL" desc=""/>
+                <compatibilitylicense name="Unlicense" desc=""/>
+            </license>
+            <license name="BSD" desc="">
+                <compatibilitylicense name="ApacheStyleLicense" desc=""/>
+                <compatibilitylicense name="FSFAP" desc=""/>
+                <compatibilitylicense name="FSFUL" desc=""/>
+                <compatibilitylicense name="FSFULLR" desc=""/>
+                <compatibilitylicense name="curl" desc=""/>
+                <compatibilitylicense name="ISC" desc=""/>
+                <compatibilitylicense name="diffmark" desc=""/>
+                <compatibilitylicense name="Beerware" desc=""/>
+                <compatibilitylicense name="blessing" desc=""/>
+                <compatibilitylicense name="NLPL" desc=""/>
+                <compatibilitylicense name="Unlicense" desc=""/>
+            </license>
             <license name="Apache-2.0" desc="">
                 <compatibilitylicense name="ApacheStyleLicense" desc=""/>
+                <compatibilitylicense name="FSFAP" desc=""/>
+                <compatibilitylicense name="FSFUL" desc=""/>
+                <compatibilitylicense name="FSFULLR" desc=""/>
+                <compatibilitylicense name="curl" desc=""/>
+                <compatibilitylicense name="ISC" desc=""/>
+                <compatibilitylicense name="diffmark" desc=""/>
+                <compatibilitylicense name="Beerware" desc=""/>
+                <compatibilitylicense name="blessing" desc=""/>
+                <compatibilitylicense name="NLPL" desc=""/>
+                <compatibilitylicense name="Unlicense" desc=""/>
             </license>
             <license name="ApacheStyleLicense" desc="">
                 <compatibilitylicense name="Apache-2.0" desc=""/>
