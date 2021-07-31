@@ -263,7 +263,7 @@ public class OatPostAnalyser4Output implements IDocumentAnalyser {
         if (result) {
             return true;
         }
-        if ((!policyType.equals("license")) && (!policyType.equals("compatibility"))) {
+        if (!policyType.equals("compatibility")) {
             return false;
         }
         final List<String> compatibilityLicenseList = this.oatConfig.getLicenseCompatibilityMap().get(piName);
@@ -543,6 +543,9 @@ public class OatPostAnalyser4Output implements IDocumentAnalyser {
             subject.getMetaData().set(new MetaData.Datum(RAT_URL_LICENSE_FAMILY_NAME, "NoLicenseHeader"));
             name = subject.getMetaData().value(RAT_URL_LICENSE_FAMILY_NAME);
         }
+        if (name.contains(" AND ")) {
+            name = name.replace(" AND ", "|");
+        }
         final List<OatPolicyItem> licensePolicyItems = oatPolicy.getPolicyItems("license");
         boolean isApproved = false;
         isApproved = this.verify(subject, filePath, name, licensePolicyItems);
@@ -551,10 +554,13 @@ public class OatPostAnalyser4Output implements IDocumentAnalyser {
     }
 
     private void verifyCompatibility(final OatFileDocument subject, final OatPolicy oatPolicy, final String filePath) {
-        final String name = subject.getMetaData().value(RAT_URL_LICENSE_FAMILY_NAME);
+        String name = subject.getMetaData().value(RAT_URL_LICENSE_FAMILY_NAME);
 
         if (name == null || name.contains("?") || name.equals("SameLicense") || name.equals("NoLicenseHeader")) {
             return;
+        }
+        if (name.contains(" AND ")) {
+            name = name.replace(" AND ", "|");
         }
         final List<OatPolicyItem> compatibilityPolicyItems = oatPolicy.getPolicyItems("compatibility");
         boolean isApproved = false;
