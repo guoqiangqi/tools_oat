@@ -106,6 +106,11 @@ public class OatPostAnalyser4Output implements IDocumentAnalyser {
         final String[] defLicenseFiles = oatProject.getLicenseFiles();
         final String name = document.getMetaData().value(RAT_URL_LICENSE_FAMILY_NAME);
         final String LicenseHeaderText = document.getData("LicenseHeaderText");
+        if (LicenseHeaderText != null && LicenseHeaderText.equals("InvalidLicense")) {
+            OatLogUtil.warn(this.getClass().getSimpleName(),
+                oatProject.getPath() + "\tInvalidLicense\t" + shortFileUnderProject + "\t" + name + "\t"
+                    + LicenseHeaderText);
+        }
         boolean findIt = false;
         if (!document.isDirectory()) {
             if (shortFileUnderProject.equals("LICENSE")) {
