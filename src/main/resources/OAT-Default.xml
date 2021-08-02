@@ -58,7 +58,8 @@
                 <filteritem type="filename" name="*.babelrc|*.editorconfig|*.eslintignore|*.prettierrc|*.eslintrc.js|*.template|*.tmpl|*.vcproj|*.def|*.sln"/>
                 <filteritem type="filename" name="*_contexts|*.vcxproj|*.vcxproj.filters|*.vcxproj.user|*visual_studio.sln|*.bundle|CERTIFICATE|SIGNATURE"/>
                 <filteritem type="filename" name="*.lds|SConscript|*.pod|*.arb|*.repo|*.map|*.yml|*.config|*.cfg|*.conf|*.in"/>
-                <!--filteritem type="filename" name="*.png|*.jpg|*.jpeg|*.tif|*.tiff|*.gif|*.bmp|*.heic|*.ico"/-->
+                <filteritem type="filename" name="*.png|*.jpg|*.jpeg|*.tif|*.tiff|*.gif|*.bmp|*.heic|*.ico|*.pic|*.psd|*.pcx"/>
+                <filteritem type="filename" name="*.wav|*.mp3|*.mp4|*.wma|*.mov|*.wmv|*.rmvb|*.3gp|*.avi|*.rm|*.mid|*.flv|*.mpg|*.mkv|*.vob"/>
                 <filteritem type="filepath" name="projectroot/target/.*" desc="out put files"/>
                 <filteritem type="filepath" name="projectroot/output/.*" desc="out put files"/>
                 <filteritem type="filepath" name="projectroot/out/.*" desc="out put files"/>
