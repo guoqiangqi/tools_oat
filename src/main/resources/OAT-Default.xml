@@ -204,7 +204,7 @@
             </licensematcher>
             <licensematcher name="MIT|NCSA" desc="">
                 <licensetext name="
-                    dual license under the MIT and the University of Illinois Open Source Licenses
+                    dual licensed under the MIT and the University of Illinois Open
                 " desc=""/>
             </licensematcher>
             <licensematcher name="c-ares license" desc="">
