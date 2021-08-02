@@ -202,6 +202,11 @@
                     OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
                 " desc=""/>
             </licensematcher>
+            <licensematcher name="MIT|NCSA" desc="">
+                <licensetext name="
+                    dual license under the MIT and the University of Illinois Open Source Licenses
+                " desc=""/>
+            </licensematcher>
             <licensematcher name="c-ares license" desc="">
                 <licensetext name="
                     Permission to use, copy, modify, and distribute this software and its
@@ -274,6 +279,7 @@
                 <compatibilitylicense name="blessing" desc=""/>
                 <compatibilitylicense name="NLPL" desc=""/>
                 <compatibilitylicense name="Unlicense" desc=""/>
+                <compatibilitylicense name="NCSA" desc=""/>
             </license>
             <license name="Apache-2.0" desc="">
                 <compatibilitylicense name="ApacheStyleLicense" desc=""/>
