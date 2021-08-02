@@ -57,8 +57,9 @@
                 <filteritem type="filename" name="*.hcb|*.gradle|*.gen|*.dic|*.d|*.css|*.cmake|*.cer|*.build|*.aff|*.err|*.pro|*.clang-format|*.ld"/>
                 <filteritem type="filename" name="*.babelrc|*.editorconfig|*.eslintignore|*.prettierrc|*.eslintrc.js|*.template|*.tmpl|*.vcproj|*.def|*.sln"/>
                 <filteritem type="filename" name="*_contexts|*.vcxproj|*.vcxproj.filters|*.vcxproj.user|*visual_studio.sln|*.bundle|CERTIFICATE|SIGNATURE"/>
-                <filteritem type="filename" name="*.lds|SConscript|*.pod|*.arb|*.repo|*.map|*.yml|*.config|*.cfg"/>
-                <!--filteritem type="filename" name="*.png|*.jpg|*.jpeg|*.tif|*.tiff|*.gif|*.bmp|*.heic|*.ico"/-->
+                <filteritem type="filename" name="*.lds|SConscript|*.pod|*.arb|*.repo|*.map|*.yml|*.config|*.cfg|*.conf|*.in"/>
+                <filteritem type="filename" name="*.png|*.jpg|*.jpeg|*.tif|*.tiff|*.gif|*.bmp|*.heic|*.ico|*.pic|*.psd|*.pcx"/>
+                <filteritem type="filename" name="*.wav|*.mp3|*.mp4|*.wma|*.mov|*.wmv|*.rmvb|*.3gp|*.avi|*.rm|*.mid|*.flv|*.mpg|*.mkv|*.vob"/>
                 <filteritem type="filepath" name="projectroot/target/.*" desc="out put files"/>
                 <filteritem type="filepath" name="projectroot/output/.*" desc="out put files"/>
                 <filteritem type="filepath" name="projectroot/out/.*" desc="out put files"/>
@@ -153,6 +154,16 @@
                    and/or other materials provided with the distribution.
                 THIS SOFTWARE IS PROVIDED BY THE
                  " desc=""/>
+                <licensetext name="
+                Redistribution and use in source and binary forms, with or without
+                modification, are permitted provided that the following conditions are met:
+                Redistributions of source code must retain the above copyright notice, this
+                   list of conditions and the following disclaimer.
+                Redistributions in binary form must reproduce the above copyright notice,
+                   this list of conditions and the following disclaimer in the documentation
+                   and/or other materials provided with the distribution.
+                THIS SOFTWARE IS PROVIDED BY THE
+                 " desc=""/>
             </licensematcher>
             <licensematcher name="BSD-3-Clause" desc="">
                 <licensetext name="
@@ -168,6 +179,19 @@
                  *    derived from this software without specific prior written permission.
                  * THIS SOFTWARE IS PROVIDED BY THE
                  " desc=""/>
+                <licensetext name="
+                 * Redistribution and use in source and binary forms, with or without modification,
+                 * are permitted provided that the following conditions are met:
+                 *
+                 * Redistributions of source code must retain the above copyright notice,
+                 *    this list of conditions and the following disclaimer.
+                 * Redistributions in binary form must reproduce the above copyright notice,
+                 *    this list of conditions and the following disclaimer in the documentation
+                 *    and/or other materials provided with the distribution.
+                 * The name of the author may not be used to endorse or promote products
+                 *    derived from this software without specific prior written permission.
+                 * THIS SOFTWARE IS PROVIDED BY THE
+                 " desc=""/>
             </licensematcher>
             <licensematcher name="ISC" desc="">
                 <licensetext name="
@@ -177,6 +201,11 @@
                     MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL
                     DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE
                     OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+                " desc=""/>
+            </licensematcher>
+            <licensematcher name="MIT|NCSA" desc="">
+                <licensetext name="
+                    dual licensed under the MIT and the University of Illinois Open
                 " desc=""/>
             </licensematcher>
             <licensematcher name="c-ares license" desc="">
@@ -251,6 +280,7 @@
                 <compatibilitylicense name="blessing" desc=""/>
                 <compatibilitylicense name="NLPL" desc=""/>
                 <compatibilitylicense name="Unlicense" desc=""/>
+                <compatibilitylicense name="NCSA" desc=""/>
             </license>
             <license name="Apache-2.0" desc="">
                 <compatibilitylicense name="ApacheStyleLicense" desc=""/>
