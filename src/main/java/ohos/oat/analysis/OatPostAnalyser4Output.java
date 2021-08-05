@@ -289,6 +289,7 @@ public class OatPostAnalyser4Output implements IDocumentAnalyser {
                 // 用文件名匹配，如果匹配成功，则本策略要忽略此文件，故返回false
                 Pattern pattern = null;
                 try {
+                    fileFilterItem = fileFilterItem.replace(subject.getOatProject().getPath(), "");
                     fileFilterItem = fileFilterItem.replace("*", ".*");
                     pattern = OatMatchUtils.compilePattern(fileFilterItem);
                 } catch (final Exception e) {

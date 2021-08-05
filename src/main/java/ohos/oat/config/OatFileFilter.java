@@ -94,6 +94,10 @@ public class OatFileFilter {
     }
 
     public void addFilterItem(final String filterstr) {
+        this.addFilterItem("", filterstr);
+    }
+
+    public void addFilterItem(final String projectPath, final String filterstr) {
         if (!(filterstr != null && filterstr.trim().length() > 0)) {
             return;
         }
@@ -101,7 +105,7 @@ public class OatFileFilter {
             final String[] filter = filterstr.split("\\|");
             for (final String filterTxt : filter) {
                 if (filterTxt != null && filterTxt.trim().length() > 0) {
-                    this.oatFileFilterItems.add(filterTxt);
+                    this.oatFileFilterItems.add(projectPath + filterTxt);
                 }
             }
         } catch (final Exception e) {

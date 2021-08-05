@@ -189,7 +189,7 @@ public class OatCfgUtilTest {
         taskList.add(task);
 
         Assert.assertEquals(this.oatConfig.getTaskList(), taskList);
-        
+
     }
 
     @org.junit.Test
