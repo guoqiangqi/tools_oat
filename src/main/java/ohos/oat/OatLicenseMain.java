@@ -313,8 +313,12 @@ public class OatLicenseMain {
         final List<OatProject> projectList = oatTask.getProjectList();
 
         for (final OatProject oatProject : projectList) {
-            final FilenameFilter filenameFilter = OatLicenseMain.parseFileExclusions(
-                oatProject.getFileFilterObj().getFileFilterItems());
+            final List<String> filterItems = oatProject.getFileFilterObj().getFileFilterItems();
+            final List<String> newItems = new ArrayList<>();
+            for (final String filterItem : filterItems) {
+                newItems.add(filterItem.replace(oatProject.getPath(), ""));
+            }
+            final FilenameFilter filenameFilter = OatLicenseMain.parseFileExclusions(newItems);
             final long startTime = System.currentTimeMillis();
             final IReportable base = OatLicenseMain.getDirectoryWalker(oatConfig, oatProject, filenameFilter);
             if (base != null) {
