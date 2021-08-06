@@ -83,7 +83,8 @@ public class OatLicenseMain {
     /**
      * Prompt message when the program started
      */
-    private static final String PROMPT_MESSAGE_SEPARATOR = "----------------------------------------------------------";
+    private static final String PROMPT_MESSAGE_SEPARATOR
+        = "--------------------------------------------------------------------------";
 
     private static final String PROMPT_MESSAGE_NAME = "OpenHarmony OSS Audit Tool";
 
@@ -107,7 +108,6 @@ public class OatLicenseMain {
      * @throws Exception exception wile process
      */
     public static void main(final String[] args) throws Exception {
-        OatLogUtil.println("", System.getProperty("file.encoding"));
         OatLogUtil.println("", OatLicenseMain.PROMPT_MESSAGE_SEPARATOR);
         OatLogUtil.println("", OatLicenseMain.PROMPT_MESSAGE_NAME);
         OatLogUtil.println("", OatLicenseMain.PROMPT_MESSAGE_COPY);
@@ -134,13 +134,20 @@ public class OatLicenseMain {
         if (cmd.hasOption("s")) {
             oatConfig.setPluginMode(true);
             sourceCodeRepoPath = OatCfgUtil.formatPath(cmd.getOptionValue("s"));
+            final File tmpFile = new File(sourceCodeRepoPath);
+            if (tmpFile.exists()) {
+                sourceCodeRepoPath = OatFileUtils.getFileCanonicalPath(tmpFile);
+                sourceCodeRepoPath = OatCfgUtil.formatPath(sourceCodeRepoPath);
+            } else {
+                printUsage(options);
+            }
             if (!sourceCodeRepoPath.endsWith("/")) {
                 sourceCodeRepoPath += "/";
             }
             final String jarOatPkgPath = OatLicenseMain.class.getResource("/ohos/oat").toString();
             final String jarRootPath = jarOatPkgPath.substring(0, jarOatPkgPath.length() - 8);
             oatConfig.setBasedir(sourceCodeRepoPath);
-            OatLogUtil.println("", "jarRoot:\t" + jarRootPath);
+            OatLogUtil.warn("", "jarRoot:\t" + jarRootPath);
             oatConfig.putData("JarRootPath", jarRootPath);
             initOATCfgFile = jarRootPath + "OAT-Default.xml";
         }
@@ -178,10 +185,7 @@ public class OatLicenseMain {
         OatLogUtil.warn(OatLicenseMain.class.getSimpleName(), "CommandLine" + "\tfileList\t" + fileList);
         if (cmd.hasOption("s")) {
             if ((!cmd.hasOption("r") || !cmd.hasOption("n")) && (!cmd.hasOption("c"))) {
-                OatLogUtil.println("", "Args invalid, the valid args is: [-s sourceCodeRepoPath -r "
-                    + "reportFilePath -n nameOfRepo -m 0] or [-s sourceCodeRepoPath -r reportFilePath -n nameOfRepo -m "
-                    + "1 -f filelistSeparatedBy|]" + " ");
-                System.exit(0);
+                printUsage(options);
             }
         }
         if (cmd.hasOption("t")) {
@@ -229,18 +233,25 @@ public class OatLicenseMain {
         } catch (final ParseException e) {
             OatLogUtil.traceException(e);
         }
-        if (ArrayUtils.isEmpty(args) || (cmd != null && cmd.hasOption("h"))) {
+        if (ArrayUtils.isEmpty(args) || cmd == null || cmd.hasOption("h")) {
             printUsage(options);
         }
+        if (!(cmd.hasOption("i")) && !(cmd.hasOption("s"))) {
+            printUsage(options);
+        }
+
         return cmd;
     }
 
     private static void printUsage(final Options opts) {
         final HelpFormatter helpFormatter = new HelpFormatter();
+        helpFormatter.setWidth(120);
         final String messageHeader = "\nAvailable options";
 
-        helpFormatter.printHelp("java -jar ohos_ossaudittool-VERSION.jar [options] ", messageHeader, opts,
-            "---------------------------------------------------------------------", false);
+        helpFormatter.printHelp("java -Dfile.encoding=UTF-8 -jar ohos_ossaudittool-VERSION.jar [options] \n"
+            + "[Multi-Project Scan]: java -Dfile.encoding=UTF-8 -jar ohos_ossaudittool-1.0.jar -i OAT-ALL.xml \n"
+            + "[Single-Project Scan]: java -Dfile.encoding=UTF-8 -jar ohos_ossaudittool-xx.jar -s sourcedir -r "
+            + "reportdir -n nameOfRepo\n", messageHeader, opts, PROMPT_MESSAGE_SEPARATOR, false);
         System.exit(0);
     }
 

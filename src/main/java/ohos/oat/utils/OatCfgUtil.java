@@ -123,6 +123,14 @@ public final class OatCfgUtil {
         } else {
             tmpDir = OatCfgUtil.getValue(xmlconfig, "basedir");
         }
+        final File tmpFile = new File(tmpDir);
+        if (tmpFile.exists()) {
+            tmpDir = OatCfgUtil.formatPath(OatFileUtils.getFileCanonicalPath(tmpFile));
+        } else {
+            OatLogUtil.println("", "The basedir is invalid, please check it.");
+            System.exit(0);
+        }
+
         if (!tmpDir.endsWith("/")) {
             tmpDir += "/";
         }
