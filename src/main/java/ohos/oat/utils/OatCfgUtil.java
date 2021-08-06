@@ -128,7 +128,10 @@ public final class OatCfgUtil {
             tmpDir = OatCfgUtil.formatPath(OatFileUtils.getFileCanonicalPath(tmpFile));
         } else {
             OatLogUtil.println("", "The basedir is invalid, please check it.");
-            System.exit(0);
+            final String mode = oatConfig.getData("TestMode");
+            if (mode == null || mode.equals("false")) {
+                System.exit(0);
+            }
         }
 
         if (!tmpDir.endsWith("/")) {

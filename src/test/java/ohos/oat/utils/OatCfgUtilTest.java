@@ -90,6 +90,7 @@ public class OatCfgUtilTest {
         this.oatConfig.setRepositoryName("");
         this.oatConfig.setPluginCheckMode("");
         this.oatConfig.setSrcFileList("");
+        this.oatConfig.putData("TestMode", "true");
         OatCfgUtil.initOatConfig(this.oatConfig, this.initOATCfgFile, this.sourceCodeRepoPath);
         Assert.assertEquals(this.oatConfig.getBasedir(), "/home/OpenHarmony/");
 
