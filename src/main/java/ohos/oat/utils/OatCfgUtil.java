@@ -342,8 +342,20 @@ public final class OatCfgUtil {
                 oatPolicyItem.setPath(policyPath);
                 oatPolicyItem.setRule(OatCfgUtil.getElementAttrValue(policyitemCfg, "rule", "may"));
                 oatPolicyItem.setGroup(OatCfgUtil.getElementAttrValue(policyitemCfg, "group", "defaultGroup"));
-                oatPolicyItem.setFileFilter(
-                    OatCfgUtil.getElementAttrValue(policyitemCfg, "filefilter", "defaultPolicyFilter"));
+                final String policyType = oatPolicyItem.getType();
+                final String policyName = oatPolicyItem.getName();
+
+                String tmpFilterName = "defaultPolicyFilter";
+                if (policyType.equals("copyright")) {
+                    tmpFilterName = "copyrightPolicyFilter";
+                } else if (policyType.equals("filename") && policyName.equals("LICENSE")) {
+                    tmpFilterName = "licenseFileNamePolicyFilter";
+                } else if (policyType.equals("filename") && policyName.contains("README")) {
+                    tmpFilterName = "readmeFileNamePolicyFilter";
+                } else if (policyType.equals("filetype")) {
+                    tmpFilterName = "binaryFileTypePolicyFilter";
+                }
+                oatPolicyItem.setFileFilter(OatCfgUtil.getElementAttrValue(policyitemCfg, "filefilter", tmpFilterName));
                 oatPolicyItem.setDesc(OatCfgUtil.getElementAttrValue(policyitemCfg, "desc"));
                 if (oatProject != null) {
                     // Project OAT XML
