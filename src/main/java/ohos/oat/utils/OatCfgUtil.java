@@ -350,6 +350,8 @@ public final class OatCfgUtil {
                     tmpFilterName = "copyrightPolicyFilter";
                 } else if (policyType.equals("filename") && policyName.equals("LICENSE")) {
                     tmpFilterName = "licenseFileNamePolicyFilter";
+                } else if (policyType.equals("filename") && policyName.contains("README.OpenSource")) {
+                    tmpFilterName = "readmeOpenSourcefileNamePolicyFilter";
                 } else if (policyType.equals("filename") && policyName.contains("README")) {
                     tmpFilterName = "readmeFileNamePolicyFilter";
                 } else if (policyType.equals("filetype")) {
