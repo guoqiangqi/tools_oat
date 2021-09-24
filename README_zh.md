@@ -334,7 +334,7 @@ OpenHarmony项目要求许可证统一位于项目根目录，并且命名为“
 
 ## Committer审核代码<a name="section77489114429"></a>
 
-Committer在审核合入代码PR时须检查OAT报告以及各开源仓规则文件OAT.xml，每次批准代码合入时应当做到OAT检查结果清零，同时确保OAT.xml中的policy规则以及filefilter规则是合理的，对于无法确定的问题，可联系PMC或[基金会律师](law@openatom.md)一同评审。
+Committer在审核合入代码PR时须检查OAT报告以及各开源仓规则文件OAT.xml，每次批准代码合入时应当做到OAT检查结果清零，同时确保OAT.xml中的policy规则以及filefilter规则是合理的，对于无法确定的问题，可联系PMC或[基金会律师](law@openatom.md)一同评审。.
 
 ## 许可证<a name="section126611612164217"></a>
 
