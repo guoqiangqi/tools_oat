@@ -290,7 +290,23 @@ OpenHarmony社区开源仓中不应当存放过多二进制文件，如因业务
 <policyitem type="compatibility" name="BSD" path="abc/.*" rule="may" group="defaultGroup" filefilter="defaultPolicyFilter" desc=""/>
 ```
 
-注意这里的path尽可能限定到最小范围，避免将该规则泛化到更广的范围导致问题被掩盖。
+注意：
+1、policyitem的name字段应该与扫描报告中的对应，如扫描报告显示“License Not Compatible GPL-2.0+”，则name字段应该就写“GPL-2.0+”，并在desc字段中描述具体的原因，如是跨进程调用等。
+
+2、如果扫描报告检测的许可证名字为“InvalidLicense”，请将许可证映射到具体的许可证名字。
+```
+<licensematcher name="XXX License" desc="License for XXX" >
+    <licensetext name="
+    license line 1
+    license line 2
+    license line 3
+    ...
+    end
+     " desc=""/>
+</licensematcher>
+```
+
+3、policyitem的path尽可能限定到最小范围，避免将该规则泛化到更广的范围导致问题被掩盖。
 
 - 源代码许可头缺失或不兼容（License Header Invalid）
 
@@ -315,7 +331,8 @@ OpenHarmony社区开源仓中不应当存放过多二进制文件，如因业务
 ```
 <policyitem type="copyright" name="Copyright Owner" path="efg/.*" rule="may" group="defaultGroup" filefilter="copyrightPolicyFilter" desc=""/>
 ```
-
+注意：完整的版权头格式为：Copyright (C) [第一次发布年份]-[当前版本发布年份] [版权所有者]
+上述policyitem中name字段Copyright Owner不用包括Copyright (C) [第一次发布年份]-[当前版本发布年份]部分，只需配置[版权所有者]部分即可。
 如果本项目不需要该类型检测，如上游开源软件不需检测文件头是否遗漏版权声明，可通过如下方式配置：
 
 ```
