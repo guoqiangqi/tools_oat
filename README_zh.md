@@ -270,21 +270,21 @@ OAT已默认支持OSI定义的大多数许可证类型的检测，若项目使�
 
 如开源仓代码不满足OAT默认规则，则会在OAT扫描报告中呈现出相应的问题，针对不同的问题需要采取不同的措施：
 
-- 二进制文件
+- 二进制文件（Invalid File Type）
 
 OpenHarmony社区开源仓中不应当存放过多二进制文件，如因业务需要必须存放二进制文件，请按如下步骤进行处理：
 
 1、确认该二进制文件的版本是否为自研，如是自研跳到步骤3，如包含三方版权文件请执行步骤2。
 
-2、如包含三方版权文件，请确认是否有正确履行其义务，如按照三方许可证条款提供NOTICE文件声明使用的软件名、许可证及版权信息等。
+2、如包含三方版权文件，请确认是否有正确履行其义务，即按照三方许可证条款提供NOTICE文件声明使用的软件名、许可证及版权信息。
 
 3、确认该二进制文件的许可证信息，如果二进制文件对应的源码都在本仓中已开源，可以直接使用该仓的许可证；如果二进制文件对应的源码有部分不是开源的，则必须单独提供LICENSE，具体的LICENSE条款请与律师确认。
 
 4、上述步骤处理完成后，请在binaryFileTypePolicyFilter中配置该二进制文件的过滤规则，并且在desc字段中详细描述二进制文件存在的理由以及上述处理的结果。
 
-- 许可证兼容性
+- 许可证不兼容（License Not Compatible）
 
-如果开源仓用到了默认规则以外的许可证，经与律师确认该许可证可以使用，则可通过添加policyitem的方式指定该许可证：
+如果开源仓用到了默认规则（Apache，BSD，MIT）以外的许可证，经与律师确认该许可证可以使用，或者使用场景满足该许可证的要求，则可通过添加policyitem的方式指定该许可证：
 
 ```
 <policyitem type="compatibility" name="BSD" path="abc/.*" rule="may" group="defaultGroup" filefilter="defaultPolicyFilter" desc=""/>
@@ -292,7 +292,7 @@ OpenHarmony社区开源仓中不应当存放过多二进制文件，如因业务
 
 注意这里的path尽可能限定到最小范围，避免将该规则泛化到更广的范围导致问题被掩盖。
 
-- 源代码许可头
+- 源代码许可头缺失或不兼容（License Header Invalid）
 
 跟上述许可证兼容性问题类似，如要新增许可证类型可通过如下方式配置：
 
@@ -308,7 +308,7 @@ OpenHarmony社区开源仓中不应当存放过多二进制文件，如因业务
 
 如若某些文件无法添加许可头，则可以在defaultPolicyFilter中配置过滤规则，并且在desc字段中详细说明过滤的理由。
 
-- 源代码版权头
+- 源代码版权头缺失或错误（Copyright Header Invalid）
 
 如需添加新的版权所有者，可通过如下方式配置：
 
@@ -324,9 +324,17 @@ OpenHarmony社区开源仓中不应当存放过多二进制文件，如因业务
 
 如若某些文件无法添加版权头，则可以在copyrightPolicyFilter中配置过滤规则，并且在desc字段中详细说明过滤的理由。
 
-- 项目许可证文件
+- 项目许可证文件缺失（No License File）
 
 OpenHarmony项目要求许可证统一位于项目根目录，并且命名为“LICENSE”，如若是三方开源仓许可证不满足该要求，可以在licensefile字段处配置具体的LICENSE文件路径，OAT会根据此配置重新审查。
+
+- 义务履行配置文件缺失（No README.OpenSource）
+
+OpenHarmony项目要求所有第三方开源软件需要在其根目录提供README.OpenSource文件，用于在发布二进制版本时自动生成开源声明，该文件的具体写法参见[第三方开源软件引入指导](https://gitee.com/openharmony/docs/blob/master/zh-cn/contribute/%E7%AC%AC%E4%B8%89%E6%96%B9%E5%BC%80%E6%BA%90%E8%BD%AF%E4%BB%B6%E5%BC%95%E5%85%A5%E6%8C%87%E5%AF%BC.md)。
+
+- README文件缺失（No README）
+
+OpenHarmony项目要求所有开源仓根目录提供README，README_zh文件，如缺失请补充。
 
 - 其它
 
@@ -334,7 +342,7 @@ OpenHarmony项目要求许可证统一位于项目根目录，并且命名为“
 
 ## Committer审核代码<a name="section77489114429"></a>
 
-Committer在审核合入代码PR时须检查OAT报告以及各开源仓规则文件OAT.xml，每次批准代码合入时应当做到OAT检查结果清零，同时确保OAT.xml中的policy规则以及filefilter规则是合理的，对于无法确定的问题，可联系PMC或[基金会律师](law@openatom.md)一同评审。.
+Committer在审核合入代码PR时须检查OAT报告以及各开源仓规则文件OAT.xml，每次批准代码合入时应当做到OAT检查结果清零，同时确保OAT.xml中的policy规则以及filefilter规则是合理的，对于无法确定的问题，可联系PMC或[基金会律师](law@openatom.md)一同评审。
 
 ## 许可证<a name="section126611612164217"></a>
 
