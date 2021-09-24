@@ -268,7 +268,11 @@ OAT已默认支持OSI定义的大多数许可证类型的检测，若项目使�
 
 ## OAT问题确认<a name="section136713102427"></a>
 
-如开源仓代码不满足OAT默认规则，则会在OAT扫描报告中呈现出相应的问题，针对不同的问题需要采取不同的措施：
+如开源仓代码不满足OAT默认规则，则会在OAT扫描报告中呈现出相应的问题，请确认是否是问题，如果是问题请修改，如果确认不是问题，请在开源仓根目录的OAT.xml中进行屏蔽。
+注意：
+
+OpenHarmony CI门禁的问题详情界面提供了忽略问题的操作入口，但OAT工具检查的问题请不要在Web界面忽略，而应当在仓的根目录OAT.xml文件中进行确认（配置Policy或Filter），这样能确保该仓的确认信息继承到下游产品使用场景，避免重复进行问题确认；同时OAT.xml中配置规则能批量应用于很多文件，问题确认效率会更高。
+
 
 - 二进制文件（Invalid File Type）
 
@@ -287,10 +291,11 @@ OpenHarmony社区开源仓中不应当存放过多二进制文件，如因业务
 如果开源仓用到了默认规则（Apache，BSD，MIT）以外的许可证，经与律师确认该许可证可以使用，或者使用场景满足该许可证的要求，则可通过添加policyitem的方式指定该许可证：
 
 ```
-<policyitem type="compatibility" name="BSD" path="abc/.*" rule="may" group="defaultGroup" filefilter="defaultPolicyFilter" desc=""/>
+<policyitem type="compatibility" name="GPL-2.0+" path="abc/.*" rule="may" group="defaultGroup" filefilter="defaultPolicyFilter" desc="reason"/>
 ```
 
 注意：
+
 1、policyitem的name字段应该与扫描报告中的对应，如扫描报告显示“License Not Compatible GPL-2.0+”，则name字段应该就写“GPL-2.0+”，并在desc字段中描述具体的原因，如是跨进程调用等。
 
 2、如果扫描报告检测的许可证名字为“InvalidLicense”，请将许可证映射到具体的许可证名字。
