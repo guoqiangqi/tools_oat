@@ -7,8 +7,8 @@
 - [编译构建](#section137768191623)
 - [CI集成](#section7899558173218)
 - [运行](#section1634911263317)
-    - [批量模式运行](#section20292217143516)
     - [单项目模式运行](#section1771013213818)
+    - [批量模式运行](#section20292217143516)
 
 - [默认规则配置](#section729883153314)
 - [开源仓规则配置](#section119891146124010)
@@ -68,6 +68,17 @@ OpenHarmony社区开源项目采用了多种编程语言、多种构建工具，
 ## 运行<a name="section1634911263317"></a>
 
 OAT是基于Java语言开发的，因此可以运行在多种操作系统中，请确保您的环境已安装JDK8以上版本，OAT支持批量以及单项目两种运行模式：
+
+
+### 单项目模式运行<a name="section1771013213818"></a>
+
+```
+java -Dfile.encoding=UTF-8 -jar ohos_ossaudittool-xx.jar -s sourcedir -r reportdir -n nameOfRepo
+```
+
+其中第一个参数是待扫描项目的根目录路径，第二个参数为报告输出路径，本模式采用resources/OAT-Default.xml中的定义作为默认规则，如果默认规则不满足业务要求，您同样可以在开源仓根目录放置一个命名为 "OAT.xml" 的文件作为开源仓规则，详情参见[开源仓规则配置](#section119891146124010)章节的描述。
+
+OAT已集成到OpenHarmony社区门禁，门禁被触发时即以此模式在运行，您可以在resources/OAT-Default.xml中查看工具的默认规则。
 
 ### 批量模式运行<a name="section20292217143516"></a>
 
@@ -132,15 +143,6 @@ Available options
 
 6、如果默认规则不满足业务要求，您可以在各开源仓根目录放置一个命名为 "OAT.xml"的文件作为开源仓规则，详情参见[开源仓规则配置](#section119891146124010)配置章节的描述。
 
-### 单项目模式运行<a name="section1771013213818"></a>
-
-```
-java -Dfile.encoding=UTF-8 -jar ohos_ossaudittool-xx.jar -s sourcedir -r reportdir -n nameOfRepo
-```
-
-其中第一个参数是待扫描项目的根目录路径，第二个参数为报告输出路径，本模式采用resources/OAT-Default.xml中的定义作为默认规则，如果默认规则不满足业务要求，您同样可以在开源仓根目录放置一个命名为 "OAT.xml" 的文件作为开源仓规则，详情参见[开源仓规则配置](#section119891146124010)章节的描述。
-
-OAT已集成到OpenHarmony社区门禁，门禁被触发时即以此模式在运行，您可以在resources/OAT-Default.xml中查看工具的默认规则。
 
 ## 默认规则配置<a name="section729883153314"></a>
 
