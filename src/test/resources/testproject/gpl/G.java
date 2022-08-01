@@ -18,4 +18,5 @@ package testproject.gpl;
  * @author chenyaxun
  * @since 2021/06
  */
-public class G { }
+public class G {
+}

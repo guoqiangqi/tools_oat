@@ -62,7 +62,7 @@ public class OatMainReport implements IOatReport {
 
     private final OatConfig oatConfig;
 
-    private final static int threadPoolSize = 16;
+    private final static int THREAD_POOL_SIZE = 16;
 
     private int index = 0;
 
@@ -74,7 +74,7 @@ public class OatMainReport implements IOatReport {
      */
     public OatMainReport(final OatConfig oatConfig, final FileWriter writer) {
         this.oatConfig = oatConfig;
-        for (int i = 0; i < threadPoolSize; i++) {
+        for (int i = 0; i < THREAD_POOL_SIZE; i++) {
             this.docMap.put(i, new ArrayList<>());
         }
 
@@ -100,7 +100,7 @@ public class OatMainReport implements IOatReport {
     public void report(final Document document) throws RatException {
         this.docMap.get(this.index).add(document);
         this.index++;
-        if (this.index >= threadPoolSize) {
+        if (this.index >= THREAD_POOL_SIZE) {
             this.index = 0;
         }
     }
@@ -108,8 +108,8 @@ public class OatMainReport implements IOatReport {
     @Override
     public void concurrentReport() throws RatException {
         // process in thread pool and the task main thread will wait until the pool finished
-        final ExecutorService exec = Executors.newFixedThreadPool(threadPoolSize);
-        for (int i = 0; i < threadPoolSize; i++) {
+        final ExecutorService exec = Executors.newFixedThreadPool(THREAD_POOL_SIZE);
+        for (int i = 0; i < THREAD_POOL_SIZE; i++) {
             final List<Document> documentList = this.docMap.get(i);
             exec.execute(new Runnable() {
                 @Override
@@ -130,7 +130,7 @@ public class OatMainReport implements IOatReport {
         }
 
         // process in one thread of the task
-        for (int i = 0; i < threadPoolSize; i++) {
+        for (int i = 0; i < THREAD_POOL_SIZE; i++) {
             final List<Document> documentList = this.docMap.get(i);
             for (final Document document : documentList) {
                 this.processReport(document);

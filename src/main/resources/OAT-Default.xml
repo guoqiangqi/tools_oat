@@ -34,8 +34,7 @@
                 <policyitem type="filename" name="LICENSE" path="projectroot" rule="may" group="defaultGroup" filefilter="licenseFileNamePolicyFilter" desc=""/>
                 <policyitem type="filename" name="README.OpenSource" path="projectroot" rule="must" group="defaultGroup" filefilter="readmeOpenSourcefileNamePolicyFilter" desc=""/>
                 <policyitem type="filetype" name="!binary" path=".*" rule="must" group="defaultGroup" filefilter="binaryFileTypePolicyFilter" desc=""/>
-                <policyitem type="filetype" name="!archive" path=".*" rule="must" group="defaultGroup" filefilter="binaryFileTypePolicyFilter" desc=""/>
-
+                <policyitem type="filetype" name="!archive" path=".*" rule="must" group="defaultGroup" filefilter="binaryFileTypePolicyFilter" desc=""/>				
             </policy>
             <policy name="defaultPolicy" desc="">
                 <policyitem type="license" name="Apache-2.0" path="!.*LICENSE" rule="may" group="defaultGroup" filefilter="defaultPolicyFilter" desc=""/>

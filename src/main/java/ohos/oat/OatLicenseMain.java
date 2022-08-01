@@ -66,6 +66,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.FilenameFilter;
 import java.io.IOException;
+import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -144,7 +145,11 @@ public class OatLicenseMain {
             if (!sourceCodeRepoPath.endsWith("/")) {
                 sourceCodeRepoPath += "/";
             }
-            final String jarOatPkgPath = OatLicenseMain.class.getResource("/ohos/oat").toString();
+            URL oatResource = OatLicenseMain.class.getResource("/ohos/oat");
+            if (oatResource == null) {
+                throw new Exception("oat jar path is empty");
+            }
+            final String jarOatPkgPath = oatResource.toString();
             final String jarRootPath = jarOatPkgPath.substring(0, jarOatPkgPath.length() - 8);
             oatConfig.setBasedir(sourceCodeRepoPath);
             OatLogUtil.warn("", "jarRoot:\t" + jarRootPath);
@@ -406,16 +411,17 @@ public class OatLicenseMain {
         final List<String> subProjects = new ArrayList<>();
 
         final File[] files = prjFile.listFiles();
-        for (final File file : files) {
-            if (!file.isDirectory()) {
-                continue;
+        if (files != null && files.length > 0) {
+            for (final File file : files) {
+                if (!file.isDirectory()) {
+                    continue;
+                }
+                if (file.getName().equals(".git")) {
+                    continue;
+                }
+                collectSubPrjects(subProjects, prjPath, file, 1);
             }
-            if (file.getName().equals(".git")) {
-                continue;
-            }
-            collectSubPrjects(subProjects, prjPath, file, 1);
         }
-
         for (final String subProject : subProjects) {
             OatLogUtil.warn(OatLicenseMain.class.getSimpleName(),
                 oatProject.getPath() + "\tsubProject\t" + "<project name=\"" + subProject + "\" path=\"" + subProject
@@ -430,17 +436,19 @@ public class OatLicenseMain {
         }
         final int nextDepth = depth + 1;
         final File[] subFiles = file.listFiles();
-        for (final File subFile : subFiles) {
-            if (!subFile.isDirectory()) {
-                continue;
+        if (subFiles != null && subFiles.length > 0) {
+            for (final File subFile : subFiles) {
+                if (!subFile.isDirectory()) {
+                    continue;
+                }
+                if (subFile.getName().equals(".git")) {
+                    final String subPath = OatCfgUtil.formatPath(OatFileUtils.getFileCanonicalPath(file)) + "/";
+                    final String subPrjPath = subPath.replace(prjPath, "");
+                    subProjects.add(subPrjPath);
+                    continue;
+                }
+                collectSubPrjects(subProjects, prjPath, subFile, nextDepth);
             }
-            if (subFile.getName().equals(".git")) {
-                final String subPath = OatCfgUtil.formatPath(OatFileUtils.getFileCanonicalPath(file)) + "/";
-                final String subPrjPath = subPath.replace(prjPath, "");
-                subProjects.add(subPrjPath);
-                continue;
-            }
-            collectSubPrjects(subProjects, prjPath, subFile, nextDepth);
         }
     }
 

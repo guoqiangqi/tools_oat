@@ -19,4 +19,5 @@ package testproject.apache;
  * @author chenyaxun
  * @since 2021/06
  */
-public class A { }
+public class A {
+}

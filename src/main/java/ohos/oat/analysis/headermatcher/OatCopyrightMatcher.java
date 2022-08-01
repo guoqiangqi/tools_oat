@@ -47,9 +47,9 @@ public class OatCopyrightMatcher implements IOatHeaderMatcher {
     @Override
     public boolean match(final Document subject, final String licensHeaderText) throws RatHeaderAnalysisException {
         this.line++;
-        if (this.line > 50) {
-            // return true;
-        }
+//        if (this.line > 50) {
+//            // return true;
+//        }
         String tmpText = licensHeaderText;
         final MetaData metaData = subject.getMetaData();
         String owner = metaData.value("copyright-owner");
