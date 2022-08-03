@@ -138,7 +138,10 @@ public class OatFileUtils {
         final File file = new File(filePath);
         if (!file.exists()) {
             try {
-                file.createNewFile();
+                boolean success = file.createNewFile();
+                if (!success) {
+                    OatLogUtil.traceException(new Exception("create file error"));
+                }
             } catch (final IOException e) {
                 OatLogUtil.traceException(e);
             }
@@ -153,7 +156,7 @@ public class OatFileUtils {
     }
 
     public static <T> List<T> readJsonFromFile(final String filePath, final Class<OatLicense> t) {
-        final File file = new File(filePath);
+//        final File file = new File(filePath);
         // if (!file.exists()) {
         //     return null;
         // }
@@ -167,9 +170,12 @@ public class OatFileUtils {
             final InputStreamReader inputStreamReader = new InputStreamReader(fileInputStream, "UTF-8");
             final BufferedReader reader = new BufferedReader(inputStreamReader);) {
             String tempString = null;
+            StringBuffer buffer = new StringBuffer();
+            buffer.append(readJson);
             while ((tempString = reader.readLine()) != null) {
-                readJson += tempString;
+                buffer.append(tempString);
             }
+            readJson = buffer.toString();
         } catch (final IOException e) {
             OatLogUtil.traceException(e);
         }

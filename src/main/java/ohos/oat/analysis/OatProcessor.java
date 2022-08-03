@@ -122,7 +122,7 @@ import java.util.Map;
  * @since 1.0
  */
 public class OatProcessor {
-    private int PROCESS_LINE_COUNT = 150;
+    private int processLineCount = 150;
 
     private static final String[] SKIP_STRINGS = {
 
@@ -150,19 +150,19 @@ public class OatProcessor {
 
     private final StringBuffer cleanHeaderText = new StringBuffer();
 
-    private final List<IOatHeaderMatcher> defaultHeaderMatchers_ori = new ArrayList<>();
+    private final List<IOatHeaderMatcher> defaultHeaderMatchersOri = new ArrayList<>();
 
-    private final List<IOatHeaderMatcher> defaultHeaderMatchers_clean = new ArrayList<>();
+    private final List<IOatHeaderMatcher> defaultHeaderMatchersClean = new ArrayList<>();
 
-    private final List<IOatHeaderMatcher> defaultHeaderMatchers_exception_clean = new ArrayList<>();
+    private final List<IOatHeaderMatcher> defaultHeaderMatchersExceptionClean = new ArrayList<>();
 
-    private final List<IOatHeaderMatcher> definedHeaderMatchers_ori = new ArrayList<>();
+    private final List<IOatHeaderMatcher> definedHeaderMatchersOri = new ArrayList<>();
 
-    private final List<IOatHeaderMatcher> definedHeaderMatchers_clean = new ArrayList<>();
+    private final List<IOatHeaderMatcher> definedHeaderMatchersClean = new ArrayList<>();
 
-    private final List<IOatHeaderMatcher> definedHeaderMatchers_clean_gpl = new ArrayList<>();
+    private final List<IOatHeaderMatcher> definedHeaderMatchersCleanGpl = new ArrayList<>();
 
-    private final List<IOatHeaderMatcher> customizedHeaderMatchers_clean = new ArrayList<>();
+    private final List<IOatHeaderMatcher> customizedHeaderMatchersClean = new ArrayList<>();
 
     private final BufferedReader fileReader;
 
@@ -190,19 +190,22 @@ public class OatProcessor {
             OatLogUtil.error(this.getClass().getSimpleName(), "Document invalid: " + fileDocument.getClass().getName());
         }
         this.oatConfig = oatConfig;
-        this.repoDisplayName = this.fileDocument.getOatProject().getPath();
+        if (this.fileDocument != null) {
+            this.repoDisplayName = this.fileDocument.getOatProject().getPath();
+        }
         if (this.repoDisplayName.endsWith("/")) {
             this.repoDisplayName = this.repoDisplayName.substring(0, this.repoDisplayName.length() - 1);
         }
         this.repoDisplayName = this.repoDisplayName.replace("/", "_");
         final String licensefilename = OatCfgUtil.getShortPath(this.oatConfig, fileDocument.getName());
-        if (this.fileDocument.getOatProject()
-            .getProjectFileDocument()
-            .getListData("LICENSEFILE")
-            .contains(licensefilename)) {
-            this.PROCESS_LINE_COUNT = 3000;
+        if (this.fileDocument != null) {
+            if (this.fileDocument.getOatProject()
+                    .getProjectFileDocument()
+                    .getListData("LICENSEFILE")
+                    .contains(licensefilename)) {
+                this.processLineCount = 3000;
+            }
         }
-
         this.initMatchers();
     }
 
@@ -216,21 +219,21 @@ public class OatProcessor {
 
     private void initDefaultMatchers() {
         // matchers need the original header texts        
-        this.defaultHeaderMatchers_ori.add(new OatCopyrightMatcher());
-        this.defaultHeaderMatchers_ori.add(new OatImportMatcher());
-        this.defaultHeaderMatchers_ori.add(new InvalidLicense());
-        this.defaultHeaderMatchers_ori.add(new OatSpdxLabelLicenseMatcher());
+        this.defaultHeaderMatchersOri.add(new OatCopyrightMatcher());
+        this.defaultHeaderMatchersOri.add(new OatImportMatcher());
+        this.defaultHeaderMatchersOri.add(new InvalidLicense());
+        this.defaultHeaderMatchersOri.add(new OatSpdxLabelLicenseMatcher());
 
         // matchers only need the cleaned and lowercase texts
         final List<OatLicense> spdxLicenseList = this.oatConfig.getLicenseList();
         for (final OatLicense oatLicense : spdxLicenseList) {
-            this.defaultHeaderMatchers_clean.add(
+            this.defaultHeaderMatchersClean.add(
                 new OatSpdxTextLicenseMatcher(oatLicense.getLicenseId(), oatLicense.getLicenseHeaderText(),
                     oatLicense.getUrls()));
         }
         final List<OatLicense> spdxLicenseExceptionList = this.oatConfig.getExceptionLicenseList();
         for (final OatLicense oatLicense : spdxLicenseExceptionList) {
-            this.defaultHeaderMatchers_exception_clean.add(
+            this.defaultHeaderMatchersExceptionClean.add(
                 new OatSpdxTextLicenseExceptionMatcher(oatLicense.getLicenseId(), oatLicense.getLicenseHeaderText(),
                     oatLicense.getUrls()));
         }
@@ -238,66 +241,66 @@ public class OatProcessor {
     }
 
     private void initDefinedMatchers() {
-        this.definedHeaderMatchers_clean.add(new Apache2License());
-        this.definedHeaderMatchers_clean.add(new MITLicense());
-        this.definedHeaderMatchers_clean.add(new MITLicense2());
-        this.definedHeaderMatchers_clean.add(new MITLicense3());
-        this.definedHeaderMatchers_clean.add(new MITLicense5());
-        this.definedHeaderMatchers_clean.add(new W3CLicense());
-        this.definedHeaderMatchers_clean.add(new W3CDocLicense());
-        this.definedHeaderMatchers_clean.add(new DojoLicense());
-        this.definedHeaderMatchers_clean.add(new TMF854License());
-        this.definedHeaderMatchers_clean.add(new CDDL1License());
-        this.definedHeaderMatchers_clean.add(new CDDL1License2());
-        this.definedHeaderMatchers_clean.add(new BSD2ClauseLicense());
-        this.definedHeaderMatchers_clean.add(new BSD2ClauseLicense2());
-        this.definedHeaderMatchers_clean.add(new BSD3ClauseLicense());
-        this.definedHeaderMatchers_clean.add(new BSD3ClauseLicense2());
-        this.definedHeaderMatchers_clean.add(new BSD3ClauseLicense3());
-        this.definedHeaderMatchers_clean.add(new BSD3ClauseLicense4());
-        this.definedHeaderMatchers_clean.add(new BSD3ClauseLicense5());
-        this.definedHeaderMatchers_clean.add(new BSD3ClauseLicense6());
-        this.definedHeaderMatchers_clean.add(new BSD4ClauseLicense());
-        this.definedHeaderMatchers_clean.add(new OriginalBSDLicense());
-        this.definedHeaderMatchers_clean.add(new ZopePublicLicense());
-        this.definedHeaderMatchers_clean.add(new FreeBSDLicense());
-        this.definedHeaderMatchers_clean.add(new BSD1ClauseLicense());
-        this.definedHeaderMatchers_clean.add(new BSD1ClauseLicense2());
-        this.definedHeaderMatchers_clean.add(new BSD0ClauseLicense());
-        this.definedHeaderMatchers_clean.add(new NuttXBSDLicense());
-        this.definedHeaderMatchers_clean.add(new ZlibLicense());
-        this.definedHeaderMatchers_clean.add(new ZlibLibpngLicense2());
-        this.definedHeaderMatchers_clean.add(new MITLicense1());
-        this.definedHeaderMatchers_clean.add(new MulanLicense());
-        this.definedHeaderMatchers_clean.add(new LibertyLicense2());
-        this.definedHeaderMatchers_clean.add(new XConsortiumLicense());
-        this.definedHeaderMatchers_clean.add(new PublicDomainLicense());
-        this.definedHeaderMatchers_clean.add(new CreativeCommonsAttribution4InternationalPublicLicense());
-        this.definedHeaderMatchers_clean.add(new CurlLicense());
-        this.definedHeaderMatchers_clean.add(new FreeTypeProjectLicense());
-        this.definedHeaderMatchers_clean.add(new LibpngLicense());
-        this.definedHeaderMatchers_clean.add(new ApplePublicSourceLicense());
-        this.definedHeaderMatchers_clean.add(new OpenSSLLicense());
-        this.definedHeaderMatchers_clean.add(new OpenSSLLicense2());
-        this.definedHeaderMatchers_clean.add(new Apache2License2());
-        this.definedHeaderMatchers_clean.add(new EndUserLicenseAgreement());
-        this.definedHeaderMatchers_clean.add(new ThirdPartyNotice());
-        this.definedHeaderMatchers_clean.add(new BSLLicense());
-        this.definedHeaderMatchers_clean.add(new DerivedLicense());
-        this.definedHeaderMatchers_clean.add(new BSDStyleLicense());
-        this.definedHeaderMatchers_clean.add(new BSDStyleLicense2());
-        this.definedHeaderMatchers_clean.add(new ApacheStyleLicense());
-        this.definedHeaderMatchers_clean.add(new GPL2WithClassPathExceptionLicense());
-        this.definedHeaderMatchers_clean.add(new GPL1License());
-        this.definedHeaderMatchers_clean.add(new GPL2License());
-        this.definedHeaderMatchers_clean.add(new GPL2License2());
-        this.definedHeaderMatchers_clean.add(new GPL3License());
-        this.definedHeaderMatchers_clean.add(new LGPLLicense());
-        this.definedHeaderMatchers_clean_gpl.add(new GPLStyleLicense2());
-        this.definedHeaderMatchers_clean_gpl.add(new LGPLStyleLicense2());
-        this.definedHeaderMatchers_clean_gpl.add(new LGPLStyleLicense3());
-        this.definedHeaderMatchers_ori.add(new LGPLStyleLicense());
-        this.definedHeaderMatchers_ori.add(new GPLStyleLicense());
+        this.definedHeaderMatchersClean.add(new Apache2License());
+        this.definedHeaderMatchersClean.add(new MITLicense());
+        this.definedHeaderMatchersClean.add(new MITLicense2());
+        this.definedHeaderMatchersClean.add(new MITLicense3());
+        this.definedHeaderMatchersClean.add(new MITLicense5());
+        this.definedHeaderMatchersClean.add(new W3CLicense());
+        this.definedHeaderMatchersClean.add(new W3CDocLicense());
+        this.definedHeaderMatchersClean.add(new DojoLicense());
+        this.definedHeaderMatchersClean.add(new TMF854License());
+        this.definedHeaderMatchersClean.add(new CDDL1License());
+        this.definedHeaderMatchersClean.add(new CDDL1License2());
+        this.definedHeaderMatchersClean.add(new BSD2ClauseLicense());
+        this.definedHeaderMatchersClean.add(new BSD2ClauseLicense2());
+        this.definedHeaderMatchersClean.add(new BSD3ClauseLicense());
+        this.definedHeaderMatchersClean.add(new BSD3ClauseLicense2());
+        this.definedHeaderMatchersClean.add(new BSD3ClauseLicense3());
+        this.definedHeaderMatchersClean.add(new BSD3ClauseLicense4());
+        this.definedHeaderMatchersClean.add(new BSD3ClauseLicense5());
+        this.definedHeaderMatchersClean.add(new BSD3ClauseLicense6());
+        this.definedHeaderMatchersClean.add(new BSD4ClauseLicense());
+        this.definedHeaderMatchersClean.add(new OriginalBSDLicense());
+        this.definedHeaderMatchersClean.add(new ZopePublicLicense());
+        this.definedHeaderMatchersClean.add(new FreeBSDLicense());
+        this.definedHeaderMatchersClean.add(new BSD1ClauseLicense());
+        this.definedHeaderMatchersClean.add(new BSD1ClauseLicense2());
+        this.definedHeaderMatchersClean.add(new BSD0ClauseLicense());
+        this.definedHeaderMatchersClean.add(new NuttXBSDLicense());
+        this.definedHeaderMatchersClean.add(new ZlibLicense());
+        this.definedHeaderMatchersClean.add(new ZlibLibpngLicense2());
+        this.definedHeaderMatchersClean.add(new MITLicense1());
+        this.definedHeaderMatchersClean.add(new MulanLicense());
+        this.definedHeaderMatchersClean.add(new LibertyLicense2());
+        this.definedHeaderMatchersClean.add(new XConsortiumLicense());
+        this.definedHeaderMatchersClean.add(new PublicDomainLicense());
+        this.definedHeaderMatchersClean.add(new CreativeCommonsAttribution4InternationalPublicLicense());
+        this.definedHeaderMatchersClean.add(new CurlLicense());
+        this.definedHeaderMatchersClean.add(new FreeTypeProjectLicense());
+        this.definedHeaderMatchersClean.add(new LibpngLicense());
+        this.definedHeaderMatchersClean.add(new ApplePublicSourceLicense());
+        this.definedHeaderMatchersClean.add(new OpenSSLLicense());
+        this.definedHeaderMatchersClean.add(new OpenSSLLicense2());
+        this.definedHeaderMatchersClean.add(new Apache2License2());
+        this.definedHeaderMatchersClean.add(new EndUserLicenseAgreement());
+        this.definedHeaderMatchersClean.add(new ThirdPartyNotice());
+        this.definedHeaderMatchersClean.add(new BSLLicense());
+        this.definedHeaderMatchersClean.add(new DerivedLicense());
+        this.definedHeaderMatchersClean.add(new BSDStyleLicense());
+        this.definedHeaderMatchersClean.add(new BSDStyleLicense2());
+        this.definedHeaderMatchersClean.add(new ApacheStyleLicense());
+        this.definedHeaderMatchersClean.add(new GPL2WithClassPathExceptionLicense());
+        this.definedHeaderMatchersClean.add(new GPL1License());
+        this.definedHeaderMatchersClean.add(new GPL2License());
+        this.definedHeaderMatchersClean.add(new GPL2License2());
+        this.definedHeaderMatchersClean.add(new GPL3License());
+        this.definedHeaderMatchersClean.add(new LGPLLicense());
+        this.definedHeaderMatchersCleanGpl.add(new GPLStyleLicense2());
+        this.definedHeaderMatchersCleanGpl.add(new LGPLStyleLicense2());
+        this.definedHeaderMatchersCleanGpl.add(new LGPLStyleLicense3());
+        this.definedHeaderMatchersOri.add(new LGPLStyleLicense());
+        this.definedHeaderMatchersOri.add(new GPLStyleLicense());
 
     }
 
@@ -305,23 +308,25 @@ public class OatProcessor {
         for (final Map.Entry<String, List<String>> stringListEntry : this.oatConfig.getLicenseText2NameMap()
             .entrySet()) {
             for (final String licenseTxt : stringListEntry.getValue()) {
-                this.customizedHeaderMatchers_clean.add(new OatCustomizedTextLicenseMatcher(stringListEntry.getKey(),
+                this.customizedHeaderMatchersClean.add(new OatCustomizedTextLicenseMatcher(stringListEntry.getKey(),
                     OatLicenseTextUtil.cleanAndLowerCaseLetter(licenseTxt)));
             }
         }
-        for (final Map.Entry<String, List<String>> stringListEntry : this.fileDocument.getOatProject()
-            .getPrjLicenseText2NameMap()
-            .entrySet()) {
-            for (final String licenseTxt : stringListEntry.getValue()) {
-                this.customizedHeaderMatchers_clean.add(new OatCustomizedTextLicenseMatcher(stringListEntry.getKey(),
-                    OatLicenseTextUtil.cleanAndLowerCaseLetter(licenseTxt)));
+        if (this.fileDocument != null) {
+            for (final Map.Entry<String, List<String>> stringListEntry : this.fileDocument.getOatProject()
+                    .getPrjLicenseText2NameMap()
+                    .entrySet()) {
+                for (final String licenseTxt : stringListEntry.getValue()) {
+                    this.customizedHeaderMatchersClean.add(new OatCustomizedTextLicenseMatcher(stringListEntry.getKey(),
+                            OatLicenseTextUtil.cleanAndLowerCaseLetter(licenseTxt)));
+                }
             }
         }
     }
 
     public void read() throws RatHeaderAnalysisException {
 
-        this.headerLinesToRead = this.PROCESS_LINE_COUNT;
+        this.headerLinesToRead = this.processLineCount;
         try {
             while (this.readLine()) {
                 // do nothing
@@ -330,7 +335,7 @@ public class OatProcessor {
             throw new RatHeaderAnalysisException("Read file failed: " + this.fileDocument, e);
         }
         IOUtils.closeQuietly(this.fileReader);
-        if (this.PROCESS_LINE_COUNT - this.headerLinesToRead < 3) {
+        if (this.processLineCount - this.headerLinesToRead < 3) {
             this.fileDocument.putData("isSkipedFile", "true");
         }
         final String tmp = this.fileDocument.getData("isSkipedFile");
@@ -343,7 +348,7 @@ public class OatProcessor {
     }
 
     private void match() throws RatHeaderAnalysisException {
-        for (final IOatHeaderMatcher iOatHeaderMatcher : this.defaultHeaderMatchers_ori) {
+        for (final IOatHeaderMatcher iOatHeaderMatcher : this.defaultHeaderMatchersOri) {
             for (final String line : this.oriHeaderTextList) {
                 if (this.matchLine(line, iOatHeaderMatcher)) {
                     break;
@@ -354,28 +359,28 @@ public class OatProcessor {
         if (OatMatchUtils.stopWhileMatchedSpdx(licenseName)) {
             return;
         }
-        for (final IOatHeaderMatcher iOatHeaderMatcher : this.defaultHeaderMatchers_clean) {
+        for (final IOatHeaderMatcher iOatHeaderMatcher : this.defaultHeaderMatchersClean) {
             for (final String line : this.cleanHeaderTextList) {
                 if (this.matchLine(line, iOatHeaderMatcher)) {
                     break;
                 }
             }
         }
-        for (final IOatHeaderMatcher iOatHeaderMatcher : this.definedHeaderMatchers_clean) {
+        for (final IOatHeaderMatcher iOatHeaderMatcher : this.definedHeaderMatchersClean) {
             for (final String line : this.cleanHeaderTextList) {
                 if (this.matchLine(line, iOatHeaderMatcher)) {
                     break;
                 }
             }
         }
-        for (final IOatHeaderMatcher iOatHeaderMatcher : this.definedHeaderMatchers_ori) {
+        for (final IOatHeaderMatcher iOatHeaderMatcher : this.definedHeaderMatchersOri) {
             for (final String line : this.oriHeaderTextList) {
                 if (this.matchLine(line, iOatHeaderMatcher)) {
                     break;
                 }
             }
         }
-        for (final IOatHeaderMatcher iOatHeaderMatcher : this.definedHeaderMatchers_clean_gpl) {
+        for (final IOatHeaderMatcher iOatHeaderMatcher : this.definedHeaderMatchersCleanGpl) {
             for (final String line : this.cleanHeaderTextList) {
                 if (this.matchLine(line, iOatHeaderMatcher)) {
                     break;
@@ -383,14 +388,14 @@ public class OatProcessor {
             }
         }
 
-        for (final IOatHeaderMatcher iOatHeaderMatcher : this.customizedHeaderMatchers_clean) {
+        for (final IOatHeaderMatcher iOatHeaderMatcher : this.customizedHeaderMatchersClean) {
             for (final String line : this.cleanHeaderTextList) {
                 if (this.matchLine(line, iOatHeaderMatcher)) {
                     break;
                 }
             }
         }
-        for (final IOatHeaderMatcher iOatHeaderMatcher : this.defaultHeaderMatchers_exception_clean) {
+        for (final IOatHeaderMatcher iOatHeaderMatcher : this.defaultHeaderMatchersExceptionClean) {
             for (final String line : this.cleanHeaderTextList) {
                 if (this.matchLine(line, iOatHeaderMatcher)) {
                     break;
@@ -463,7 +468,7 @@ public class OatProcessor {
         if (this.oatConfig.isPluginMode()) {
             lineToProcess = 10;
         }
-        if (this.PROCESS_LINE_COUNT - this.headerLinesToRead > lineToProcess) {
+        if (this.processLineCount - this.headerLinesToRead > lineToProcess) {
             final String fileName = this.fileDocument.getName();
             if (fileName.endsWith(".java")) {
                 return !line.startsWith("public class ") && !line.startsWith("public final ") && !line.startsWith(

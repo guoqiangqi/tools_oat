@@ -46,7 +46,7 @@ public class OatSpdxTextLicenseExceptionMatcher extends OatFullTextLicenseMatche
 
     @Override
     public boolean match(final Document subject, final String line) throws RatHeaderAnalysisException {
-        final String licenseName = subject.getMetaData().value(MetaData.RAT_URL_LICENSE_FAMILY_NAME);
+//        final String licenseName = subject.getMetaData().value(MetaData.RAT_URL_LICENSE_FAMILY_NAME);
         final boolean matchResult = super.match(subject, line);
         if (!matchResult) {
             for (final String url : this.urls) {

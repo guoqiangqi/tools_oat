@@ -36,7 +36,7 @@ import java.util.regex.PatternSyntaxException;
 
 public class OatMatchUtils {
 
-    private static final String[] copyLeftLicenseName = new String[] {
+    private static final String[]  COPY_LEFT_LICENSE_NAME = new String[] {
         "CeCILL", "GPL", "MPL", "EPL", "CDDL", "CPL", "IPL", "NPL", "OSL"
     };
 
@@ -74,17 +74,17 @@ public class OatMatchUtils {
     }
 
     public static boolean needMatchAgain(final String matchedName, final String licenseNameToMatch) {
-        if (matchedName == null || (matchedName != null && matchedName.equals("InvalidLicense"))) {
+        if (matchedName == null || matchedName.equals("InvalidLicense")) {
             return true;
         }
 
-        for (final String name : copyLeftLicenseName) {
+        for (final String name : COPY_LEFT_LICENSE_NAME) {
             if (matchedName.contains(name)) {
                 return false;
             }
         }
 
-        for (final String name : copyLeftLicenseName) {
+        for (final String name : COPY_LEFT_LICENSE_NAME) {
             if (licenseNameToMatch.contains(name)) {
                 return true;
             }

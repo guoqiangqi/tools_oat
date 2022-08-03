@@ -109,7 +109,9 @@ public class OatOutputReport implements RatReport {
         if (document instanceof OatFileDocument) {
             oatFileDocument = (OatFileDocument) document;
         }
-
+        if (oatFileDocument == null) {
+            throw new RatException("get document error");
+        }
         final MetaData metaData = oatFileDocument.getMetaData();
         String tmpString = metaData.value(MetaData.RAT_URL_APPROVED_LICENSE);
         if (tmpString != null && tmpString.equals("false")) {
@@ -227,7 +229,7 @@ public class OatOutputReport implements RatReport {
                 string = this.name + "\t" + this.content + "\t" + this.line + "\t" + this.project + "\t" + this.file
                     + "\n";
             }
-            final String[] sss = string.split("\t");
+//            final String[] sss = string.split("\t");
             return string;
         }
 
