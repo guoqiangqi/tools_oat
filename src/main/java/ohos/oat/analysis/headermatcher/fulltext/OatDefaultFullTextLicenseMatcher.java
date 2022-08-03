@@ -42,7 +42,8 @@ public class OatDefaultFullTextLicenseMatcher extends OatFullTextLicenseMatcher 
     @Override
     public boolean match(final Document subject, final String line) throws RatHeaderAnalysisException {
         final String licenseName = subject.getMetaData().value(MetaData.RAT_URL_LICENSE_FAMILY_CATEGORY);
-        if (OatMatchUtils.needMatchAgain(licenseName, this.getLicenseFamilyName())) {// copyleft need match again
+        if (OatMatchUtils.needMatchAgain(licenseName, this.getLicenseFamilyName())) {
+            // copyleft need match again
             if (this.stopWhileMatched(licenseName)) {
                 return true;
             }

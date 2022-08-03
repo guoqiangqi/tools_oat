@@ -53,7 +53,7 @@ import java.util.regex.Pattern;
  */
 public class OatDirectoryWalker extends Walker {
     // FileComparator to sort projects
-    private final FileNameComparator COMPARATOR = new FileNameComparator();
+    private final FileNameComparator comparator = new FileNameComparator();
 
     // project of this walker
     private final OatProject oatProject;
@@ -188,7 +188,7 @@ public class OatDirectoryWalker extends Walker {
         if (this.needCheck(file)) {
             final File[] files = file.listFiles();
             if (files != null) {
-                Arrays.sort(files, this.COMPARATOR);
+                Arrays.sort(files, this.comparator);
                 // breadth first traversal
                 this.processNonDirectories(report, files);
                 this.processDirectories(report, files);

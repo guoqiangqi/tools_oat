@@ -29,13 +29,13 @@ import org.apache.logging.log4j.Logger;
  * @since 1.0
  */
 public final class OatLogUtil {
-    private static final Logger logger = LogManager.getLogger("Log");
+    private static final Logger LOGGER = LogManager.getLogger("Log");
 
-    private static final Logger licenseLogger = LogManager.getLogger("Log_License");
+    private static final Logger LICENSE_LOGGER = LogManager.getLogger("Log_License");
 
-    private static final Logger licenseFileLogger = LogManager.getLogger("Log_License_File");
+    private static final Logger LICENSE_FILE_LOGGER = LogManager.getLogger("Log_License_File");
 
-    private static final Logger oatConfigLogger = LogManager.getLogger("Log_OAT_Config");
+    private static final Logger OAT_CONFIG_LOGGER = LogManager.getLogger("Log_OAT_Config");
 
     private static boolean isDebugMode = false;
 
@@ -72,7 +72,7 @@ public final class OatLogUtil {
      */
     public static void info(final String className, final String logtext) {
         if (isDebugMode) {
-            logger.info(className + "\t" + logtext);
+            LOGGER.info(className + "\t" + logtext);
         }
     }
 
@@ -84,7 +84,7 @@ public final class OatLogUtil {
      */
     public static void warn(final String className, final String logtext) {
         if (isDebugMode) {
-            logger.warn(className + "\t" + logtext);
+            LOGGER.warn(className + "\t" + logtext);
         }
     }
 
@@ -96,7 +96,7 @@ public final class OatLogUtil {
      */
     public static void error(final String className, final String logtext) {
         if (isDebugMode) {
-            logger.error(className + "\t" + logtext);
+            LOGGER.error(className + "\t" + logtext);
         }
     }
 
@@ -116,7 +116,7 @@ public final class OatLogUtil {
      * @param logtext log text
      */
     public static void logLicense(final String className, final String logtext) {
-        licenseLogger.warn(className + "\t" + logtext);
+        LICENSE_LOGGER.warn(className + "\t" + logtext);
     }
 
     /**
@@ -126,7 +126,7 @@ public final class OatLogUtil {
      * @param logtext log text
      */
     public static void logLicenseFile(final String className, final String logtext) {
-        licenseFileLogger.warn(className + "\t" + logtext);
+        LICENSE_FILE_LOGGER.warn(className + "\t" + logtext);
     }
 
     /**
@@ -136,7 +136,7 @@ public final class OatLogUtil {
      * @param logtext log text
      */
     public static void logOatConfig(final String className, final String logtext) {
-        oatConfigLogger.warn(className + "\t" + logtext);
+        OAT_CONFIG_LOGGER.warn(className + "\t" + logtext);
     }
 
 }

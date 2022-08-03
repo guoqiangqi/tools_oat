@@ -67,9 +67,8 @@ public class OatSpdxLabelLicenseMatcher extends BaseLicense implements IOatHeade
 
         final Matcher matcher = this.pattern.matcher(licensHeaderText);
         if (matcher.find()) {
-            String cp = licensHeaderText;
             if (matcher.groupCount() >= 2) {
-                cp = matcher.group(2).trim();
+                String cp = matcher.group(2).trim();
                 final String familyCategory = this.getLicenseFamilyCategory();
                 final String familyName = this.getLicenseFamilyName();
                 this.setLicenseFamilyCategory((familyCategory == null ? "" : familyCategory) + " SPDX:" + cp);

@@ -34,4 +34,5 @@ package testproject.bsd;
  * @author chenyaxun
  * @since 2021/06
  */
-public class B { }
+public class B {
+}

@@ -512,6 +512,7 @@ public class OatPostAnalyser4Output implements IDocumentAnalyser {
         final String thisDir = OatCfgUtil.getShortPath(this.oatConfig, subject.getName() + "/");
         String name = "";
         if (list != null && list.size() > 0) {
+            StringBuffer buffer = new StringBuffer();
             for (final String fileName : list) {
                 if (!fileName.contains(thisDir)) {
                     continue;
@@ -519,9 +520,10 @@ public class OatPostAnalyser4Output implements IDocumentAnalyser {
                 final String tmpStr = fileName.replace(thisDir, "");
                 if (!tmpStr.contains("/")) {
                     // only check files in this dir layer
-                    name = name + " " + fileName;
+                    buffer.append(name).append(" ").append(fileName);
                 }
             }
+            name = buffer.toString();
         }
         if (name.equals("")) {
             name = "NULL";
@@ -555,7 +557,7 @@ public class OatPostAnalyser4Output implements IDocumentAnalyser {
         final List<OatPolicyItem> licensePolicyItems = oatPolicy.getPolicyItems("license");
         boolean isApproved = false;
         isApproved = this.verify(subject, filePath, name, licensePolicyItems);
-        subject.getMetaData().set( //
+        subject.getMetaData().set(
             isApproved ? MetaData.RAT_APPROVED_LICENSE_DATIM_TRUE : MetaData.RAT_APPROVED_LICENSE_DATIM_FALSE);
     }
 
@@ -685,10 +687,10 @@ public class OatPostAnalyser4Output implements IDocumentAnalyser {
             }
             boolean endValid = true;
             // 针对各组May进行分析，如果有一个必须的组是False，则结果为False
-            for (final String groupkey : map.keySet()) {
-                final List<ValidResult> lst = map.get(groupkey);
+            for (final Map.Entry<String, List<ValidResult>> entry : map.entrySet()) {
+                final List<ValidResult> lst = entry.getValue();
                 // 只处理必须的组
-                if (groupkey.equals("notRequired")) {
+                if (entry.getKey().equals("notRequired")) {
                     continue;
                 }
                 boolean isvalid = false;
