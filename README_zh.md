@@ -359,7 +359,7 @@ OpenHarmony项目要求所有第三方开源软件需要在其根目录提供REA
 
 - README文件缺失（No README）
 
-OpenHarmony项目要求所有开源仓根目录提供README，README_zh文件，如缺失请补充。
+OpenHarmony项目要求所有开源仓根目录提供README，README_zh文件，如缺失这两个文件请补充。
 
 - 其它
 
