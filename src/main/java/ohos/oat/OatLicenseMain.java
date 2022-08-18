@@ -39,6 +39,7 @@ package ohos.oat;
 import ohos.oat.config.OatConfig;
 import ohos.oat.config.OatProject;
 import ohos.oat.config.OatTask;
+import ohos.oat.input.OatCommandLineMgr;
 import ohos.oat.report.IOatReport;
 import ohos.oat.report.OatDirectoryWalker;
 import ohos.oat.report.OatMainReport;
@@ -61,6 +62,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.rat.api.RatException;
 import org.apache.rat.report.IReportable;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -84,16 +86,14 @@ public class OatLicenseMain {
     /**
      * Prompt message when the program started
      */
-    private static final String PROMPT_MESSAGE_SEPARATOR
-        = "--------------------------------------------------------------------------";
+    private static final String PROMPT_MESSAGE_SEPARATOR = "--------------------------------------------------------------------------";
 
     private static final String PROMPT_MESSAGE_NAME = "OpenHarmony OSS Audit Tool";
 
     private static final String PROMPT_MESSAGE_COPY = "Copyright (C) 2021 Huawei Device Co., Ltd.";
 
-    private static final String PROMPT_MESSAGE_FEEDBACK =
-        "If you have any questions or concerns, please create issue at https://gitee"
-            + ".com/openharmony-sig/tools_oat/issues";
+    private static final String PROMPT_MESSAGE_FEEDBACK = "If you have any questions or concerns, please create issue at https://gitee"
+        + ".com/openharmony-sig/tools_oat/issues";
 
     /**
      * Private constructure to prevent new instance
@@ -114,19 +114,20 @@ public class OatLicenseMain {
         OatLogUtil.println("", OatLicenseMain.PROMPT_MESSAGE_COPY);
         OatLogUtil.println("", OatLicenseMain.PROMPT_MESSAGE_FEEDBACK);
         OatLogUtil.println("", OatLicenseMain.PROMPT_MESSAGE_SEPARATOR);
+
+        final OatConfig oatConfig = new OatConfig();
+        OatCommandLineMgr.initConfig(args, oatConfig);
+
         final Options options = new Options();
         final CommandLine cmd = parseCommandLine(options, args);
-        final OatConfig oatConfig = new OatConfig();
 
         String initOATCfgFile = "OAT.xml";
         if (cmd.hasOption("i")) {
             initOATCfgFile = cmd.getOptionValue("i");
         }
+
         OatLogUtil.warn(OatLicenseMain.class.getSimpleName(), "CommandLine" + "\tinitOATCfgFile\t" + initOATCfgFile);
-        boolean logSwitch = false;
-        if (cmd.hasOption("l")) {
-            logSwitch = true;
-        }
+        final boolean logSwitch = cmd.hasOption("l");
         OatLogUtil.setDebugMode(logSwitch);
         OatLogUtil.warn(OatLicenseMain.class.getSimpleName(), "CommandLine" + "\tlogSwitch\t" + logSwitch);
 
@@ -145,7 +146,7 @@ public class OatLicenseMain {
             if (!sourceCodeRepoPath.endsWith("/")) {
                 sourceCodeRepoPath += "/";
             }
-            URL oatResource = OatLicenseMain.class.getResource("/ohos/oat");
+            final URL oatResource = OatLicenseMain.class.getResource("/ohos/oat");
             if (oatResource == null) {
                 throw new Exception("oat jar path is empty");
             }
@@ -156,8 +157,8 @@ public class OatLicenseMain {
             oatConfig.putData("JarRootPath", jarRootPath);
             initOATCfgFile = jarRootPath + "OAT-Default.xml";
         }
-        OatLogUtil.warn(OatLicenseMain.class.getSimpleName(),
-            "CommandLine" + "\tsourceCodeRepoPath\t" + sourceCodeRepoPath);
+        oatConfig.putData("initOATCfgFile", initOATCfgFile);
+        OatLogUtil.warn(OatLicenseMain.class.getSimpleName(), "CommandLine" + "\tsourceCodeRepoPath\t" + sourceCodeRepoPath);
         String reportFile = "";
         if (cmd.hasOption("s") && cmd.hasOption("r")) {
             reportFile = OatCfgUtil.formatPath(cmd.getOptionValue("r"));
@@ -171,8 +172,7 @@ public class OatLicenseMain {
             nameOfRepository = "defaultProject";
         }
         oatConfig.setRepositoryName(nameOfRepository);
-        OatLogUtil.warn(OatLicenseMain.class.getSimpleName(),
-            "CommandLine" + "\tnameOfRepository\t" + nameOfRepository);
+        OatLogUtil.warn(OatLicenseMain.class.getSimpleName(), "CommandLine" + "\tnameOfRepository\t" + nameOfRepository);
         String mode = "0";
         if (cmd.hasOption("s") && cmd.hasOption("m")) {
             final String tmpMode = cmd.getOptionValue("m");
@@ -203,7 +203,7 @@ public class OatLicenseMain {
             oatConfig.putData("IgnoreProjectOAT", "true");
         }
 
-        OatCfgUtil.initOatConfig(oatConfig, initOATCfgFile, sourceCodeRepoPath);
+        OatCfgUtil.initOatConfig(oatConfig, sourceCodeRepoPath);
         if (cmd.hasOption("s") && cmd.hasOption("c")) {
             OatLogUtil.setDebugMode(true);
             logSubProjects(oatConfig);
@@ -219,8 +219,7 @@ public class OatLicenseMain {
         options.addOption("i", true, "OAT.xml file path, default vaule is OAT.xml in the running path");
         options.addOption("s", true, "Source code repository path");
         options.addOption("r", true, "Report file path, must be used together with -s option");
-        options.addOption("n", true,
-            "Name of repository, used to match the default policy, must be used together with -s option");
+        options.addOption("n", true, "Name of repository, used to match the default policy, must be used together with -s option");
         options.addOption("m", true,
             "Check mode, 0 means full check, 1 means only check the file list, must be used together with -s option");
         options.addOption("f", true, "File list to check, separated by |, must be used together with -s option");
@@ -229,8 +228,20 @@ public class OatLicenseMain {
         options.addOption("c", false, "Collect and log sub projects only, must be used together with -s option");
         options.addOption("t", false, "Trace project license list only");
         options.addOption("k", false, "Trace skipped files and ignored files");
-        options.addOption("g", false,
-            "Ignore project OAT configuration, used to display all the filtered report items");
+        options.addOption("g", false, "Ignore project OAT configuration, used to display all the filtered report items");
+        final CommandLine cmd = parseOptions(args, options);
+        if (ArrayUtils.isEmpty(args) || cmd == null || cmd.hasOption("h")) {
+            printUsage(options);
+        }
+        if (cmd != null && !(cmd.hasOption("i")) && !(cmd.hasOption("s"))) {
+            printUsage(options);
+        }
+
+        return cmd;
+    }
+
+    @Nullable
+    private static CommandLine parseOptions(final String[] args, final Options options) {
         final CommandLineParser parser = new DefaultParser();
         CommandLine cmd = null;
         try {
@@ -238,13 +249,6 @@ public class OatLicenseMain {
         } catch (final ParseException e) {
             OatLogUtil.traceException(e);
         }
-        if (ArrayUtils.isEmpty(args) || cmd == null || cmd.hasOption("h")) {
-            printUsage(options);
-        }
-        if (!(cmd.hasOption("i")) && !(cmd.hasOption("s"))) {
-            printUsage(options);
-        }
-
         return cmd;
     }
 
@@ -324,8 +328,7 @@ public class OatLicenseMain {
         exec.shutdown();
     }
 
-    private static void checkProjects(final IOatReport report, final OatTask oatTask, final OatConfig oatConfig)
-        throws RatException {
+    private static void checkProjects(final IOatReport report, final OatTask oatTask, final OatConfig oatConfig) throws RatException {
         final List<OatProject> projectList = oatTask.getProjectList();
 
         for (final OatProject oatProject : projectList) {
@@ -424,13 +427,11 @@ public class OatLicenseMain {
         }
         for (final String subProject : subProjects) {
             OatLogUtil.warn(OatLicenseMain.class.getSimpleName(),
-                oatProject.getPath() + "\tsubProject\t" + "<project name=\"" + subProject + "\" path=\"" + subProject
-                    + "\"/>");
+                oatProject.getPath() + "\tsubProject\t" + "<project name=\"" + subProject + "\" path=\"" + subProject + "\"/>");
         }
     }
 
-    private static void collectSubPrjects(final List<String> subProjects, final String prjPath, final File file,
-        final int depth) {
+    private static void collectSubPrjects(final List<String> subProjects, final String prjPath, final File file, final int depth) {
         if (depth > 4) {
             return;
         }
@@ -453,8 +454,8 @@ public class OatLicenseMain {
     }
 
     @SuppressWarnings("unused")
-    private static void printMissedFiles(final OatConfig oatConfig, final List<OatTask> taskList,
-        final String resultfolder) throws IOException {
+    private static void printMissedFiles(final OatConfig oatConfig, final List<OatTask> taskList, final String resultfolder)
+        throws IOException {
         if (oatConfig.isPluginMode()) {
             return;
         }
