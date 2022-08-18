@@ -39,6 +39,7 @@ package ohos.oat;
 import ohos.oat.config.OatConfig;
 import ohos.oat.config.OatProject;
 import ohos.oat.config.OatTask;
+import ohos.oat.input.OatCommandLineMgr;
 import ohos.oat.report.IOatReport;
 import ohos.oat.report.OatDirectoryWalker;
 import ohos.oat.report.OatMainReport;
@@ -61,6 +62,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.rat.api.RatException;
 import org.apache.rat.report.IReportable;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -114,19 +116,19 @@ public class OatLicenseMain {
         OatLogUtil.println("", OatLicenseMain.PROMPT_MESSAGE_COPY);
         OatLogUtil.println("", OatLicenseMain.PROMPT_MESSAGE_FEEDBACK);
         OatLogUtil.println("", OatLicenseMain.PROMPT_MESSAGE_SEPARATOR);
+
+        final OatConfig oatConfig = new OatConfig();
+        OatCommandLineMgr.initConfig(args, oatConfig);
+
         final Options options = new Options();
         final CommandLine cmd = parseCommandLine(options, args);
-        final OatConfig oatConfig = new OatConfig();
 
         String initOATCfgFile = "OAT.xml";
         if (cmd.hasOption("i")) {
             initOATCfgFile = cmd.getOptionValue("i");
         }
         OatLogUtil.warn(OatLicenseMain.class.getSimpleName(), "CommandLine" + "\tinitOATCfgFile\t" + initOATCfgFile);
-        boolean logSwitch = false;
-        if (cmd.hasOption("l")) {
-            logSwitch = true;
-        }
+        final boolean logSwitch = cmd.hasOption("l");
         OatLogUtil.setDebugMode(logSwitch);
         OatLogUtil.warn(OatLicenseMain.class.getSimpleName(), "CommandLine" + "\tlogSwitch\t" + logSwitch);
 
@@ -145,7 +147,7 @@ public class OatLicenseMain {
             if (!sourceCodeRepoPath.endsWith("/")) {
                 sourceCodeRepoPath += "/";
             }
-            URL oatResource = OatLicenseMain.class.getResource("/ohos/oat");
+            final URL oatResource = OatLicenseMain.class.getResource("/ohos/oat");
             if (oatResource == null) {
                 throw new Exception("oat jar path is empty");
             }
@@ -231,6 +233,19 @@ public class OatLicenseMain {
         options.addOption("k", false, "Trace skipped files and ignored files");
         options.addOption("g", false,
             "Ignore project OAT configuration, used to display all the filtered report items");
+        final CommandLine cmd = parseOptions(args, options);
+        if (ArrayUtils.isEmpty(args) || cmd == null || cmd.hasOption("h")) {
+            printUsage(options);
+        }
+        if (cmd != null && !(cmd.hasOption("i")) && !(cmd.hasOption("s"))) {
+            printUsage(options);
+        }
+
+        return cmd;
+    }
+
+    @Nullable
+    private static CommandLine parseOptions(final String[] args, final Options options) {
         final CommandLineParser parser = new DefaultParser();
         CommandLine cmd = null;
         try {
@@ -238,13 +253,6 @@ public class OatLicenseMain {
         } catch (final ParseException e) {
             OatLogUtil.traceException(e);
         }
-        if (ArrayUtils.isEmpty(args) || cmd == null || cmd.hasOption("h")) {
-            printUsage(options);
-        }
-        if (!(cmd.hasOption("i")) && !(cmd.hasOption("s"))) {
-            printUsage(options);
-        }
-
         return cmd;
     }
 
