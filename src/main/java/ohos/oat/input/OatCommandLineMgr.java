@@ -52,6 +52,9 @@ public class OatCommandLineMgr {
             if (iOatCommandLine.accept(args)) {
                 if (iOatCommandLine.parseArgs2Config(args, oatConfig)) {
                     matched = true;
+                }else{
+                    iOatCommandLine.printUsage();
+                    System.exit(0);
                 }
                 break;
             }

@@ -36,17 +36,17 @@ import java.util.List;
 public class OatCollectSubPrjectsCommandLine implements IOatCommandLine {
     private final Options options = new Options();
 
-    private final String cmdLineSyntax = "java -jar ohos_ossaudittool-VERSION.jar [options] \n";
+    private final String cmdLineSyntax = "[Collect Sub Projects Mode]: java -jar ohos_ossaudittool-VERSION.jar";
 
     private final List<IOatExcutor> lstOatExcutors = new ArrayList<>();
 
     @Override
     public boolean accept(final String[] args) {
         this.options.addOption("mode", true, "Operating mode, 'c' for collecting sub projects only");
-        this.options.addOption("h", false, "Help message");
-        this.options.addOption("l", false, "Log switch, used to enable the logger");
         this.options.addOption("s", true, "Source code repository path, eg: c:/test/");
         this.options.addOption("r", true, "Report file path, eg: c:/oatresult.txt");
+        this.options.addOption("l", false, "Log switch, used to enable the logger");
+        this.options.addOption("h", false, "Help message");
         return this.accept(args, this.options, "c");
     }
 

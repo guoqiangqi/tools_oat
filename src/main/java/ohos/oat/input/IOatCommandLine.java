@@ -65,8 +65,7 @@ public interface IOatCommandLine {
         final HelpFormatter helpFormatter = new HelpFormatter();
         helpFormatter.setOptionComparator(null);
         helpFormatter.setWidth(140);
-        helpFormatter.printHelp(this.getCmdLineSyntax(), PROMPT_MESSAGE_HEADER, this.getOptions(),
-            PROMPT_MESSAGE_SEPARATOR, false);
+        helpFormatter.printHelp(this.getCmdLineSyntax(), PROMPT_MESSAGE_HEADER, this.getOptions(), PROMPT_MESSAGE_SEPARATOR, true);
     }
 
     default boolean accept(final String[] args, final Options options, final String mode) {
@@ -96,7 +95,7 @@ public interface IOatCommandLine {
         try {
             cmd = parser.parse(options, args);
         } catch (final ParseException e) {
-            OatLogUtil.traceException(e);
+            return null;
         }
         return cmd;
     }

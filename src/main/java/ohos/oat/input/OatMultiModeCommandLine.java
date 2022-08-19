@@ -35,18 +35,18 @@ import java.util.List;
 public class OatMultiModeCommandLine implements IOatCommandLine {
     private final Options options = new Options();
 
-    private final String cmdLineSyntax = "java -jar ohos_ossaudittool-VERSION.jar [options] \n";
+    private final String cmdLineSyntax = "[Multiple Projects Mode]: java -jar ohos_ossaudittool-VERSION.jar";
 
     private final List<IOatExcutor> lstOatExcutors = new ArrayList<>();
 
     @Override
     public boolean accept(final String[] args) {
         this.options.addOption("mode", true, "Operating mode, 'm' for check multiple projects");
-        this.options.addOption("h", false, "Help message");
-        this.options.addOption("l", false, "Log switch, used to enable the logger");
         this.options.addOption("i", true, "OAT.xml file path, default vaule is OAT.xml in the running path");
         this.options.addOption("k", false, "Trace skipped files and ignored files");
         this.options.addOption("g", false, "Ignore project OAT configuration");
+        this.options.addOption("l", false, "Log switch, used to enable the logger");
+        this.options.addOption("h", false, "Help message");
         return this.accept(args, this.options, "m");
     }
 
