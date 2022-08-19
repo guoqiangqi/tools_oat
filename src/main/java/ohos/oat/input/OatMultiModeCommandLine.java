@@ -16,9 +16,17 @@
 package ohos.oat.input;
 
 import ohos.oat.config.OatConfig;
+import ohos.oat.excutor.IOatExcutor;
+import ohos.oat.excutor.OatComplianceExcutor;
+import ohos.oat.utils.OatCfgUtil;
+import ohos.oat.utils.OatLogUtil;
+import ohos.oat.utils.OatSpdxLicenseUtil;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.Options;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author chenyaxun
@@ -29,23 +37,54 @@ public class OatMultiModeCommandLine implements IOatCommandLine {
 
     private final String cmdLineSyntax = "java -jar ohos_ossaudittool-VERSION.jar [options] \n";
 
+    private final List<IOatExcutor> lstOatExcutors = new ArrayList<>();
+
     @Override
     public boolean accept(final String[] args) {
+        this.options.addOption("mode", true, "Operating mode, 'm' for check multiple projects");
+        this.options.addOption("h", false, "Help message");
+        this.options.addOption("l", false, "Log switch, used to enable the logger");
+        this.options.addOption("i", true, "OAT.xml file path, default vaule is OAT.xml in the running path");
+        this.options.addOption("k", false, "Trace skipped files and ignored files");
+        this.options.addOption("g", false, "Ignore project OAT configuration");
         return this.accept(args, this.options, "m");
     }
 
     @Override
     public boolean parseArgs2Config(final String[] args, final OatConfig oatConfig) {
-        this.options.addOption("i", true, "OAT.xml file path, default vaule is OAT.xml in the running path");
-        this.options.addOption("l", false, "Log switch, used to enable the logger");
-        this.options.addOption("c", false, "Collect and log sub projects only, must be used together with -s option");
-        this.options.addOption("t", false, "Trace project license list only");
-        this.options.addOption("k", false, "Trace skipped files and ignored files");
-        this.options.addOption("g", false, "Ignore project OAT configuration, used to display all the filtered report items");
         final CommandLine commandLine = this.parseOptions(args, this.options);
-        if (null == commandLine || commandLine.hasOption("h")) {
+        final String optionValue_i = commandLine.getOptionValue("i");
+        if (null == commandLine || null == optionValue_i) {
             return false;
         }
+
+        String initOATCfgFile = "OAT.xml";
+        initOATCfgFile = OatCfgUtil.formatPath(optionValue_i);
+
+        oatConfig.putData("initOATCfgFile", initOATCfgFile);
+        OatLogUtil.warn(this.getClass().getSimpleName(), "CommandLine" + "\tinitOATCfgFile\t" + initOATCfgFile);
+
+        // To be deleted
+        oatConfig.setRepositoryName("defaultProject");
+        OatLogUtil.warn(this.getClass().getSimpleName(), "CommandLine\tnameOfRepository\tdefaultProject");
+        oatConfig.setPluginCheckMode("0");
+        OatLogUtil.warn(this.getClass().getSimpleName(), "CommandLine" + "\tmode\t" + "0");
+        final String fileList = "";
+        oatConfig.setSrcFileList(fileList);
+        OatLogUtil.warn(this.getClass().getSimpleName(), "CommandLine" + "\tfileList\t" + fileList);
+
+        if (commandLine.hasOption("k")) {
+            oatConfig.putData("TraceSkippedAndIgnoredFiles", "true");
+        }
+        if (commandLine.hasOption("g")) {
+            oatConfig.putData("IgnoreProjectOAT", "true");
+        }
+
+        OatCfgUtil.initOatConfig(oatConfig, "");
+        OatSpdxLicenseUtil.initSpdxLicenseList(oatConfig);
+        this.lstOatExcutors.add(new OatComplianceExcutor());
+        this.transmit(oatConfig, this.lstOatExcutors);
+
         return true;
     }
 

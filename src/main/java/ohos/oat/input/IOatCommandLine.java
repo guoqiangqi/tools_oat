@@ -16,6 +16,7 @@
 package ohos.oat.input;
 
 import ohos.oat.config.OatConfig;
+import ohos.oat.excutor.IOatExcutor;
 import ohos.oat.utils.OatLogUtil;
 
 import org.apache.commons.cli.CommandLine;
@@ -26,6 +27,8 @@ import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import org.apache.commons.lang3.ArrayUtils;
 
+import java.util.List;
+
 /**
  * Command line parameter Interface for converting command line parameters into OAT configuration data structures
  * extract this Interface to support more detection scenarios
@@ -35,7 +38,7 @@ import org.apache.commons.lang3.ArrayUtils;
  */
 public interface IOatCommandLine {
     String PROMPT_MESSAGE_SEPARATOR = "--------------------------------------------------------------------------";
-    String PROMPT_MESSAGE_HEADER = "\nAvailable options:";
+    String PROMPT_MESSAGE_HEADER = "Available options:";
 
     boolean accept(String[] args);
 
@@ -62,21 +65,22 @@ public interface IOatCommandLine {
         final HelpFormatter helpFormatter = new HelpFormatter();
         helpFormatter.setOptionComparator(null);
         helpFormatter.setWidth(140);
-        helpFormatter.printHelp(this.getCmdLineSyntax(), PROMPT_MESSAGE_HEADER, this.getOptions(), PROMPT_MESSAGE_SEPARATOR, false);
+        helpFormatter.printHelp(this.getCmdLineSyntax(), PROMPT_MESSAGE_HEADER, this.getOptions(),
+            PROMPT_MESSAGE_SEPARATOR, false);
     }
 
     default boolean accept(final String[] args, final Options options, final String mode) {
+
         if (ArrayUtils.isEmpty(args)) {
             return false;
         }
-        options.addOption("mode", true, "Operating mode, " + mode + " for collecting sub projects only");
-        options.addOption("h", false, "Help message");
-        options.addOption("l", false, "Log switch, used to enable the logger");
+
         final CommandLine commandLine = this.parseOptions(args, options);
         if (null == commandLine || commandLine.hasOption("h")) {
             return false;
         }
         OatLogUtil.setDebugMode(commandLine.hasOption("l"));
+        OatLogUtil.warn(this.getClass().getSimpleName(), "CommandLine" + "\tlogSwitch\t" + commandLine.hasOption("l"));
         final String modeValue = commandLine.getOptionValue("mode");
         return modeValue != null && modeValue.equals(mode);
     }
@@ -97,4 +101,11 @@ public interface IOatCommandLine {
         return cmd;
     }
 
+    /**
+     * @param oatConfig
+     * @param oatExcutors
+     */
+    default void transmit(final OatConfig oatConfig, final List<IOatExcutor> oatExcutors) {
+        oatExcutors.forEach(iOatExcutor -> iOatExcutor.excute(oatConfig));
+    }
 }
