@@ -41,21 +41,24 @@ public interface IOatCommandLine {
     String PROMPT_MESSAGE_HEADER = "Available options:";
 
     /**
-     * @param args
-     * @return
+     * Receive command line parameters and determine whether the command line corresponds to the operating mode
+     * @param args command line paras
+     * @return Match result
      */
     boolean accept(String[] args);
 
     /**
-     * @param args
-     * @return
+     * Parse command line arguments and convert to OatConfig data structure
+     * @param args Command line arguments
+     * @return OatConfig data structure
      */
     OatConfig parseArgs2Config(final String[] args);
 
     /**
+     * Perform tasks
      * @param oatConfig
      */
-    void transmitTask(OatConfig oatConfig);
+    void excuteTask(OatConfig oatConfig);
 
     /**
      * Command line options
@@ -131,7 +134,7 @@ public interface IOatCommandLine {
      * @param oatConfig
      * @param oatExcutors
      */
-    static void transmitTask(final OatConfig oatConfig, final List<IOatExcutor> oatExcutors) {
+    static void excuteTask(final OatConfig oatConfig, final List<IOatExcutor> oatExcutors) {
         oatExcutors.forEach(iOatExcutor -> iOatExcutor.excute(oatConfig));
     }
 }

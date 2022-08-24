@@ -52,7 +52,7 @@ public class OatCommandLineMgr {
                 final OatConfig oatConfig = iOatCommandLine.parseArgs2Config(args);
                 if (null != oatConfig) {
                     bMatched = true;
-                    iOatCommandLine.transmitTask(oatConfig);
+                    iOatCommandLine.excuteTask(oatConfig);
                     return;
                 } else {
                     // Print command options of this mode only

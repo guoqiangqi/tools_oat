@@ -37,6 +37,11 @@ public class OatMultiModeCommandLine implements IOatCommandLine {
 
     private final String cmdLineSyntax = "java -jar ohos_ossaudittool-VERSION.jar [options] \n";
 
+    /**
+     * Receive command line parameters and determine whether the command line corresponds to the operating mode
+     * @param args command line paras
+     * @return Match result
+     */
     @Override
     public boolean accept(final String[] args) {
         this.options.addOption("mode", true, "Operating mode, 'm' for check multiple projects");
@@ -48,6 +53,11 @@ public class OatMultiModeCommandLine implements IOatCommandLine {
         return IOatCommandLine.accept(args, this.options, "m");
     }
 
+    /**
+     * Parse command line arguments and convert to OatConfig data structure
+     * @param args Command line arguments
+     * @return OatConfig data structure
+     */
     @Override
     public OatConfig parseArgs2Config(final String[] args) {
         final OatConfig oatConfig = new OatConfig();
@@ -88,10 +98,10 @@ public class OatMultiModeCommandLine implements IOatCommandLine {
      * @param oatConfig
      */
     @Override
-    public void transmitTask(final OatConfig oatConfig) {
+    public void excuteTask(final OatConfig oatConfig) {
         final List<IOatExcutor> lstOatExcutors = new ArrayList<>();
         lstOatExcutors.add(new OatComplianceExcutor());
-        IOatCommandLine.transmitTask(oatConfig, lstOatExcutors);
+        IOatCommandLine.excuteTask(oatConfig, lstOatExcutors);
     }
 
     /**

@@ -49,7 +49,9 @@ import java.util.concurrent.Executors;
  * @since 2022/08
  */
 public class OatComplianceExcutor implements IOatExcutor {
+    
     /**
+     * Perform inspection tasks based on the contents of the Oat Config data structure
      * @param oatConfig
      */
     @Override

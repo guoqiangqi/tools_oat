@@ -18,12 +18,16 @@ package ohos.oat.excutor;
 import ohos.oat.config.OatConfig;
 
 /**
- * OAT excutor，used to process tasks passed in by the commander
+ * OAT excutor，used to process tasks passed in by OatCommandLine
  *
  * @author chenyaxun
  * @since 2022/08
  */
 public interface IOatExcutor {
 
+    /**
+     *
+     * @param oatConfig
+     */
     void excute(OatConfig oatConfig);
 }
