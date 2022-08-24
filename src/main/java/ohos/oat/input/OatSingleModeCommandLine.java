@@ -41,8 +41,6 @@ public class OatSingleModeCommandLine implements IOatCommandLine {
 
     private final String cmdLineSyntax = "java -jar ohos_ossaudittool-VERSION.jar [options] \n";
 
-    private final List<IOatExcutor> lstOatExcutors = new ArrayList<>();
-
     @Override
     public boolean accept(final String[] args) {
         this.options.addOption("mode", true, "Operating mode, 's' for check single project");
@@ -55,15 +53,16 @@ public class OatSingleModeCommandLine implements IOatCommandLine {
         this.options.addOption("f", true, "File list to check, separated by |");
         this.options.addOption("k", false, "Trace skipped files and ignored files");
         this.options.addOption("g", false, "Ignore project OAT configuration");
-        return this.accept(args, this.options, "s");
+        return IOatCommandLine.accept(args, this.options, "s");
     }
 
     @Override
-    public boolean parseArgs2Config(final String[] args, final OatConfig oatConfig) {
-        final CommandLine commandLine = this.parseOptions(args, this.options);
+    public OatConfig parseArgs2Config(final String[] args) {
+        final OatConfig oatConfig = new OatConfig();
+        final CommandLine commandLine = IOatCommandLine.parseOptions(args, this.options);
         final String optionValue_s = commandLine.getOptionValue("s");
         if (null == commandLine || null == optionValue_s) {
-            return false;
+            return null;
         }
 
         oatConfig.setPluginMode(true);
@@ -77,7 +76,7 @@ public class OatSingleModeCommandLine implements IOatCommandLine {
             sourceCodeRepoPath = OatCfgUtil.formatPath(sourceCodeRepoPath);
         } else {
             OatLogUtil.warn(this.getClass().getSimpleName(), "Source code repository path is not exists!");
-            return false;
+            return null;
         }
         if (!sourceCodeRepoPath.endsWith("/")) {
             sourceCodeRepoPath += "/";
@@ -89,7 +88,7 @@ public class OatSingleModeCommandLine implements IOatCommandLine {
         final URL oatResource = OatLicenseMain.class.getResource("/ohos/oat");
         if (oatResource == null) {
             OatLogUtil.warn(this.getClass().getSimpleName(), "OAT jar path is empty!");
-            return false;
+            return null;
         }
         final String jarOatPkgPath = oatResource.toString();
         final String jarRootPath = jarOatPkgPath.substring(0, jarOatPkgPath.length() - 8);
@@ -146,9 +145,18 @@ public class OatSingleModeCommandLine implements IOatCommandLine {
 
         OatCfgUtil.initOatConfig(oatConfig, sourceCodeRepoPath);
         OatSpdxLicenseUtil.initSpdxLicenseList(oatConfig);
-        this.lstOatExcutors.add(new OatComplianceExcutor());
-        this.transmit(oatConfig, this.lstOatExcutors);
-        return true;
+  
+        return oatConfig;
+    }
+
+    /**
+     * @param oatConfig
+     */
+    @Override
+    public void transmitTask(final OatConfig oatConfig) {
+        final List<IOatExcutor> lstOatExcutors = new ArrayList<>();
+        lstOatExcutors.add(new OatComplianceExcutor());
+        IOatCommandLine.transmitTask(oatConfig, lstOatExcutors);
     }
 
     /**

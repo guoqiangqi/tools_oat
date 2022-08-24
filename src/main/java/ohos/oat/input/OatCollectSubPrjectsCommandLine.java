@@ -38,8 +38,6 @@ public class OatCollectSubPrjectsCommandLine implements IOatCommandLine {
 
     private final String cmdLineSyntax = "java -jar ohos_ossaudittool-VERSION.jar [options] \n";
 
-    private final List<IOatExcutor> lstOatExcutors = new ArrayList<>();
-
     @Override
     public boolean accept(final String[] args) {
         this.options.addOption("mode", true, "Operating mode, 'c' for collecting sub projects only");
@@ -47,15 +45,16 @@ public class OatCollectSubPrjectsCommandLine implements IOatCommandLine {
         this.options.addOption("l", false, "Log switch, used to enable the logger");
         this.options.addOption("s", true, "Source code repository path, eg: c:/test/");
         this.options.addOption("r", true, "Report file path, eg: c:/oatresult.txt");
-        return this.accept(args, this.options, "c");
+        return IOatCommandLine.accept(args, this.options, "c");
     }
 
     @Override
-    public boolean parseArgs2Config(final String[] args, final OatConfig oatConfig) {
-        final CommandLine commandLine = this.parseOptions(args, this.options);
+    public OatConfig parseArgs2Config(final String[] args) {
+        final OatConfig oatConfig = new OatConfig();
+        final CommandLine commandLine = IOatCommandLine.parseOptions(args, this.options);
         final String optionValue_s = commandLine.getOptionValue("s");
         if (null == commandLine || null == optionValue_s) {
-            return false;
+            return null;
         }
 
         // Init Source code repository path, same with basedir
@@ -67,7 +66,7 @@ public class OatCollectSubPrjectsCommandLine implements IOatCommandLine {
             sourceCodeRepoPath = OatCfgUtil.formatPath(sourceCodeRepoPath);
         } else {
             OatLogUtil.warn(this.getClass().getSimpleName(), "Source code repository path is not exists!");
-            return false;
+            return null;
         }
         if (!sourceCodeRepoPath.endsWith("/")) {
             sourceCodeRepoPath += "/";
@@ -75,9 +74,18 @@ public class OatCollectSubPrjectsCommandLine implements IOatCommandLine {
         oatConfig.setBasedir(sourceCodeRepoPath);
         OatLogUtil.warn(this.getClass().getSimpleName(), "CommandLine\tsourceCodeRepoPath\t" + sourceCodeRepoPath);
 
-        this.lstOatExcutors.add(new OatCollectSubProjectsExcutor());
-        this.transmit(oatConfig, this.lstOatExcutors);
-        return true;
+        return oatConfig;
+    }
+
+    /**
+     * @param oatConfig
+     */
+    @Override
+    public void transmitTask(final OatConfig oatConfig) {
+
+        final List<IOatExcutor> lstOatExcutors = new ArrayList<>();
+        lstOatExcutors.add(new OatCollectSubProjectsExcutor());
+        IOatCommandLine.transmitTask(oatConfig, lstOatExcutors);
     }
 
     /**

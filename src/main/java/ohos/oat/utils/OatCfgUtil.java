@@ -173,7 +173,7 @@ public final class OatCfgUtil {
      * @return String array
      */
     public static String[] getSplitStrings(final String configString) {
-        return getSplitStrings(configString, "\\|");
+        return OatCfgUtil.getSplitStrings(configString, "\\|");
     }
 
     public static String[] getSplitStrings(final String configString, final String splitflag) {
@@ -181,8 +181,8 @@ public final class OatCfgUtil {
         if (configString.trim().length() <= 0) {
             return strings;
         }
-        if ((splitflag.contains("|") && (!configString.contains("|"))) || (!splitflag.contains("|") && (!configString.contains(
-            splitflag)))) {
+        if ((splitflag.contains("|") && (!configString.contains("|"))) || (!splitflag.contains("|")
+            && (!configString.contains(splitflag)))) {
             strings = new String[] {configString};
             return strings;
         }
@@ -196,7 +196,8 @@ public final class OatCfgUtil {
         return strings;
     }
 
-    private static void updateProjectConfig(final OatConfig oatConfig, final String projectDir, final OatProject oatProject) {
+    private static void updateProjectConfig(final OatConfig oatConfig, final String projectDir,
+        final OatProject oatProject) {
         final String prjOatFile = projectDir + "OAT.xml";
         final File oatFile = new File(prjOatFile);
 
@@ -209,8 +210,14 @@ public final class OatCfgUtil {
             }
             OatCfgUtil.initLicenseMatcher(oatConfig, prjXmlconfig, oatProject);
             OatCfgUtil.initCompatibilityLicense(oatConfig, prjXmlconfig, oatProject);
-            OatCfgUtil.initPolicy(oatConfig, prjXmlconfig, oatProject);
-            OatCfgUtil.initFilter(oatConfig, prjXmlconfig, oatProject);
+            final String bIgnoreProjectOAT = oatConfig.getData("IgnoreProjectOAT");
+            if (bIgnoreProjectOAT.equals("true")) {
+                OatCfgUtil.initFilter(oatConfig, prjXmlconfig, oatProject);
+            } else {
+                OatCfgUtil.initPolicy(oatConfig, prjXmlconfig, oatProject);
+                OatCfgUtil.initFilter(oatConfig, prjXmlconfig, oatProject);
+            }
+
         }
     }
 
@@ -219,7 +226,8 @@ public final class OatCfgUtil {
         final Configurations configs = new Configurations();
         try {
             xmlconfig = configs.xml(defaultOatConfigFilePath);
-            final DefaultExpressionEngine engine = new DefaultExpressionEngine(DefaultExpressionEngineSymbols.DEFAULT_SYMBOLS);
+            final DefaultExpressionEngine engine = new DefaultExpressionEngine(
+                DefaultExpressionEngineSymbols.DEFAULT_SYMBOLS);
             xmlconfig.setExpressionEngine(engine);
         } catch (final org.apache.commons.configuration2.ex.ConfigurationException e) {
             OatLogUtil.traceException(e);
@@ -227,9 +235,10 @@ public final class OatCfgUtil {
         return xmlconfig;
     }
 
-    private static void initFilter(final OatConfig oatConfig, final XMLConfiguration xmlconfig, final OatProject oatProject) {
-        final List<HierarchicalConfiguration<ImmutableNode>> fileFilterListCfg = OatCfgUtil.getElements(xmlconfig, OatCfgUtil.ROOTNODE,
-            "filefilterlist.filefilter");
+    private static void initFilter(final OatConfig oatConfig, final XMLConfiguration xmlconfig,
+        final OatProject oatProject) {
+        final List<HierarchicalConfiguration<ImmutableNode>> fileFilterListCfg = OatCfgUtil.getElements(xmlconfig,
+            OatCfgUtil.ROOTNODE, "filefilterlist.filefilter");
         for (final HierarchicalConfiguration<ImmutableNode> fileFilterCfg : fileFilterListCfg) {
             final OatFileFilter oatFileFilter = new OatFileFilter();
             oatFileFilter.setName(OatCfgUtil.getElementAttrValue(fileFilterCfg, "name"));
@@ -238,10 +247,11 @@ public final class OatCfgUtil {
                 // Global OAT XML
                 oatConfig.addFileFilter(oatFileFilter);
             }
-            final List<HierarchicalConfiguration<ImmutableNode>> fileFilterItemListCfg = fileFilterCfg.configurationsAt("filteritem");
-            initFilterItems(oatProject, oatFileFilter, fileFilterItemListCfg);
-            initFilterItems2Policy(oatProject, oatFileFilter);
-            initFilterItems2Project(oatProject, oatFileFilter);
+            final List<HierarchicalConfiguration<ImmutableNode>> fileFilterItemListCfg = fileFilterCfg.configurationsAt(
+                "filteritem");
+            OatCfgUtil.initFilterItems(oatProject, oatFileFilter, fileFilterItemListCfg);
+            OatCfgUtil.initFilterItems2Policy(oatProject, oatFileFilter);
+            OatCfgUtil.initFilterItems2Project(oatProject, oatFileFilter);
         } // end of filefilter
     }
 
@@ -289,7 +299,8 @@ public final class OatCfgUtil {
                 if (oatProject != null && (!oatFileFilter.getName().contains("dir name underproject"))) {
                     // Project OAT XML
                     OatLogUtil.logOatConfig(OatCfgUtil.class.getSimpleName(),
-                        oatProject.getPath() + "\tFilter\t" + oatFileFilter.getName() + "\t\t" + "\tFileName\t" + name + "\tDesc\t" + desc);
+                        oatProject.getPath() + "\tFilter\t" + oatFileFilter.getName() + "\t\t" + "\tFileName\t" + name
+                            + "\tDesc\t" + desc);
                 }
                 continue;
             }
@@ -305,14 +316,16 @@ public final class OatCfgUtil {
             if (oatProject != null) {
                 // Project OAT XML
                 OatLogUtil.logOatConfig(OatCfgUtil.class.getSimpleName(),
-                    oatProject.getPath() + "\tFilter\t" + oatFileFilter.getName() + "\t\t" + "\tFilePath\t" + name + "\tDesc\t" + desc);
+                    oatProject.getPath() + "\tFilter\t" + oatFileFilter.getName() + "\t\t" + "\tFilePath\t" + name
+                        + "\tDesc\t" + desc);
             }
         } // end of filter items
     }
 
-    private static void initPolicy(final OatConfig oatConfig, final XMLConfiguration xmlconfig, final OatProject oatProject) {
-        final List<HierarchicalConfiguration<ImmutableNode>> policylistCfg = OatCfgUtil.getElements(xmlconfig, OatCfgUtil.ROOTNODE,
-            "policylist.policy");
+    private static void initPolicy(final OatConfig oatConfig, final XMLConfiguration xmlconfig,
+        final OatProject oatProject) {
+        final List<HierarchicalConfiguration<ImmutableNode>> policylistCfg = OatCfgUtil.getElements(xmlconfig,
+            OatCfgUtil.ROOTNODE, "policylist.policy");
         for (final HierarchicalConfiguration<ImmutableNode> policyCfg : policylistCfg) {
             final OatPolicy oatPolicy = new OatPolicy();
             oatPolicy.setName(OatCfgUtil.getElementAttrValue(policyCfg, "name"));
@@ -321,7 +334,8 @@ public final class OatCfgUtil {
                 // Global OAT XML
                 oatConfig.addPolicy(oatPolicy);
             }
-            final List<HierarchicalConfiguration<ImmutableNode>> policyitemlistCfg = policyCfg.configurationsAt("policyitem");
+            final List<HierarchicalConfiguration<ImmutableNode>> policyitemlistCfg = policyCfg.configurationsAt(
+                "policyitem");
             for (final HierarchicalConfiguration<ImmutableNode> policyitemCfg : policyitemlistCfg) {
                 final OatPolicyItem oatPolicyItem = new OatPolicyItem();
                 oatPolicyItem.setName(OatCfgUtil.getElementAttrValue(policyitemCfg, "name"));
@@ -357,8 +371,9 @@ public final class OatCfgUtil {
                     if (oatProject != null) {
                         // Project OAT XML
                         OatLogUtil.logOatConfig(OatCfgUtil.class.getSimpleName(),
-                            oatProject.getPath() + "\tPolicyItem\t" + oatPolicyItem.getType() + "Policy\tName\t" + oatPolicyItem.getName()
-                                + "\tPath\t" + oatPolicyItem.getPath() + "\tDesc\t" + oatPolicyItem.getDesc());
+                            oatProject.getPath() + "\tPolicyItem\t" + oatPolicyItem.getType() + "Policy\tName\t"
+                                + oatPolicyItem.getName() + "\tPath\t" + oatPolicyItem.getPath() + "\tDesc\t"
+                                + oatPolicyItem.getDesc());
                     }
                 } else {
                     // Global OAT XML
@@ -368,13 +383,15 @@ public final class OatCfgUtil {
         } // end of policy
     }
 
-    private static void initLicenseMatcher(final OatConfig oatConfig, final XMLConfiguration xmlconfig, final OatProject oatProject) {
-        final List<HierarchicalConfiguration<ImmutableNode>> licenseMatcherlistCfg = OatCfgUtil.getElements(xmlconfig, OatCfgUtil.ROOTNODE,
-            "licensematcherlist.licensematcher");
+    private static void initLicenseMatcher(final OatConfig oatConfig, final XMLConfiguration xmlconfig,
+        final OatProject oatProject) {
+        final List<HierarchicalConfiguration<ImmutableNode>> licenseMatcherlistCfg = OatCfgUtil.getElements(xmlconfig,
+            OatCfgUtil.ROOTNODE, "licensematcherlist.licensematcher");
         for (final HierarchicalConfiguration<ImmutableNode> licenseMatcherCfg : licenseMatcherlistCfg) {
             final String licenseName = OatCfgUtil.getElementAttrValue(licenseMatcherCfg, "name");
 
-            final List<HierarchicalConfiguration<ImmutableNode>> licenseTextListCfg = licenseMatcherCfg.configurationsAt("licensetext");
+            final List<HierarchicalConfiguration<ImmutableNode>> licenseTextListCfg
+                = licenseMatcherCfg.configurationsAt("licensetext");
             for (final HierarchicalConfiguration<ImmutableNode> licenseTextCfg : licenseTextListCfg) {
                 final String licenseText = OatCfgUtil.getElementAttrValue(licenseTextCfg, "name");
                 if (oatProject == null) {
@@ -392,33 +409,35 @@ public final class OatCfgUtil {
         }
     }
 
-    private static void initCompatibilityLicense(final OatConfig oatConfig, final XMLConfiguration xmlconfig, final OatProject oatProject) {
-        final List<HierarchicalConfiguration<ImmutableNode>> compatibilityCfg = OatCfgUtil.getElements(xmlconfig, OatCfgUtil.ROOTNODE,
-            "licensecompatibilitylist.license");
+    private static void initCompatibilityLicense(final OatConfig oatConfig, final XMLConfiguration xmlconfig,
+        final OatProject oatProject) {
+        final List<HierarchicalConfiguration<ImmutableNode>> compatibilityCfg = OatCfgUtil.getElements(xmlconfig,
+            OatCfgUtil.ROOTNODE, "licensecompatibilitylist.license");
         for (final HierarchicalConfiguration<ImmutableNode> license : compatibilityCfg) {
             final String licenseName = OatCfgUtil.getElementAttrValue(license, "name");
 
-            final List<HierarchicalConfiguration<ImmutableNode>> compatibilityLicenseCfg = license.configurationsAt("compatibilitylicense");
+            final List<HierarchicalConfiguration<ImmutableNode>> compatibilityLicenseCfg = license.configurationsAt(
+                "compatibilitylicense");
             for (final HierarchicalConfiguration<ImmutableNode> compatibilitylicense : compatibilityLicenseCfg) {
                 final String compatibilitylicenseName = OatCfgUtil.getElementAttrValue(compatibilitylicense, "name");
                 if (oatProject == null) {
                     oatConfig.addCompatibilityLicense(licenseName, compatibilitylicenseName);
                     OatLogUtil.logOatConfig(OatCfgUtil.class.getSimpleName(),
-                        "GlobalConfig" + "\taddCompatibilityLicense\t" + "compatibilityLicenseConfig\tName\t" + licenseName
-                            + "\t \t \tLicenseText\t" + compatibilitylicenseName);
+                        "GlobalConfig" + "\taddCompatibilityLicense\t" + "compatibilityLicenseConfig\tName\t"
+                            + licenseName + "\t \t \tLicenseText\t" + compatibilitylicenseName);
                 } else {
                     oatProject.addPrjCompatibilityLicense(licenseName, compatibilitylicenseName);
                     OatLogUtil.logOatConfig(OatCfgUtil.class.getSimpleName(),
-                        oatProject.getPath() + "\taddPrjCompatibilityLicense\t" + "compatibilityLicenseConfig\tName\t" + licenseName
-                            + "\t \t \tLicenseText\t" + compatibilitylicenseName);
+                        oatProject.getPath() + "\taddPrjCompatibilityLicense\t" + "compatibilityLicenseConfig\tName\t"
+                            + licenseName + "\t \t \tLicenseText\t" + compatibilitylicenseName);
                 }
             }
         }
     }
 
     private static void initTask(final OatConfig oatConfig, final XMLConfiguration xmlconfig) {
-        final List<HierarchicalConfiguration<ImmutableNode>> tasklistCfg = OatCfgUtil.getElements(xmlconfig, OatCfgUtil.ROOTNODE,
-            "tasklist.task");
+        final List<HierarchicalConfiguration<ImmutableNode>> tasklistCfg = OatCfgUtil.getElements(xmlconfig,
+            OatCfgUtil.ROOTNODE, "tasklist.task");
         OatTask defaultOatTask = null;
         for (final HierarchicalConfiguration<ImmutableNode> taskCfg : tasklistCfg) {
             final OatTask oatTask = new OatTask();
@@ -432,7 +451,7 @@ public final class OatCfgUtil {
             for (final HierarchicalConfiguration<ImmutableNode> projectCfg : projectlistCfg) {
                 final OatProject oatProject = new OatProject();
                 final String prjName = OatCfgUtil.getElementAttrValue(projectCfg, "name");
-                initProjectBasicinfo(projectCfg, oatProject, prjName);
+                OatCfgUtil.initProjectBasicinfo(projectCfg, oatProject, prjName);
                 if (!oatConfig.isPluginMode()) {
                     oatTask.addProject(oatProject);
                     continue;
@@ -446,7 +465,7 @@ public final class OatCfgUtil {
                 if ((!(oatConfig.getRepositoryName().equals(prjName))) && oatTask.getNamne().equals("defaultTask")) {
                     oatProject.setName(oatConfig.getRepositoryName());
                     oatProject.setPath(oatConfig.getRepositoryName() + "/");
-                    initProjectDefaultPolicy(oatConfig, oatProject);
+                    OatCfgUtil.initProjectDefaultPolicy(oatConfig, oatProject);
                     oatTask.addProject(oatProject);
                 }
             } // end of project list
@@ -470,8 +489,8 @@ public final class OatCfgUtil {
         }
     }
 
-    private static void initProjectBasicinfo(final HierarchicalConfiguration<ImmutableNode> projectCfg, final OatProject oatProject,
-        final String prjName) {
+    private static void initProjectBasicinfo(final HierarchicalConfiguration<ImmutableNode> projectCfg,
+        final OatProject oatProject, final String prjName) {
         oatProject.setName(prjName);
         String tmpPath = OatCfgUtil.getElementAttrValue(projectCfg, "path");
         if (!tmpPath.endsWith("/")) {
@@ -483,8 +502,9 @@ public final class OatCfgUtil {
         oatProject.setPath(tmpPath);
         oatProject.setPolicy(OatCfgUtil.getElementAttrValue(projectCfg, "policy"));
         oatProject.setFileFilter(OatCfgUtil.getElementAttrValue(projectCfg, "filefilter"));
-        final String[] licenselist = OatCfgUtil.getSplitStrings(OatCfgUtil.getElementAttrValue(projectCfg, "licensefile"));
-        cleanFileName(licenselist);
+        final String[] licenselist = OatCfgUtil.getSplitStrings(
+            OatCfgUtil.getElementAttrValue(projectCfg, "licensefile"));
+        OatCfgUtil.cleanFileName(licenselist);
         oatProject.setLicenseFiles(licenselist);
     }
 
@@ -518,12 +538,13 @@ public final class OatCfgUtil {
         return value == null ? defaultValue : OatCfgUtil.formatPath(value);
     }
 
-    private static String getElementAttrValue(final HierarchicalConfiguration<ImmutableNode> element, final String attr) {
+    private static String getElementAttrValue(final HierarchicalConfiguration<ImmutableNode> element,
+        final String attr) {
         return OatCfgUtil.getElementAttrValue(element, attr, "");
     }
 
-    private static List<HierarchicalConfiguration<ImmutableNode>> getElements(final XMLConfiguration xmlconfig, final String rootnode,
-        final String path) {
+    private static List<HierarchicalConfiguration<ImmutableNode>> getElements(final XMLConfiguration xmlconfig,
+        final String rootnode, final String path) {
         final List<HierarchicalConfiguration<ImmutableNode>> elements = xmlconfig.configurationsAt(rootnode + path);
         return elements;
     }
@@ -533,7 +554,8 @@ public final class OatCfgUtil {
         return value == null ? "" : OatCfgUtil.formatPath(value);
     }
 
-    private static String getAttrValue(final XMLConfiguration xmlconfig, final String rootnode, final String path, final String attr) {
+    private static String getAttrValue(final XMLConfiguration xmlconfig, final String rootnode, final String path,
+        final String attr) {
         final String value = xmlconfig.getString(rootnode + path + "[@" + attr + "]");
         return value == null ? "" : OatCfgUtil.formatPath(value);
     }

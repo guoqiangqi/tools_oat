@@ -37,8 +37,6 @@ public class OatMultiModeCommandLine implements IOatCommandLine {
 
     private final String cmdLineSyntax = "java -jar ohos_ossaudittool-VERSION.jar [options] \n";
 
-    private final List<IOatExcutor> lstOatExcutors = new ArrayList<>();
-
     @Override
     public boolean accept(final String[] args) {
         this.options.addOption("mode", true, "Operating mode, 'm' for check multiple projects");
@@ -47,15 +45,16 @@ public class OatMultiModeCommandLine implements IOatCommandLine {
         this.options.addOption("i", true, "OAT.xml file path, default vaule is OAT.xml in the running path");
         this.options.addOption("k", false, "Trace skipped files and ignored files");
         this.options.addOption("g", false, "Ignore project OAT configuration");
-        return this.accept(args, this.options, "m");
+        return IOatCommandLine.accept(args, this.options, "m");
     }
 
     @Override
-    public boolean parseArgs2Config(final String[] args, final OatConfig oatConfig) {
-        final CommandLine commandLine = this.parseOptions(args, this.options);
+    public OatConfig parseArgs2Config(final String[] args) {
+        final OatConfig oatConfig = new OatConfig();
+        final CommandLine commandLine = IOatCommandLine.parseOptions(args, this.options);
         final String optionValue_i = commandLine.getOptionValue("i");
         if (null == commandLine || null == optionValue_i) {
-            return false;
+            return null;
         }
 
         String initOATCfgFile = "OAT.xml";
@@ -82,10 +81,17 @@ public class OatMultiModeCommandLine implements IOatCommandLine {
 
         OatCfgUtil.initOatConfig(oatConfig, "");
         OatSpdxLicenseUtil.initSpdxLicenseList(oatConfig);
-        this.lstOatExcutors.add(new OatComplianceExcutor());
-        this.transmit(oatConfig, this.lstOatExcutors);
+        return oatConfig;
+    }
 
-        return true;
+    /**
+     * @param oatConfig
+     */
+    @Override
+    public void transmitTask(final OatConfig oatConfig) {
+        final List<IOatExcutor> lstOatExcutors = new ArrayList<>();
+        lstOatExcutors.add(new OatComplianceExcutor());
+        IOatCommandLine.transmitTask(oatConfig, lstOatExcutors);
     }
 
     /**

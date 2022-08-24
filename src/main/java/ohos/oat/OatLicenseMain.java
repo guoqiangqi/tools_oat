@@ -90,8 +90,7 @@ public class OatLicenseMain {
         OatLogUtil.println("", OatLicenseMain.PROMPT_MESSAGE_FEEDBACK);
         OatLogUtil.println("", OatLicenseMain.PROMPT_MESSAGE_SEPARATOR);
 
-        final OatConfig oatConfig = new OatConfig();
-        OatCommandLineMgr.initConfig(args, oatConfig);
+        OatCommandLineMgr.runCommand(args);
 
     }
 

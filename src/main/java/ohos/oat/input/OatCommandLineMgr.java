@@ -38,28 +38,34 @@ public class OatCommandLineMgr {
      * init oat config from program command para
      *
      * @param args commmand para
-     * @param oatConfig oat config
      */
-    public static void initConfig(final String[] args, final OatConfig oatConfig) {
+    public static void runCommand(final String[] args) {
         final List<IOatCommandLine> lstOatCommandLine = new ArrayList<>();
         lstOatCommandLine.add(new OatSingleModeCommandLine());
         lstOatCommandLine.add(new OatMultiModeCommandLine());
         lstOatCommandLine.add(new OatFolderModeCommandLine());
         lstOatCommandLine.add(new OatCollectSubPrjectsCommandLine());
 
-        boolean matched = false;
+        boolean bMatched = false;
         for (final IOatCommandLine iOatCommandLine : lstOatCommandLine) {
             if (iOatCommandLine.accept(args)) {
-                if (iOatCommandLine.parseArgs2Config(args, oatConfig)) {
-                    matched = true;
+                final OatConfig oatConfig = iOatCommandLine.parseArgs2Config(args);
+                if (null != oatConfig) {
+                    bMatched = true;
+                    iOatCommandLine.transmitTask(oatConfig);
+                    return;
+                } else {
+                    // Print command options of this mode only
+                    iOatCommandLine.printUsage();
+                    System.exit(0);
                 }
                 break;
             }
         }
-
-        if (!matched) {
+        if (!bMatched) {
             lstOatCommandLine.forEach(k -> k.printUsage());
             System.exit(0);
         }
+
     }
 }

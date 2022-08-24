@@ -39,8 +39,6 @@ public class OatFolderModeCommandLine implements IOatCommandLine {
 
     private final String cmdLineSyntax = "java -jar ohos_ossaudittool-VERSION.jar [options] \n";
 
-    private final List<IOatExcutor> lstOatExcutors = new ArrayList<>();
-
     @Override
     public boolean accept(final String[] args) {
         this.options.addOption("mode", true, "Operating mode, 'f' for check folder");
@@ -50,15 +48,16 @@ public class OatFolderModeCommandLine implements IOatCommandLine {
         this.options.addOption("r", true, "Report file path, eg: c:/oatresult.txt");
         this.options.addOption("k", false, "Trace skipped files and ignored files");
         this.options.addOption("g", false, "Ignore project OAT configuration");
-        return this.accept(args, this.options, "f");
+        return IOatCommandLine.accept(args, this.options, "f");
     }
 
     @Override
-    public boolean parseArgs2Config(final String[] args, final OatConfig oatConfig) {
-        final CommandLine commandLine = this.parseOptions(args, this.options);
+    public OatConfig parseArgs2Config(final String[] args) {
+        final OatConfig oatConfig = new OatConfig();
+        final CommandLine commandLine = IOatCommandLine.parseOptions(args, this.options);
         final String optionValue_s = commandLine.getOptionValue("s");
         if (null == commandLine || null == optionValue_s) {
-            return false;
+            return null;
         }
 
         // Init Source code repository path, same with basedir
@@ -70,7 +69,7 @@ public class OatFolderModeCommandLine implements IOatCommandLine {
             sourceCodeRepoPath = OatCfgUtil.formatPath(sourceCodeRepoPath);
         } else {
             OatLogUtil.warn(this.getClass().getSimpleName(), "Source code repository path is not exists!");
-            return false;
+            return null;
         }
         if (!sourceCodeRepoPath.endsWith("/")) {
             sourceCodeRepoPath += "/";
@@ -96,10 +95,18 @@ public class OatFolderModeCommandLine implements IOatCommandLine {
 
         OatCfgUtil.initOatConfig(oatConfig, "");
         OatSpdxLicenseUtil.initSpdxLicenseList(oatConfig);
-        this.lstOatExcutors.add(new OatComplianceExcutor());
-        this.transmit(oatConfig, this.lstOatExcutors);
+        return oatConfig;
+    }
 
-        return true;
+    /**
+     * @param oatConfig
+     */
+    @Override
+    public void transmitTask(final OatConfig oatConfig) {
+
+        final List<IOatExcutor> lstOatExcutors = new ArrayList<>();
+        lstOatExcutors.add(new OatComplianceExcutor());
+        IOatCommandLine.transmitTask(oatConfig, lstOatExcutors);
     }
 
     /**

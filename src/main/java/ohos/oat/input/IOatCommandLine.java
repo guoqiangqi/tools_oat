@@ -40,9 +40,22 @@ public interface IOatCommandLine {
     String PROMPT_MESSAGE_SEPARATOR = "--------------------------------------------------------------------------";
     String PROMPT_MESSAGE_HEADER = "Available options:";
 
+    /**
+     * @param args
+     * @return
+     */
     boolean accept(String[] args);
 
-    boolean parseArgs2Config(final String[] args, final OatConfig oatConfig);
+    /**
+     * @param args
+     * @return
+     */
+    OatConfig parseArgs2Config(final String[] args);
+
+    /**
+     * @param oatConfig
+     */
+    void transmitTask(OatConfig oatConfig);
 
     /**
      * Command line options
@@ -59,38 +72,49 @@ public interface IOatCommandLine {
     String getCmdLineSyntax();
 
     /**
-     * Print usage of this commandline
+     * Tool function, Print usage of this commandline，defined as static to avoid instantiation
      */
     default void printUsage() {
         final HelpFormatter helpFormatter = new HelpFormatter();
         helpFormatter.setOptionComparator(null);
         helpFormatter.setWidth(140);
-        helpFormatter.printHelp(this.getCmdLineSyntax(), PROMPT_MESSAGE_HEADER, this.getOptions(),
-            PROMPT_MESSAGE_SEPARATOR, false);
+        helpFormatter.printHelp(this.getCmdLineSyntax(), IOatCommandLine.PROMPT_MESSAGE_HEADER, this.getOptions(),
+            IOatCommandLine.PROMPT_MESSAGE_SEPARATOR, false);
     }
 
-    default boolean accept(final String[] args, final Options options, final String mode) {
+    /**
+     * Tool function, defined as static to avoid instantiation
+     *
+     * @param args
+     * @param options
+     * @param mode
+     * @return
+     */
+    static boolean accept(final String[] args, final Options options, final String mode) {
 
         if (ArrayUtils.isEmpty(args)) {
             return false;
         }
 
-        final CommandLine commandLine = this.parseOptions(args, options);
+        final CommandLine commandLine = IOatCommandLine.parseOptions(args, options);
         if (null == commandLine || commandLine.hasOption("h")) {
             return false;
         }
         OatLogUtil.setDebugMode(commandLine.hasOption("l"));
-        OatLogUtil.warn(this.getClass().getSimpleName(), "CommandLine" + "\tlogSwitch\t" + commandLine.hasOption("l"));
+        OatLogUtil.warn(IOatCommandLine.class.getSimpleName(),
+            "CommandLine" + "\tlogSwitch\t" + commandLine.hasOption("l"));
         final String modeValue = commandLine.getOptionValue("mode");
         return modeValue != null && modeValue.equals(mode);
     }
 
     /**
+     * Tool function, defined as static to avoid instantiation
+     *
      * @param args
      * @param options
      * @return
      */
-    default CommandLine parseOptions(final String[] args, final Options options) {
+    static CommandLine parseOptions(final String[] args, final Options options) {
         final CommandLineParser parser = new DefaultParser();
         CommandLine cmd = null;
         try {
@@ -102,10 +126,12 @@ public interface IOatCommandLine {
     }
 
     /**
+     * Tool function, defined as static to avoid instantiation
+     *
      * @param oatConfig
      * @param oatExcutors
      */
-    default void transmit(final OatConfig oatConfig, final List<IOatExcutor> oatExcutors) {
+    static void transmitTask(final OatConfig oatConfig, final List<IOatExcutor> oatExcutors) {
         oatExcutors.forEach(iOatExcutor -> iOatExcutor.excute(oatConfig));
     }
 }
