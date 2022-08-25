@@ -35,10 +35,11 @@ import java.util.List;
 public class OatMultiModeCommandLine implements IOatCommandLine {
     private final Options options = new Options();
 
-    private final String cmdLineSyntax = "java -jar ohos_ossaudittool-VERSION.jar [options] \n";
+    private final String cmdLineSyntax = "java -jar ohos_ossaudittool-VERSION.jar ";
 
     /**
      * Receive command line parameters and determine whether the command line corresponds to the operating mode
+     *
      * @param args command line paras
      * @return Match result
      */
@@ -50,11 +51,13 @@ public class OatMultiModeCommandLine implements IOatCommandLine {
         this.options.addOption("i", true, "OAT.xml file path, default vaule is OAT.xml in the running path");
         this.options.addOption("k", false, "Trace skipped files and ignored files");
         this.options.addOption("g", false, "Ignore project OAT configuration");
+        this.options.addOption("p", false, "Ignore project OAT policy");
         return IOatCommandLine.accept(args, this.options, "m");
     }
 
     /**
      * Parse command line arguments and convert to OatConfig data structure
+     *
      * @param args Command line arguments
      * @return OatConfig data structure
      */
@@ -63,7 +66,7 @@ public class OatMultiModeCommandLine implements IOatCommandLine {
         final OatConfig oatConfig = new OatConfig();
         final CommandLine commandLine = IOatCommandLine.parseOptions(args, this.options);
         final String optionValue_i = commandLine.getOptionValue("i");
-        if (null == commandLine || null == optionValue_i) {
+        if (null == commandLine || null == optionValue_i || commandLine.hasOption("h")) {
             return null;
         }
 
@@ -87,6 +90,9 @@ public class OatMultiModeCommandLine implements IOatCommandLine {
         }
         if (commandLine.hasOption("g")) {
             oatConfig.putData("IgnoreProjectOAT", "true");
+        }
+        if (commandLine.hasOption("p")) {
+            oatConfig.putData("IgnoreProjectPolicy", "true");
         }
 
         OatCfgUtil.initOatConfig(oatConfig, "");

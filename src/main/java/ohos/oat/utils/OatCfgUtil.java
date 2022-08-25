@@ -210,8 +210,8 @@ public final class OatCfgUtil {
             }
             OatCfgUtil.initLicenseMatcher(oatConfig, prjXmlconfig, oatProject);
             OatCfgUtil.initCompatibilityLicense(oatConfig, prjXmlconfig, oatProject);
-            final String bIgnoreProjectOAT = oatConfig.getData("IgnoreProjectOAT");
-            if (bIgnoreProjectOAT.equals("true")) {
+            final String bIgnoreProjectPolicy = oatConfig.getData("IgnoreProjectPolicy");
+            if (bIgnoreProjectPolicy.equals("true")) {
                 OatCfgUtil.initFilter(oatConfig, prjXmlconfig, oatProject);
             } else {
                 OatCfgUtil.initPolicy(oatConfig, prjXmlconfig, oatProject);

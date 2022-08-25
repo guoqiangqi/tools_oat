@@ -38,10 +38,11 @@ import java.util.List;
  */
 public interface IOatCommandLine {
     String PROMPT_MESSAGE_SEPARATOR = "--------------------------------------------------------------------------";
-    String PROMPT_MESSAGE_HEADER = "Available options:";
+    String PROMPT_MESSAGE_HEADER = "options:";
 
     /**
      * Receive command line parameters and determine whether the command line corresponds to the operating mode
+     *
      * @param args command line paras
      * @return Match result
      */
@@ -49,6 +50,7 @@ public interface IOatCommandLine {
 
     /**
      * Parse command line arguments and convert to OatConfig data structure
+     *
      * @param args Command line arguments
      * @return OatConfig data structure
      */
@@ -56,6 +58,7 @@ public interface IOatCommandLine {
 
     /**
      * Perform tasks
+     *
      * @param oatConfig
      */
     void excuteTask(OatConfig oatConfig);
@@ -82,7 +85,7 @@ public interface IOatCommandLine {
         helpFormatter.setOptionComparator(null);
         helpFormatter.setWidth(140);
         helpFormatter.printHelp(this.getCmdLineSyntax(), IOatCommandLine.PROMPT_MESSAGE_HEADER, this.getOptions(),
-            IOatCommandLine.PROMPT_MESSAGE_SEPARATOR, false);
+            IOatCommandLine.PROMPT_MESSAGE_SEPARATOR, true);
     }
 
     /**
@@ -100,7 +103,7 @@ public interface IOatCommandLine {
         }
 
         final CommandLine commandLine = IOatCommandLine.parseOptions(args, options);
-        if (null == commandLine || commandLine.hasOption("h")) {
+        if (null == commandLine) {
             return false;
         }
         OatLogUtil.setDebugMode(commandLine.hasOption("l"));

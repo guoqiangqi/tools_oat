@@ -37,10 +37,11 @@ import java.util.List;
 public class OatFolderModeCommandLine implements IOatCommandLine {
     private final Options options = new Options();
 
-    private final String cmdLineSyntax = "java -jar ohos_ossaudittool-VERSION.jar [options] \n";
+    private final String cmdLineSyntax = "java -jar ohos_ossaudittool-VERSION.jar ";
 
     /**
      * Receive command line parameters and determine whether the command line corresponds to the operating mode
+     *
      * @param args command line paras
      * @return Match result
      */
@@ -58,6 +59,7 @@ public class OatFolderModeCommandLine implements IOatCommandLine {
 
     /**
      * Parse command line arguments and convert to OatConfig data structure
+     *
      * @param args Command line arguments
      * @return OatConfig data structure
      */
@@ -66,7 +68,7 @@ public class OatFolderModeCommandLine implements IOatCommandLine {
         final OatConfig oatConfig = new OatConfig();
         final CommandLine commandLine = IOatCommandLine.parseOptions(args, this.options);
         final String optionValue_s = commandLine.getOptionValue("s");
-        if (null == commandLine || null == optionValue_s) {
+        if (null == commandLine || null == optionValue_s || commandLine.hasOption("h")) {
             return null;
         }
 
