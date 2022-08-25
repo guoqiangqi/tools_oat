@@ -36,7 +36,7 @@ import java.util.regex.PatternSyntaxException;
 
 public class OatMatchUtils {
 
-    private static final String[]  COPY_LEFT_LICENSE_NAME = new String[] {
+    private static final String[] COPY_LEFT_LICENSE_NAME = new String[] {
         "CeCILL", "GPL", "MPL", "EPL", "CDDL", "CPL", "IPL", "NPL", "OSL"
     };
 
@@ -78,13 +78,13 @@ public class OatMatchUtils {
             return true;
         }
 
-        for (final String name : COPY_LEFT_LICENSE_NAME) {
+        for (final String name : OatMatchUtils.COPY_LEFT_LICENSE_NAME) {
             if (matchedName.contains(name)) {
                 return false;
             }
         }
 
-        for (final String name : COPY_LEFT_LICENSE_NAME) {
+        for (final String name : OatMatchUtils.COPY_LEFT_LICENSE_NAME) {
             if (licenseNameToMatch.contains(name)) {
                 return true;
             }
@@ -111,9 +111,13 @@ public class OatMatchUtils {
         if (null == patternStr || patternStr.trim().length() <= 0) {
             return null;
         }
+        String tmppatternStr = patternStr;
+        if (tmppatternStr.contains("**")) {
+            tmppatternStr = tmppatternStr.replaceAll("\\*\\*", ".*");
+        }
         final Pattern pattern;
         try {
-            pattern = Pattern.compile(patternStr, Pattern.CASE_INSENSITIVE);
+            pattern = Pattern.compile(tmppatternStr, Pattern.CASE_INSENSITIVE);
         } catch (final PatternSyntaxException e) {
             OatLogUtil.traceException(e);
             return null;
@@ -126,5 +130,11 @@ public class OatMatchUtils {
             return false;
         }
         return pattern.matcher(strToMatch).matches();
+    }
+
+    public static void main(final String[] args) {
+        final String ss = "****/.*.json5";
+        final String bb = ss.replaceAll("\\*\\*", ".*");
+        System.out.println(bb);
     }
 }

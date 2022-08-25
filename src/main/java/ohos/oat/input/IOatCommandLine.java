@@ -126,7 +126,7 @@ public interface IOatCommandLine {
         try {
             cmd = parser.parse(options, args);
         } catch (final ParseException e) {
-            OatLogUtil.traceException(e);
+            return null;
         }
         return cmd;
     }
