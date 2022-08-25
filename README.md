@@ -84,37 +84,23 @@ multiple projects in a batch.
 ### Multi-Project Scan<a name="section20292217143516"></a>
 
 ```
-java -Dfile.encoding=UTF-8 -jar ohos_ossaudittool-xx.jar -i OAT-ALL.xml
-```
+java -jar ohos_ossaudittool-xx.jar -mode m -i OAT-ALL.xml
 
-All supported parameters are as follows:
-
-```
-usage: java -jar ohos_ossaudittool-VERSION.jar [options]
-
-Available options
- -f <arg>   File list to check, separated by |, must be used together with
-            -s option
- -h         Help message
- -i <arg>   OAT.xml file path, default vaule is OAT.xml in the running
-            path
- -k         Trace skipped files and ignored files
- -l         Log switch, used to enable the logger
- -m <arg>   Check mode, 0 means full check, 1 means only check the file
-            list, must be used together with -s option
- -n <arg>   Name of repository, used to match the default policy, must be
-            used together with -s option
- -r <arg>   Report file path, must be used together with -s option
- -s <arg>   Source code repository path
- -t         Trace project license list only
- -c         Collect and log sub projects only, must be used together with
-            -s option 
+options:
+ -mode <arg>   Operating mode, 'm' for check multiple projects
+ -h            Help message
+ -l            Log switch, used to enable the logger
+ -i <arg>      OAT.xml file path, default vaule is OAT.xml in the running path
+ -k            Trace skipped files and ignored files
+ -g            Ignore project OAT configuration
+ -p            Ignore project OAT policy
 ```
 
 In this mode, the report is generated in the running directory of OAT. The  **OAT-ALL.xml**  file is used to configure the list of projects to be scanned, the default license and copyright policy, and
-the default filtering rule, you can copy resources/OAT-Default.xml, define projects and save as OAT-ALL.xml. 
+the default filtering rule, you can copy resources/OAT-Default.xml, define projects and save as OAT-ALL.xml.
 
-Note: 
+Note:
+
 - Please add a new task in the **tasklist** and configure the project information you want to scan. Do not modify the **defaultTask**.
 - You can use **java -jar ohos_ossaudittool-VERSION.jar -s sourcedir -c** to generate all projects and write into the OAT.log file.
 
@@ -151,7 +137,19 @@ Configure the projects to be scanned and their paths as follows:
 ### Single-Project Scan<a name="section1771013213818"></a>
 
 ```
-java -Dfile.encoding=UTF-8 -jar ohos_ossaudittool-xx.jar -s sourcedir -r reportdir -n nameOfRepo
+java -jar ohos_ossaudittool-xx.jar -mode s -s sourcedir -r reportdir -n nameOfRepo
+
+options:
+ -mode <arg>   Operating mode, 's' for check single project
+ -h            Help message
+ -l            Log switch, used to enable the logger
+ -s <arg>      Source code repository path, eg: c:/test/
+ -r <arg>      Report file path, eg: c:/oatresult.txt
+ -n <arg>      Name of repository, used to match the default policy
+ -w <arg>      Check way, 0 means full check, 1 means only check the file list
+ -f <arg>      File list to check, separated by |
+ -k            Trace skipped files and ignored files
+ -g            Ignore project OAT configuration
 ```
 
 **sourcedir**  indicates the root directory of the project to be scanned, and  **reportdir**  indicates the directory used to store the generated report. In this mode, the rules defined in  **
