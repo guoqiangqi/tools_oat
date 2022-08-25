@@ -131,10 +131,4 @@ public class OatMatchUtils {
         }
         return pattern.matcher(strToMatch).matches();
     }
-
-    public static void main(final String[] args) {
-        final String ss = "****/.*.json5";
-        final String bb = ss.replaceAll("\\*\\*", ".*");
-        System.out.println(bb);
-    }
 }

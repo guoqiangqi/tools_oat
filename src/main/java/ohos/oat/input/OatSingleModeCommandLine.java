@@ -22,7 +22,6 @@ import ohos.oat.excutor.OatComplianceExcutor;
 import ohos.oat.utils.OatCfgUtil;
 import ohos.oat.utils.OatFileUtils;
 import ohos.oat.utils.OatLogUtil;
-import ohos.oat.utils.OatSpdxLicenseUtil;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.Options;
@@ -156,8 +155,6 @@ public class OatSingleModeCommandLine implements IOatCommandLine {
         }
 
         OatCfgUtil.initOatConfig(oatConfig, sourceCodeRepoPath);
-        OatSpdxLicenseUtil.initSpdxLicenseList(oatConfig);
-
         return oatConfig;
     }
 

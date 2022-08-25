@@ -20,7 +20,6 @@ import ohos.oat.excutor.IOatExcutor;
 import ohos.oat.excutor.OatComplianceExcutor;
 import ohos.oat.utils.OatCfgUtil;
 import ohos.oat.utils.OatLogUtil;
-import ohos.oat.utils.OatSpdxLicenseUtil;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.Options;
@@ -96,7 +95,6 @@ public class OatMultiModeCommandLine implements IOatCommandLine {
         }
 
         OatCfgUtil.initOatConfig(oatConfig, "");
-        OatSpdxLicenseUtil.initSpdxLicenseList(oatConfig);
         return oatConfig;
     }
 

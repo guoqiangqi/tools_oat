@@ -23,6 +23,7 @@ import ohos.oat.report.IOatReport;
 import ohos.oat.report.OatDirectoryWalker;
 import ohos.oat.report.OatMainReport;
 import ohos.oat.utils.OatLogUtil;
+import ohos.oat.utils.OatSpdxLicenseUtil;
 
 import org.apache.commons.io.filefilter.NameFileFilter;
 import org.apache.commons.io.filefilter.NotFileFilter;
@@ -49,14 +50,15 @@ import java.util.concurrent.Executors;
  * @since 2022/08
  */
 public class OatComplianceExcutor implements IOatExcutor {
-    
+
     /**
      * Perform inspection tasks based on the contents of the Oat Config data structure
+     *
      * @param oatConfig
      */
     @Override
     public void excute(final OatConfig oatConfig) {
-        oatCheck(oatConfig);
+        OatComplianceExcutor.oatCheck(oatConfig);
     }
 
     /**
@@ -65,6 +67,7 @@ public class OatComplianceExcutor implements IOatExcutor {
      * @param oatConfig Config in oat.xml
      */
     private static void oatCheck(final OatConfig oatConfig) {
+        OatSpdxLicenseUtil.initSpdxLicenseList(oatConfig);
         final List<OatTask> taskList = oatConfig.getTaskList();
         final int size = taskList.size();
         int maxThread = Math.min(size, 100);
@@ -133,9 +136,9 @@ public class OatComplianceExcutor implements IOatExcutor {
             for (final String filterItem : filterItems) {
                 newItems.add(filterItem.replace(oatProject.getPath(), ""));
             }
-            final FilenameFilter filenameFilter = parseFileExclusions(newItems);
+            final FilenameFilter filenameFilter = OatComplianceExcutor.parseFileExclusions(newItems);
             final long startTime = System.currentTimeMillis();
-            final IReportable base = getDirectoryWalker(oatConfig, oatProject, filenameFilter);
+            final IReportable base = OatComplianceExcutor.getDirectoryWalker(oatConfig, oatProject, filenameFilter);
             if (base != null) {
                 base.run(report);
             }
@@ -148,7 +151,7 @@ public class OatComplianceExcutor implements IOatExcutor {
 
     private static IReportable getDirectoryWalker(final OatConfig oatConfig, final OatProject oatProject,
         final FilenameFilter inputFileFilter) {
-        final String prjDirectory = getPrjDirectory(oatConfig, oatProject);
+        final String prjDirectory = OatComplianceExcutor.getPrjDirectory(oatConfig, oatProject);
         final File base = new File(prjDirectory);
         if (!base.exists()) {
             return null;
