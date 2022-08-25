@@ -19,22 +19,11 @@
 
 package ohos.oat.utils;
 
-import com.alibaba.fastjson.JSON;
-
 import ohos.oat.analysis.headermatcher.OatLicense;
 import ohos.oat.config.OatConfig;
 
-import org.spdx.library.InvalidSPDXAnalysisException;
-import org.spdx.library.model.license.ListedLicenseException;
-import org.spdx.library.model.license.ListedLicenses;
-import org.spdx.library.model.license.SpdxListedLicense;
-
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
-import java.util.Locale;
 
 /**
  * Stateless utility class for spdx license collection
@@ -56,8 +45,8 @@ public final class OatSpdxLicenseUtil {
      */
     public static void initSpdxLicenseList(final OatConfig oatConfig) {
         // List for store spdx licenses
-        List<OatLicense> licenseList = OatFileUtils.readJsonFromFile("/licenses.json", OatLicense.class);
-        List<OatLicense> exceptionLicenseList = OatFileUtils.readJsonFromFile("/licenses-exception.json",
+        final List<OatLicense> licenseList = OatFileUtils.readJsonFromFile("/licenses.json", OatLicense.class);
+        final List<OatLicense> exceptionLicenseList = OatFileUtils.readJsonFromFile("/licenses-exception.json",
             OatLicense.class);
         // Just use local license files
         // System.setProperty("SPDXParser.OnlyUseLocalLicenses", "true");
@@ -65,60 +54,13 @@ public final class OatSpdxLicenseUtil {
         if (licenseList != null) {
             oatConfig.setLicenseList(Collections.unmodifiableList(licenseList));
         } else {
-            licenseList = new ArrayList<>();
-            final List<String> standardLicenseIds = ListedLicenses.getListedLicenses().getSpdxListedLicenseIds();
-            try {
-                for (final String standardLicenseId : standardLicenseIds) {
-                    final SpdxListedLicense spdxListedLicense = ListedLicenses.getListedLicenses()
-                        .getListedLicenseById(standardLicenseId);
-                    convertSpdx2OatlicenseList(licenseList, spdxListedLicense);
-                }
-            } catch (final InvalidSPDXAnalysisException e) {
-                OatLogUtil.traceException(e);
-            }
-            for (final OatLicense oatLicense : licenseList) {
-                OatLogUtil.warn(OatSpdxLicenseUtil.class.getSimpleName(), oatLicense.getLicenseHeaderText());
-            }
-            Collections.sort(licenseList, new Comparator<OatLicense>() {
-                @Override
-                public int compare(final OatLicense o1, final OatLicense o2) {
-                    return o2.getLicenseHeaderTextLength() - o1.getLicenseHeaderTextLength();
-                }
-            });
-            final String licenseListJsonString = JSON.toJSONString(licenseList);
-            OatFileUtils.saveJson2File(licenseListJsonString, "licenses.json");
-            oatConfig.setLicenseList(Collections.unmodifiableList(licenseList));
+            OatLogUtil.warn(OatSpdxLicenseUtil.class.getSimpleName(), "SPDX license list is null");
         }
 
         if (exceptionLicenseList != null) {
             oatConfig.setExceptionLicenseList(Collections.unmodifiableList(exceptionLicenseList));
         } else {
-            exceptionLicenseList = new ArrayList<>();
-            final List<String> standardExceptionLicenseIds = ListedLicenses.getListedLicenses()
-                .getSpdxListedExceptionIds();
-            try {
-                for (final String standardExceptionLicenseId : standardExceptionLicenseIds) {
-                    final ListedLicenseException spdxListedException = ListedLicenses.getListedLicenses()
-                        .getListedExceptionById(standardExceptionLicenseId);
-                    convertSpdxException2OatlicenseList(exceptionLicenseList, spdxListedException);
-                }
-            } catch (final InvalidSPDXAnalysisException e) {
-                OatLogUtil.traceException(e);
-            }
-
-            for (final OatLicense oatLicense : exceptionLicenseList) {
-                OatLogUtil.warn(OatSpdxLicenseUtil.class.getSimpleName(), oatLicense.getLicenseHeaderText());
-            }
-            Collections.sort(exceptionLicenseList, new Comparator<OatLicense>() {
-                @Override
-                public int compare(final OatLicense o1, final OatLicense o2) {
-                    return o2.getLicenseHeaderTextLength() - o1.getLicenseHeaderTextLength();
-                }
-            });
-
-            final String exceptionLicenseListJsonString = JSON.toJSONString(exceptionLicenseList);
-            OatFileUtils.saveJson2File(exceptionLicenseListJsonString, "licenses-exception.json");
-            oatConfig.setExceptionLicenseList(Collections.unmodifiableList(exceptionLicenseList));
+            OatLogUtil.warn(OatSpdxLicenseUtil.class.getSimpleName(), "SPDX exception license list is null");
         }
 
         int count = 0;
@@ -137,70 +79,4 @@ public final class OatSpdxLicenseUtil {
 
     }
 
-    private static void convertSpdx2OatlicenseList(final List<OatLicense> licenseList,
-        final SpdxListedLicense spdxListedLicense) throws InvalidSPDXAnalysisException {
-        final OatLicense oatLicense = new OatLicense();
-        oatLicense.setLicenseName(spdxListedLicense.getName());
-        oatLicense.setLicenseId(spdxListedLicense.getLicenseId());
-
-        final Collection<String> seealso = spdxListedLicense.getSeeAlso();
-        for (final String seealsoUrl : seealso) {
-            oatLicense.addUrls(OatLicenseTextUtil.cleanNoLetterAndCutTemplateFlag(seealsoUrl, false));
-        }
-        final String licenseText = spdxListedLicense.getLicenseText().toLowerCase(Locale.ENGLISH);
-        final String licenseHeaderText = spdxListedLicense.getStandardLicenseHeader().toLowerCase(Locale.ENGLISH);
-        oatLicense.setLicenseText(licenseText);
-        oatLicense.setLicenseHeaderText(licenseHeaderText);
-        simplifyOatLicense(licenseList, oatLicense);
-    }
-
-    private static void convertSpdxException2OatlicenseList(final List<OatLicense> licenseList,
-        final ListedLicenseException spdxListedLicense) throws InvalidSPDXAnalysisException {
-        final OatLicense oatLicense = new OatLicense();
-        oatLicense.setLicenseName(spdxListedLicense.getName());
-        oatLicense.setLicenseId(spdxListedLicense.getLicenseExceptionId());
-
-        final Collection<String> seealso = spdxListedLicense.getSeeAlso();
-        for (final String seealsoUrl : seealso) {
-            oatLicense.addUrls(OatLicenseTextUtil.cleanNoLetterAndCutTemplateFlag(seealsoUrl, false));
-        }
-        final String licenseText = spdxListedLicense.getLicenseExceptionText().toLowerCase(Locale.ENGLISH);
-        final String licenseHeaderText = spdxListedLicense.getLicenseExceptionText().toLowerCase(Locale.ENGLISH);
-        oatLicense.setLicenseText(licenseText);
-        oatLicense.setLicenseHeaderText(licenseHeaderText);
-        simplifyOatLicense(licenseList, oatLicense);
-    }
-
-    private static void simplifyOatLicense(final List<OatLicense> licenseList, final OatLicense oatLicense) {
-        final String licenseText = oatLicense.getLicenseText();
-        final String licenseHeaderText = oatLicense.getLicenseHeaderText();
-        if (licenseHeaderText.trim().length() <= 9) {
-            // use full license text
-            String tmpString = OatLicenseTextUtil.cleanCopyrightLines(licenseText);
-            final int length = tmpString.length();
-            final int maxLength = 4000;
-            if (length > maxLength) {
-                tmpString = tmpString.substring(0, maxLength);
-            }
-            if (length > 9) {
-                oatLicense.setLicenseHeaderText(tmpString);
-                licenseList.add(oatLicense);
-            } else {
-                OatLogUtil.println("licenseTextNull:\t", oatLicense.getLicenseId());
-            }
-
-        } else {
-            // use license header text
-            final String tmp = OatLicenseTextUtil.cleanCopyrightString(licenseHeaderText);
-            final int length = tmp.length();
-            if (length > 9) {
-                oatLicense.setLicenseHeaderText(tmp);
-                licenseList.add(oatLicense);
-            } else {
-                OatLogUtil.println("licenseHeaderTextNull:\t", oatLicense.getLicenseId());
-            }
-        }
-        final String tmpLicenseString = OatLicenseTextUtil.cleanCopyrightLines(licenseText);
-        oatLicense.setLicenseText(tmpLicenseString);
-    }
 }

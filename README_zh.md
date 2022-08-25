@@ -63,59 +63,57 @@ mvn package
 
 ## CI集成<a name="section7899558173218"></a>
 
-OpenHarmony社区开源项目采用了多种编程语言、多种构建工具，OAT只是检测开源仓源码文本，与语言是解耦的，因此并未直接集成到各开源仓的构建逻辑中，而是作为通用工具集成到OpenHarmony社区门禁，各开源仓代码提交后可自动触发OAT检测并输出报告，若您需要集成到项目的构建过程中，可参考[单项目模式运行](#section1771013213818)运行参数快速集成。
+OpenHarmony社区开源项目采用了多种编程语言、多种构建工具，OAT只是检测开源仓源码文本，与语言是解耦的，因此并未直接集成到各开源仓的构建逻辑中，而是作为通用工具集成到OpenHarmony社区门禁，各开源仓代码提交后可自动触发OAT检测并输出报告，若您需要集成到项目的构建过程中，可参考[单项目模式运行](#section1771013213818)
+运行参数快速集成。
 
 ## 运行<a name="section1634911263317"></a>
 
 OAT是基于Java语言开发的，因此可以运行在多种操作系统中，请确保您的环境已安装JDK8以上版本，OAT支持批量以及单项目两种运行模式：
 
-
 ### 单项目模式运行<a name="section1771013213818"></a>
 
 ```
-java -Dfile.encoding=UTF-8 -jar ohos_ossaudittool-xx.jar -s sourcedir -r reportdir -n nameOfRepo
+java -jar ohos_ossaudittool-xx.jar -mode s -s sourcedir -r reportdir -n nameOfRepo
+
+options:
+ -mode <arg>   Operating mode, 's' for check single project
+ -h            Help message
+ -l            Log switch, used to enable the logger
+ -s <arg>      Source code repository path, eg: c:/test/
+ -r <arg>      Report file path, eg: c:/oatresult.txt
+ -n <arg>      Name of repository, used to match the default policy
+ -w <arg>      Check way, 0 means full check, 1 means only check the file list
+ -f <arg>      File list to check, separated by |
+ -k            Trace skipped files and ignored files
+ -g            Ignore project OAT configuration
 ```
 
-其中第一个参数是待扫描项目的根目录路径，第二个参数为报告输出路径，本模式采用resources/OAT-Default.xml中的定义作为默认规则，如果默认规则不满足业务要求，您同样可以在开源仓根目录放置一个命名为 "OAT.xml" 的文件作为开源仓规则，详情参见[开源仓规则配置](#section119891146124010)章节的描述。
+其中第一个参数是待扫描项目的根目录路径，第二个参数为报告输出路径，本模式采用resources/OAT-Default.xml中的定义作为默认规则，如果默认规则不满足业务要求，您同样可以在开源仓根目录放置一个命名为 "OAT.xml"
+的文件作为开源仓规则，详情参见[开源仓规则配置](#section119891146124010)章节的描述。
 
 OAT已集成到OpenHarmony社区门禁，门禁被触发时即以此模式在运行，您可以在resources/OAT-Default.xml中查看工具的默认规则。
 
 ### 批量模式运行<a name="section20292217143516"></a>
 
 ```
-java -Dfile.encoding=UTF-8 -jar ohos_ossaudittool-xx.jar -i OAT-ALL.xml
-```
+java -jar ohos_ossaudittool-xx.jar -mode m -i OAT-ALL.xml
 
-详细参数如下：
-
-```
-usage: java -jar ohos_ossaudittool-VERSION.jar [options]
-
-Available options
- -f <arg>   File list to check, separated by |, must be used together with
-            -s option
- -h         Help message
- -i <arg>   OAT.xml file path, default vaule is OAT.xml in the running
-            path
- -k         Trace skipped files and ignored files
- -l         Log switch, used to enable the logger
- -m <arg>   Check mode, 0 means full check, 1 means only check the file
-            list, must be used together with -s option
- -n <arg>   Name of repository, used to match the default policy, must be
-            used together with -s option
- -r <arg>   Report file path, must be used together with -s option
- -s <arg>   Source code repository path
- -t         Trace project license list only
- -c         Collect and log sub projects only, must be used together with
-            -s option
+options:
+ -mode <arg>   Operating mode, 'm' for check multiple projects
+ -h            Help message
+ -l            Log switch, used to enable the logger
+ -i <arg>      OAT.xml file path, default vaule is OAT.xml in the running path
+ -k            Trace skipped files and ignored files
+ -g            Ignore project OAT configuration
+ -p            Ignore project OAT policy
 ```
 
 批量模式生成的报告位于OAT的运行目录，其中OAT-ALL.xml用于配置待扫描的项目清单及默认的许可证、Copyright等策略及默认的过滤规则，您可基于resources/OAT-Default.xml修改生成OAT-ALL.xml。
 
 注意：
+
 - 在tasklist中新增task并配置您要扫描的project信息，不要修改默认的defaultTask。
 - 可以使用 **java -jar ohos_ossaudittool-VERSION.jar -s sourcedir -c** 命令行生成该源码目录下所有projects，结果会写入OAT.log文件，您可参考这些信息来配置OAT-ALL.xml中新增的task。
-
 
 扫描项目及路径配置说明：
 
@@ -142,7 +140,6 @@ Available options
 5、policy用于配置许可证、版权头等规则，filefilter用于配置哪些文件不用扫描，详情参见[默认规则配置](#section729883153314)章节的描述。
 
 6、如果默认规则不满足业务要求，您可以在各开源仓根目录放置一个命名为 "OAT.xml"的文件作为开源仓规则，详情参见[开源仓规则配置](#section119891146124010)配置章节的描述。
-
 
 ## 默认规则配置<a name="section729883153314"></a>
 
@@ -184,15 +181,16 @@ Available options
 - "filename" 用于检查指定目录是否存在指定文件，目前支持如下三种类型文件检测：LICENSE, README, README.OpenSource。
 - "import" 用于检测依赖库是否合理，该规则会扫描所有源文件的依赖声明头信息，对于不满足规则的会在报告中呈现，目前支持两种依赖声明：import、include。
 
-4、policyitem name: 用于定义规则的目标值，如许可证明等，其中"\*"表示允许所有值，"!"前缀则表示不允许该值。比如"!GPL"表示不允许使用GPL系列许可证。
+4、policyitem name: 用于定义规则的目标值，如许可证明等，其中"\*"表示允许所有值，"!"前缀则表示不允许该值。比如"!MIT"表示不允许使用MIT系列许可证。
 
 5、policyitem path: 用于定义该规则应用的源文件范围，可以在此定义basedir路径以下的路径通配规则，其中"!"前缀表示该路径以外的文件，比如"!.\*/lib/.\*"表示lib以外的文件会应用该规则.
 
-6、policyitem rule/group: 这两个字段要组合起来使用，用于计算多条规则应用后的综合结果，rule字段值为"may"表示在同一group中，只要有一个rule值为"may"的policyitem满足条件，结果即为检查通过；rule字段值为"must"则如果该policyitem不满足，结果即为检查不通过。
+6、policyitem rule/group: 这两个字段要组合起来使用，用于计算多条规则应用后的综合结果，rule字段值为"may"表示在同一group中，只要有一个rule值为"may"的policyitem满足条件，结果即为检查通过；rule字段值为"must"
+则如果该policyitem不满足，结果即为检查不通过。
 
 7、policyitem filefilter: 用于绑定过滤器，如果扫描的文件符合过滤的条件，即使其不满足该policyitem的规则也不会在报告中呈现.
 
-8、policyitem desc：用于描述该策略的原因，如许可证类型为GPL V2，在desc字段要描述为什么要用此许可证，被什么特性使用，是否是跨进程通信等。
+8、policyitem desc：用于描述该策略的原因，如desc字段要描述为什么要用此许可证，被什么特性使用，是否是跨进程通信等。
 
 - 过滤配置
 
@@ -276,7 +274,6 @@ OAT已默认支持OSI定义的大多数许可证类型的检测，若项目使�
 
 OpenHarmony CI门禁的问题详情界面提供了忽略问题的操作入口，但OAT工具检查的问题请不要在Web界面忽略，而应当在仓的根目录OAT.xml文件中进行确认（配置Policy或Filter），这样能确保该仓的确认信息继承到下游产品使用场景，避免重复进行问题确认；同时OAT.xml中配置规则能批量应用于很多文件，问题确认效率会更高。
 
-
 - 二进制文件（Invalid File Type）
 
 OpenHarmony社区开源仓中不应当存放过多二进制文件，如因业务需要必须存放二进制文件，请按如下步骤进行处理：
@@ -294,14 +291,15 @@ OpenHarmony社区开源仓中不应当存放过多二进制文件，如因业务
 如果开源仓用到了默认规则（Apache，BSD，MIT）以外的许可证，经与律师确认该许可证可以使用，或者使用场景满足该许可证的要求，则可通过添加policyitem的方式指定该许可证：
 
 ```
-<policyitem type="compatibility" name="GPL-2.0+" path="abc/.*" rule="may" group="defaultGroup" filefilter="defaultPolicyFilter" desc="reason"/>
+<policyitem type="compatibility" name="XXX-2.0+" path="abc/.*" rule="may" group="defaultGroup" filefilter="defaultPolicyFilter" desc="reason"/>
 ```
 
 注意：
 
-1、policyitem的name字段应该与扫描报告中的对应，如扫描报告显示“License Not Compatible GPL-2.0+”，则name字段应该就写“GPL-2.0+”，并在desc字段中描述具体的原因，如是跨进程调用等。
+1、policyitem的name字段应该与扫描报告中的对应，如扫描报告显示“License Not Compatible XXX-2.0+”，则name字段应该就写“XXX-2.0+”，并在desc字段中描述具体的原因，如是跨进程调用等。
 
 2、如果扫描报告检测的许可证名字为“InvalidLicense”，请将许可证映射到具体的许可证名字。
+
 ```
 <licensematcher name="XXX License" desc="License for XXX" >
     <licensetext name="
@@ -339,6 +337,7 @@ OpenHarmony社区开源仓中不应当存放过多二进制文件，如因业务
 ```
 <policyitem type="copyright" name="Copyright Owner" path="efg/.*" rule="may" group="defaultGroup" filefilter="copyrightPolicyFilter" desc=""/>
 ```
+
 注意：完整的版权头格式为：Copyright (C) [第一次发布年份]-[当前版本发布年份] [版权所有者]
 上述policyitem中name字段Copyright Owner不用包括Copyright (C) [第一次发布年份]-[当前版本发布年份]部分，只需配置[版权所有者]部分即可。
 如果本项目不需要该类型检测，如上游开源软件不需检测文件头是否遗漏版权声明，可通过如下方式配置：
@@ -355,7 +354,8 @@ OpenHarmony项目要求许可证统一位于项目根目录，并且命名为“
 
 - 义务履行配置文件缺失（No README.OpenSource）
 
-OpenHarmony项目要求所有第三方开源软件需要在其根目录提供README.OpenSource文件，用于在发布二进制版本时自动生成开源声明，该文件的具体写法参见[第三方开源软件引入指导](https://gitee.com/openharmony/docs/blob/master/zh-cn/contribute/%E7%AC%AC%E4%B8%89%E6%96%B9%E5%BC%80%E6%BA%90%E8%BD%AF%E4%BB%B6%E5%BC%95%E5%85%A5%E6%8C%87%E5%AF%BC.md)。
+OpenHarmony项目要求所有第三方开源软件需要在其根目录提供README.OpenSource文件，用于在发布二进制版本时自动生成开源声明，该文件的具体写法参见[第三方开源软件引入指导](https://gitee.com/openharmony/docs/blob/master/zh-cn/contribute/%E7%AC%AC%E4%B8%89%E6%96%B9%E5%BC%80%E6%BA%90%E8%BD%AF%E4%BB%B6%E5%BC%95%E5%85%A5%E6%8C%87%E5%AF%BC.md)
+。
 
 - README文件缺失（No README）
 
@@ -367,7 +367,8 @@ OpenHarmony项目要求所有开源仓根目录提供README，README_zh文件，
 
 ## Committer审核代码<a name="section77489114429"></a>
 
-Committer在审核合入代码PR时须检查OAT报告以及各开源仓规则文件OAT.xml，每次批准代码合入时应当做到OAT检查结果清零，同时确保OAT.xml中的policy规则以及filefilter规则是合理的，对于无法确定的问题，可联系PMC或[基金会律师](law@openatom.md)一同评审。
+Committer在审核合入代码PR时须检查OAT报告以及各开源仓规则文件OAT.xml，每次批准代码合入时应当做到OAT检查结果清零，同时确保OAT.xml中的policy规则以及filefilter规则是合理的，对于无法确定的问题，可联系PMC或[基金会律师](law@openatom.md)
+一同评审。
 
 ## 许可证<a name="section126611612164217"></a>
 
