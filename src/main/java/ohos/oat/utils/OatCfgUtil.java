@@ -109,12 +109,11 @@ public final class OatCfgUtil {
      * Read OAT config file and init OatConfig data structure
      *
      * @param oatConfig OatConfig data structure to be initiate
-     * @param defaultOatConfigFilePath OAT config file path
      * @param rootDir Root dir, while the run mode is plugin, this parameter is the single project root dir, otherwise
      * it is empty
      */
-    public static void initOatConfig(final OatConfig oatConfig, final String defaultOatConfigFilePath,
-        final String rootDir) {
+    public static void initOatConfig(final OatConfig oatConfig, final String rootDir) {
+        final String defaultOatConfigFilePath = oatConfig.getData("initOATCfgFile");
         final XMLConfiguration xmlconfig = OatCfgUtil.getXmlConfiguration(defaultOatConfigFilePath);
 
         String tmpDir = "";
@@ -174,7 +173,7 @@ public final class OatCfgUtil {
      * @return String array
      */
     public static String[] getSplitStrings(final String configString) {
-        return getSplitStrings(configString, "\\|");
+        return OatCfgUtil.getSplitStrings(configString, "\\|");
     }
 
     public static String[] getSplitStrings(final String configString, final String splitflag) {
@@ -211,8 +210,14 @@ public final class OatCfgUtil {
             }
             OatCfgUtil.initLicenseMatcher(oatConfig, prjXmlconfig, oatProject);
             OatCfgUtil.initCompatibilityLicense(oatConfig, prjXmlconfig, oatProject);
-            OatCfgUtil.initPolicy(oatConfig, prjXmlconfig, oatProject);
-            OatCfgUtil.initFilter(oatConfig, prjXmlconfig, oatProject);
+            final String bIgnoreProjectPolicy = oatConfig.getData("IgnoreProjectPolicy");
+            if (bIgnoreProjectPolicy.equals("true")) {
+                OatCfgUtil.initFilter(oatConfig, prjXmlconfig, oatProject);
+            } else {
+                OatCfgUtil.initPolicy(oatConfig, prjXmlconfig, oatProject);
+                OatCfgUtil.initFilter(oatConfig, prjXmlconfig, oatProject);
+            }
+
         }
     }
 
@@ -244,9 +249,9 @@ public final class OatCfgUtil {
             }
             final List<HierarchicalConfiguration<ImmutableNode>> fileFilterItemListCfg = fileFilterCfg.configurationsAt(
                 "filteritem");
-            initFilterItems(oatProject, oatFileFilter, fileFilterItemListCfg);
-            initFilterItems2Policy(oatProject, oatFileFilter);
-            initFilterItems2Project(oatProject, oatFileFilter);
+            OatCfgUtil.initFilterItems(oatProject, oatFileFilter, fileFilterItemListCfg);
+            OatCfgUtil.initFilterItems2Policy(oatProject, oatFileFilter);
+            OatCfgUtil.initFilterItems2Project(oatProject, oatFileFilter);
         } // end of filefilter
     }
 
@@ -446,7 +451,7 @@ public final class OatCfgUtil {
             for (final HierarchicalConfiguration<ImmutableNode> projectCfg : projectlistCfg) {
                 final OatProject oatProject = new OatProject();
                 final String prjName = OatCfgUtil.getElementAttrValue(projectCfg, "name");
-                initProjectBasicinfo(projectCfg, oatProject, prjName);
+                OatCfgUtil.initProjectBasicinfo(projectCfg, oatProject, prjName);
                 if (!oatConfig.isPluginMode()) {
                     oatTask.addProject(oatProject);
                     continue;
@@ -460,7 +465,7 @@ public final class OatCfgUtil {
                 if ((!(oatConfig.getRepositoryName().equals(prjName))) && oatTask.getNamne().equals("defaultTask")) {
                     oatProject.setName(oatConfig.getRepositoryName());
                     oatProject.setPath(oatConfig.getRepositoryName() + "/");
-                    initProjectDefaultPolicy(oatConfig, oatProject);
+                    OatCfgUtil.initProjectDefaultPolicy(oatConfig, oatProject);
                     oatTask.addProject(oatProject);
                 }
             } // end of project list
@@ -499,7 +504,7 @@ public final class OatCfgUtil {
         oatProject.setFileFilter(OatCfgUtil.getElementAttrValue(projectCfg, "filefilter"));
         final String[] licenselist = OatCfgUtil.getSplitStrings(
             OatCfgUtil.getElementAttrValue(projectCfg, "licensefile"));
-        cleanFileName(licenselist);
+        OatCfgUtil.cleanFileName(licenselist);
         oatProject.setLicenseFiles(licenselist);
     }
 

@@ -84,37 +84,23 @@ multiple projects in a batch.
 ### Multi-Project Scan<a name="section20292217143516"></a>
 
 ```
-java -Dfile.encoding=UTF-8 -jar ohos_ossaudittool-xx.jar -i OAT-ALL.xml
-```
+java -jar ohos_ossaudittool-xx.jar -mode m -i OAT-ALL.xml
 
-All supported parameters are as follows:
-
-```
-usage: java -jar ohos_ossaudittool-VERSION.jar [options]
-
-Available options
- -f <arg>   File list to check, separated by |, must be used together with
-            -s option
- -h         Help message
- -i <arg>   OAT.xml file path, default vaule is OAT.xml in the running
-            path
- -k         Trace skipped files and ignored files
- -l         Log switch, used to enable the logger
- -m <arg>   Check mode, 0 means full check, 1 means only check the file
-            list, must be used together with -s option
- -n <arg>   Name of repository, used to match the default policy, must be
-            used together with -s option
- -r <arg>   Report file path, must be used together with -s option
- -s <arg>   Source code repository path
- -t         Trace project license list only
- -c         Collect and log sub projects only, must be used together with
-            -s option 
+options:
+ -mode <arg>   Operating mode, 'm' for check multiple projects
+ -h            Help message
+ -l            Log switch, used to enable the logger
+ -i <arg>      OAT.xml file path, default vaule is OAT.xml in the running path
+ -k            Trace skipped files and ignored files
+ -g            Ignore project OAT configuration
+ -p            Ignore project OAT policy
 ```
 
 In this mode, the report is generated in the running directory of OAT. The  **OAT-ALL.xml**  file is used to configure the list of projects to be scanned, the default license and copyright policy, and
-the default filtering rule, you can copy resources/OAT-Default.xml, define projects and save as OAT-ALL.xml. 
+the default filtering rule, you can copy resources/OAT-Default.xml, define projects and save as OAT-ALL.xml.
 
-Note: 
+Note:
+
 - Please add a new task in the **tasklist** and configure the project information you want to scan. Do not modify the **defaultTask**.
 - You can use **java -jar ohos_ossaudittool-VERSION.jar -s sourcedir -c** to generate all projects and write into the OAT.log file.
 
@@ -151,7 +137,19 @@ Configure the projects to be scanned and their paths as follows:
 ### Single-Project Scan<a name="section1771013213818"></a>
 
 ```
-java -Dfile.encoding=UTF-8 -jar ohos_ossaudittool-xx.jar -s sourcedir -r reportdir -n nameOfRepo
+java -jar ohos_ossaudittool-xx.jar -mode s -s sourcedir -r reportdir -n nameOfRepo
+
+options:
+ -mode <arg>   Operating mode, 's' for check single project
+ -h            Help message
+ -l            Log switch, used to enable the logger
+ -s <arg>      Source code repository path, eg: c:/test/
+ -r <arg>      Report file path, eg: c:/oatresult.txt
+ -n <arg>      Name of repository, used to match the default policy
+ -w <arg>      Check way, 0 means full check, 1 means only check the file list
+ -f <arg>      File list to check, separated by |
+ -k            Trace skipped files and ignored files
+ -g            Ignore project OAT configuration
 ```
 
 **sourcedir**  indicates the root directory of the project to be scanned, and  **reportdir**  indicates the directory used to store the generated report. In this mode, the rules defined in  **
@@ -208,7 +206,7 @@ The policies define how OAT audits code. Each project is associated with a speci
   the report. Currently, two types of dependency declarations can be checked:  **import**  and  **include**.
 
 4. **policyitem name**: specifies the target of the policy, for example, license. The asterisk \(\*\) indicates that the target is allowed, and the exclamation mark \(!\) indicates that the target is
-   not allowed. For example,  **!GPL**  indicates that GPL licenses cannot be used.
+   not allowed. For example,  **!MIT**  indicates that MIT licenses cannot be used.
 
 5. **policyitem path**: specifies the source files to which the policy applies. You can define a policy for all the paths in  **basedir**. The exclamation mark \(!\) prefix indicates an exclusion. For
    example,  **!.\*/lib/.\***  indicates that the policy applies to all files except the  **lib**  file.
@@ -218,8 +216,7 @@ The policies define how OAT audits code. Each project is associated with a speci
 
 7. **policyitem filefilter**: specifies the file filter. A file that meets the filtering condition will not be displayed in the report even if the file does not meet the  **policyitem**.
 
-8. **policyitem desc**: specifies the reason for using the policy. For example, if GPLv2 is used, this field describes why and by what features it is used, as well as whether cross-process
-   communication is used.
+8. **policyitem desc**: specifies the reason for using the policy. 
 
 - Configuring filters
 
