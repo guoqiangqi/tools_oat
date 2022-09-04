@@ -22,6 +22,7 @@ import ohos.oat.config.OatPolicyItem;
 import ohos.oat.config.OatProject;
 import ohos.oat.config.OatTask;
 
+import org.apache.commons.configuration2.XMLConfiguration;
 import org.junit.Assert;
 
 import java.io.File;
@@ -218,4 +219,5 @@ public class OatCfgUtilTest {
         result = OatCfgUtil.getSplitStrings("abc|ghi|j", "\\|");
         Assert.assertArrayEquals(result, new String[] {"abc", "ghi", "j"});
     }
+
 }
