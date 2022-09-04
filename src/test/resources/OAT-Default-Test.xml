@@ -91,6 +91,10 @@
             <filefilter name="readmeOpenSourcefileNamePolicyFilter" desc="">
             </filefilter>
             <filefilter name="binaryFileTypePolicyFilter" desc="">
+                <filteritem type="filename" name="a.so" desc="xxx" ref="a.so.md" />
+                <filteritem type="filename" name="test/b.bin" desc="xxx" ref="third_party_prebuilts.json" />
+                <filteritem type="filename" name="vendor/*.so" desc="xxx" ref="vendor/NOTICE" />
+                <filteritem type="filename" name="c.jpg" desc="xxx" />
             </filefilter>
         </filefilterlist>
         <licensematcherlist>
