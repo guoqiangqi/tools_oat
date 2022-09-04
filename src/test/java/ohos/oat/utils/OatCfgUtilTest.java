@@ -149,6 +149,10 @@ public class OatCfgUtilTest {
         final OatFileFilter readmeOpenSourcefileNamePolicyFilter = new OatFileFilter("readmeOpenSourcefileNamePolicyFilter", "");
 
         final OatFileFilter binaryFileTypePolicyFilter = new OatFileFilter("binaryFileTypePolicyFilter", "");
+        binaryFileTypePolicyFilter.addFilterItem("a.so");
+        binaryFileTypePolicyFilter.addFilterItem("test/b.bin");
+        binaryFileTypePolicyFilter.addFilterItem("vendor/*.so");
+        binaryFileTypePolicyFilter.addFilterItem("c.jpg");
 
         defaultPolicy.addPolicyItem(
             new OatPolicyItem("license", "Apache-2.0", "!.*LICENSE", "may", "defaultGroup", "defaultPolicyFilter", "",

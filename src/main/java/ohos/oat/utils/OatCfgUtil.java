@@ -41,6 +41,7 @@ import org.apache.commons.configuration2.tree.ImmutableNode;
 import java.io.File;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 
 /**
  * Stateless utility class for OAT config file
@@ -50,6 +51,8 @@ import java.util.Locale;
  */
 public final class OatCfgUtil {
     private static final String ROOTNODE = "oatconfig."; // Root node name in OAT config file
+
+    private static final String BINARYFILEFILTER = "binaryFileTypePolicyFilter"; // binary filter
 
     /**
      * Private constructure to prevent new instance
@@ -320,6 +323,21 @@ public final class OatCfgUtil {
                         + "\tDesc\t" + desc);
             }
         } // end of filter items
+        if (Objects.equals(oatFileFilter.getName(), OatCfgUtil.BINARYFILEFILTER)) {
+            OatCfgUtil.validateRefField(fileFilterItemListCfg);
+        }
+    }
+
+    private static void validateRefField(final List<HierarchicalConfiguration<ImmutableNode>> fileFilterItemListCfg) {
+        for (final HierarchicalConfiguration<ImmutableNode> fileFilterItemCfg : fileFilterItemListCfg) {
+            final String ref = OatCfgUtil.getElementAttrValue(fileFilterItemCfg, "ref");
+            if (Objects.equals(ref, ""))
+            {
+                OatLogUtil.error(OatCfgUtil.class.getSimpleName(),
+                        "error" + "\t please fill in the ref info of the binary: "
+                                + OatCfgUtil.getElementAttrValue(fileFilterItemCfg, "name") + "in OAT.xml");
+            }
+        }
     }
 
     private static void initPolicy(final OatConfig oatConfig, final XMLConfiguration xmlconfig,
