@@ -16,18 +16,44 @@
 package ohos.oat.excutor;
 
 import ohos.oat.config.OatConfig;
+import ohos.oat.config.OatTask;
+import ohos.oat.task.IOatTaskProcessor;
+
+import java.util.List;
 
 /**
  * OAT excutor，used to process tasks passed in by OatCommandLine
  *
  * @author chenyaxun
- * @since 2022/08
+ * @since 2.0
  */
 public interface IOatExcutor {
 
     /**
+     * init instance
      *
-     * @param oatConfig
+     * @param oatConfig OAT configuration data structure
      */
-    void excute(OatConfig oatConfig);
+    IOatExcutor init(OatConfig oatConfig);
+
+    /**
+     * Execute the specified task on the command line
+     */
+    void excute();
+
+    /**
+     * Pass the task to the IOatTaskProcessor handler for execution
+     *
+     * @param oatTask OAT task
+     */
+    static void transmit2TaskProcessor(final OatTask oatTask, final OatConfig oatConfig,
+        final List<IOatTaskProcessor> oatTaskProcessors) {
+        oatTaskProcessors.forEach(oatTaskProcessor -> {
+            oatTaskProcessor.init(oatConfig, oatTask);
+            oatTaskProcessor.process();
+            oatTaskProcessor.transmit2Analyser();
+            oatTaskProcessor.transmit2Reporter();
+        });
+    }
+
 }

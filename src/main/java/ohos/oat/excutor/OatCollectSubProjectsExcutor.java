@@ -15,7 +15,6 @@
 
 package ohos.oat.excutor;
 
-import ohos.oat.OatLicenseMain;
 import ohos.oat.config.OatConfig;
 import ohos.oat.config.OatProject;
 import ohos.oat.config.OatTask;
@@ -28,22 +27,26 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * OAT excutor，used to process tasks passed in by the commander
+ * OAT excutor，Used to collect all projects in the directory specified by the command line
  *
  * @author chenyaxun
- * @since 2022/08
+ * @since 2.0
  */
-public class OatCollectSubProjectsExcutor implements IOatExcutor {
+public class OatCollectSubProjectsExcutor extends AbstractOatExcutor {
+
     /**
-     * @param oatConfig
+     * Execute the specified task on the command line
      */
     @Override
-    public void excute(final OatConfig oatConfig) {
-        logSubProjects(oatConfig);
+    public void excute() {
+        OatCollectSubProjectsExcutor.logSubProjects(this.oatConfig);
     }
 
+    /**
+     * @param oatConfig OAT configuration data structure
+     */
     private static void logSubProjects(final OatConfig oatConfig) {
-        if (!oatConfig.isPluginMode()) {
+        if (oatConfig.isPluginMode()) {
             return;
         }
         final List<OatTask> taskList = oatConfig.getTaskList();
@@ -56,7 +59,7 @@ public class OatCollectSubProjectsExcutor implements IOatExcutor {
             return;
         }
         final OatProject oatProject = projectList.get(0);
-        final String prjDirectory = getPrjDirectory(oatConfig, oatProject);
+        final String prjDirectory = OatCollectSubProjectsExcutor.getPrjDirectory(oatConfig, oatProject);
         final File prjFile = new File(prjDirectory);
         if (!prjFile.exists() || prjFile.isFile()) {
             return;
@@ -70,19 +73,23 @@ public class OatCollectSubProjectsExcutor implements IOatExcutor {
                 if (!file.isDirectory()) {
                     continue;
                 }
-                if (file.getName().equals(".git")) {
+                if (file.getName().equals(".git") || file.getName().equals(".repo")) {
                     continue;
                 }
-                collectSubPrjects(subProjects, prjPath, file, 1);
+                OatCollectSubProjectsExcutor.collectSubPrjects(subProjects, prjPath, file, 1);
             }
         }
         for (final String subProject : subProjects) {
-            OatLogUtil.warn(OatLicenseMain.class.getSimpleName(),
-                oatProject.getPath() + "\tsubProject\t" + "<project name=\"" + subProject + "\" path=\"" + subProject
-                    + "\"/>");
+            OatLogUtil.warn("", "<project name=\"" + subProject + "\" path=\"" + subProject + "\"/>");
         }
     }
 
+    /**
+     * @param subProjects
+     * @param prjPath
+     * @param file
+     * @param depth
+     */
     private static void collectSubPrjects(final List<String> subProjects, final String prjPath, final File file,
         final int depth) {
         if (depth > 4) {
@@ -101,11 +108,16 @@ public class OatCollectSubProjectsExcutor implements IOatExcutor {
                     subProjects.add(subPrjPath);
                     continue;
                 }
-                collectSubPrjects(subProjects, prjPath, subFile, nextDepth);
+                OatCollectSubProjectsExcutor.collectSubPrjects(subProjects, prjPath, subFile, nextDepth);
             }
         }
     }
 
+    /**
+     * @param oatConfig OAT configuration data structure
+     * @param oatProject
+     * @return
+     */
     private static String getPrjDirectory(final OatConfig oatConfig, final OatProject oatProject) {
         final String prjDirectory;
         if (oatConfig.isPluginMode()) {
