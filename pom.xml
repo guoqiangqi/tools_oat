@@ -20,7 +20,7 @@
     <groupId>openharmony</groupId>
     <artifactId>ohos_ossaudittool</artifactId>
     <packaging>jar</packaging>
-    <version>1.0</version>
+    <version>2.0</version>
     <build>
         <resources>
             <resource>
