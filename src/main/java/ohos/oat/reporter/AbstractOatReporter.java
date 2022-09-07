@@ -17,23 +17,27 @@
  * Modified by jalenchen
  */
 
-package ohos.oat.report;
+package ohos.oat.reporter;
 
-import org.apache.rat.api.RatException;
-import org.apache.rat.report.RatReport;
+import ohos.oat.config.OatConfig;
+import ohos.oat.config.OatTask;
 
 /**
- * New oat report interface to support concurrent reporting process
+ * Default IOatReporter method implementations
  *
  * @author chenyaxun
  * @since 1.0
  */
-public interface IOatReport extends RatReport {
+public abstract class AbstractOatReporter implements IOatReporter {
 
-    /**
-     * Concurrent reporting interface
-     *
-     * @throws RatException exception
-     */
-    void concurrentReport() throws RatException;
+    protected OatConfig oatConfig;
+
+    protected OatTask oatTask;
+
+    @Override
+    public IOatReporter init(final OatConfig oatConfig, final OatTask oatTask) {
+        this.oatConfig = oatConfig;
+        this.oatTask = oatTask;
+        return this;
+    }
 }

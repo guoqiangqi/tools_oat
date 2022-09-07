@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 Huawei Device Co., Ltd.
+ * Copyright (c) 2021-2022 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -21,16 +21,11 @@ package ohos.oat.analysis;
 
 import static org.apache.rat.api.MetaData.RAT_URL_DOCUMENT_CATEGORY;
 
-import ohos.oat.config.OatConfig;
-import ohos.oat.document.OatFileDocument;
 import ohos.oat.utils.OatFileUtils;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.rat.analysis.RatHeaderAnalysisException;
-import org.apache.rat.api.Document;
 import org.apache.rat.api.MetaData;
-import org.apache.rat.document.IDocumentAnalyser;
-import org.apache.rat.document.RatDocumentAnalysisException;
 
 import java.io.IOException;
 import java.io.Reader;
@@ -41,47 +36,35 @@ import java.io.Reader;
  * @author chenyaxun
  * @since 1.0
  */
-public class OatMainAnalyser implements IDocumentAnalyser {
-    private final OatConfig oatConfig;
-
-    public OatMainAnalyser(final OatConfig oatConfig) {
-        super();
-        this.oatConfig = oatConfig;
-    }
+public class OatHeaderMatchAnalyser extends AbstraceOatAnalyser {
 
     @Override
-    public void analyse(final Document subject) throws RatDocumentAnalysisException {
-        OatFileDocument document = null;
-        if (subject instanceof OatFileDocument) {
-            document = (OatFileDocument) subject;
-        }
-        if (null == document) {
-            return;
-        }
+    public void analyse() {
+
         final MetaData.Datum documentCategory;
 
-        if (OatFileUtils.isArchiveFile(subject) || OatFileUtils.isBinaryFile(subject)) {
+        if (OatFileUtils.isArchiveFile(this.oatFileDocument) || OatFileUtils.isBinaryFile(this.oatFileDocument)) {
             return;
         } else {
-            if (document.isDirectory()) {
+            if (this.oatFileDocument.isDirectory()) {
                 documentCategory = new MetaData.Datum(RAT_URL_DOCUMENT_CATEGORY, "Directory");
             } else {
                 documentCategory = MetaData.RAT_DOCUMENT_CATEGORY_DATUM_STANDARD;
 
                 Reader reader = null;
                 try {
-                    reader = subject.reader();
-                    final OatProcessor worker = new OatProcessor(reader, subject, this.oatConfig);
+                    reader = this.oatFileDocument.reader();
+                    final OatFileAnalyser worker = new OatFileAnalyser(reader, this.oatFileDocument, this.oatConfig);
                     worker.read();
                 } catch (final IOException e) {
-                    throw new RatDocumentAnalysisException("Cannot read header", e);
+                    e.printStackTrace();
                 } catch (final RatHeaderAnalysisException e) {
-                    throw new RatDocumentAnalysisException("Cannot analyse header", e);
+                    e.printStackTrace();
                 } finally {
                     IOUtils.closeQuietly(reader);
                 }
             }
         }
-        subject.getMetaData().set(documentCategory);
+        this.oatFileDocument.getMetaData().set(documentCategory);
     }
 }

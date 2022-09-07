@@ -24,7 +24,6 @@ import ohos.oat.utils.OatFileUtils;
 import ohos.oat.utils.OatLogUtil;
 
 import org.apache.commons.cli.CommandLine;
-import org.apache.commons.cli.Options;
 
 import java.io.File;
 import java.net.URL;
@@ -32,13 +31,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * Single project scan mode, scan the directory specified by the -s parameter as the project root directory
+ *
  * @author chenyaxun
- * @since 2022/08
+ * @since 2.0
  */
-public class OatSingleModeCommandLine implements IOatCommandLine {
-    private final Options options = new Options();
-
-    private final String cmdLineSyntax = "java -jar ohos_ossaudittool-VERSION.jar ";
+public class OatSingleModeCommandLine extends AbstractOatCommandLine {
 
     /**
      * Receive command line parameters and determine whether the command line corresponds to the operating mode
@@ -159,29 +157,15 @@ public class OatSingleModeCommandLine implements IOatCommandLine {
     }
 
     /**
-     * @param oatConfig
+     * Perform tasks
+     *
+     * @param oatConfig OAT configuration data structure
      */
     @Override
-    public void excuteTask(final OatConfig oatConfig) {
-        final List<IOatExcutor> lstOatExcutors = new ArrayList<>();
-        lstOatExcutors.add(new OatComplianceExcutor());
-        IOatCommandLine.excuteTask(oatConfig, lstOatExcutors);
-    }
+    public void transmit2Excutor(final OatConfig oatConfig) {
+        final List<IOatExcutor> oatExcutors = new ArrayList<>();
+        oatExcutors.add(new OatComplianceExcutor());
+        IOatCommandLine.transmit2Excutor(oatConfig, oatExcutors);
 
-    /**
-     * @return Options
-     */
-    @Override
-    public Options getOptions() {
-        return this.options;
     }
-
-    /**
-     * @return cmdLineSyntax
-     */
-    @Override
-    public String getCmdLineSyntax() {
-        return this.cmdLineSyntax;
-    }
-
 }
