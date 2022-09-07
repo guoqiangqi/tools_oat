@@ -23,20 +23,18 @@ import ohos.oat.utils.OatFileUtils;
 import ohos.oat.utils.OatLogUtil;
 
 import org.apache.commons.cli.CommandLine;
-import org.apache.commons.cli.Options;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * Used to scan all files in the specified directory
+ *
  * @author chenyaxun
- * @since 2022/08
+ * @since 2.0
  */
-public class OatFolderModeCommandLine implements IOatCommandLine {
-    private final Options options = new Options();
-
-    private final String cmdLineSyntax = "java -jar ohos_ossaudittool-VERSION.jar ";
+public class OatFolderModeCommandLine extends AbstractOatCommandLine {
 
     /**
      * Receive command line parameters and determine whether the command line corresponds to the operating mode
@@ -109,30 +107,16 @@ public class OatFolderModeCommandLine implements IOatCommandLine {
     }
 
     /**
-     * @param oatConfig
+     * Perform tasks
+     *
+     * @param oatConfig OAT configuration data structure
      */
     @Override
-    public void excuteTask(final OatConfig oatConfig) {
+    public void transmit2Excutor(final OatConfig oatConfig) {
+        final List<IOatExcutor> oatExcutors = new ArrayList<>();
+        oatExcutors.add(new OatComplianceExcutor());
+        IOatCommandLine.transmit2Excutor(oatConfig, oatExcutors);
 
-        final List<IOatExcutor> lstOatExcutors = new ArrayList<>();
-        lstOatExcutors.add(new OatComplianceExcutor());
-        IOatCommandLine.excuteTask(oatConfig, lstOatExcutors);
-    }
-
-    /**
-     * @return Options
-     */
-    @Override
-    public Options getOptions() {
-        return this.options;
-    }
-
-    /**
-     * @return cmdLineSyntax
-     */
-    @Override
-    public String getCmdLineSyntax() {
-        return this.cmdLineSyntax;
     }
 
 }

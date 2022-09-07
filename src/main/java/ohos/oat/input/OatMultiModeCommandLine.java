@@ -22,19 +22,17 @@ import ohos.oat.utils.OatCfgUtil;
 import ohos.oat.utils.OatLogUtil;
 
 import org.apache.commons.cli.CommandLine;
-import org.apache.commons.cli.Options;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * Multiple project scan mode, specify the batch project definition file through the -i parameter to scan all projects
+ *
  * @author chenyaxun
- * @since 2022/08
+ * @since 2.0
  */
-public class OatMultiModeCommandLine implements IOatCommandLine {
-    private final Options options = new Options();
-
-    private final String cmdLineSyntax = "java -jar ohos_ossaudittool-VERSION.jar ";
+public class OatMultiModeCommandLine extends AbstractOatCommandLine {
 
     /**
      * Receive command line parameters and determine whether the command line corresponds to the operating mode
@@ -99,29 +97,15 @@ public class OatMultiModeCommandLine implements IOatCommandLine {
     }
 
     /**
-     * @param oatConfig
+     * Perform tasks
+     *
+     * @param oatConfig OAT configuration data structure
      */
     @Override
-    public void excuteTask(final OatConfig oatConfig) {
-        final List<IOatExcutor> lstOatExcutors = new ArrayList<>();
-        lstOatExcutors.add(new OatComplianceExcutor());
-        IOatCommandLine.excuteTask(oatConfig, lstOatExcutors);
-    }
+    public void transmit2Excutor(final OatConfig oatConfig) {
+        final List<IOatExcutor> oatExcutors = new ArrayList<>();
+        oatExcutors.add(new OatComplianceExcutor());
+        IOatCommandLine.transmit2Excutor(oatConfig, oatExcutors);
 
-    /**
-     * @return Options
-     */
-    @Override
-    public Options getOptions() {
-        return this.options;
     }
-
-    /**
-     * @return cmdLineSyntax
-     */
-    @Override
-    public String getCmdLineSyntax() {
-        return this.cmdLineSyntax;
-    }
-
 }

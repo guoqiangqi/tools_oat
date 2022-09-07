@@ -13,47 +13,49 @@
  * limitations under the License.
  */
 
-package ohos.oat.excutor;
+package ohos.oat.file;
 
 import ohos.oat.config.OatConfig;
-import ohos.oat.config.OatTask;
+import ohos.oat.config.OatProject;
 import ohos.oat.task.IOatTaskProcessor;
 
-import java.util.List;
+import java.io.File;
+import java.io.IOException;
 
 /**
- * OAT excutor，used to process tasks passed in by OatCommandLine
+ * OAT file walker，used to process files
  *
  * @author chenyaxun
  * @since 2.0
  */
-public interface IOatExcutor {
-
+public interface IOatFileWalker {
+ 
     /**
-     * init instance
-     *
      * @param oatConfig OAT configuration data structure
+     * @param taskProcessor Task Processor to receive file documments
      */
-    IOatExcutor init(OatConfig oatConfig);
+    IOatFileWalker init(OatConfig oatConfig, IOatTaskProcessor taskProcessor);
 
     /**
-     * Execute the specified task on the command line
+     * @param oatProject Project to walk files
      */
-    void excute();
+    void walkProject(OatProject oatProject);
 
     /**
-     * Pass the task to the IOatTaskProcessor handler for execution
+     * Determine whether the file is a soft link file
      *
-     * @param oatTask OAT task
+     * @param file file to check
+     * @return whether the file is a soft link file
      */
-    static void transmit2TaskProcessor(final OatTask oatTask, final OatConfig oatConfig,
-        final List<IOatTaskProcessor> oatTaskProcessors) {
-        oatTaskProcessors.forEach(oatTaskProcessor -> {
-            oatTaskProcessor.init(oatConfig, oatTask);
-            oatTaskProcessor.process();
-            oatTaskProcessor.transmit2Analyser();
-            oatTaskProcessor.transmit2Reporter();
-        });
+    static boolean isLink(final File file) {
+        String cPath = "";
+        try {
+            cPath = file.getCanonicalPath();
+        } catch (final IOException ex) {
+
+        }
+        return !cPath.equals(file.getAbsolutePath());
+
     }
 
 }

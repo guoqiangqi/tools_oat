@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 Huawei Device Co., Ltd.
+ * Copyright (c) 2021-2022 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -50,6 +50,8 @@ public class OatFileDocument extends FileDocument {
 
     private final Map<String, String> data = new HashMap<>();
 
+    private final File file;
+
     // This will be used in concurrent threads
     private final Map<String, List<String>> listData = new ConcurrentHashMap<>();
 
@@ -63,6 +65,7 @@ public class OatFileDocument extends FileDocument {
 
     public OatFileDocument(final File file) {
         super(file);
+        this.file = file;
     }
 
     public int getMaxline() {
@@ -75,6 +78,10 @@ public class OatFileDocument extends FileDocument {
 
     public void putMatchResult(final String matcherName, final Boolean result) {
         this.matchResult.put(matcherName, result);
+    }
+
+    public File getFile() {
+        return this.file;
     }
 
     public Boolean getMatchResult(final String matcherName) {
