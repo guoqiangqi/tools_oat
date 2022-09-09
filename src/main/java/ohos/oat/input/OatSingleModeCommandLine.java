@@ -56,6 +56,9 @@ public class OatSingleModeCommandLine extends AbstractOatCommandLine {
         this.options.addOption("f", true, "File list to check, separated by |");
         this.options.addOption("k", false, "Trace skipped files and ignored files");
         this.options.addOption("g", false, "Ignore project OAT configuration");
+        this.options.addOption("policy", true, "Specify check policy rules to replace the tool's default rules, \n"
+            + "eg:repotype:upstream|oh; license:Apache-2.0@.*|MIT|BSD;copyright:Huawei Device Co., Ltd.;"
+            + "filename:README.md@root");
         return IOatCommandLine.accept(args, this.options, "s");
     }
 
@@ -150,6 +153,10 @@ public class OatSingleModeCommandLine extends AbstractOatCommandLine {
         }
         if (commandLine.hasOption("g")) {
             oatConfig.putData("IgnoreProjectOAT", "true");
+        }
+        final String policystring = commandLine.getOptionValue("policy");
+        if (policystring != null) {
+            oatConfig.putData("policy", policystring);
         }
 
         OatCfgUtil.initOatConfig(oatConfig, sourceCodeRepoPath);
