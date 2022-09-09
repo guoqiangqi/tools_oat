@@ -363,7 +363,7 @@ public final class OatCfgUtil {
                 final String policyType = oatPolicyItem.getType();
                 final String policyName = oatPolicyItem.getName();
 
-                final String filterName = getFilterName(policyType, policyName);
+                final String filterName = OatCfgUtil.getFilterName(policyType, policyName);
                 oatPolicyItem.setFileFilter(OatCfgUtil.getElementAttrValue(policyitemCfg, "filefilter", filterName));
                 oatPolicyItem.setDesc(OatCfgUtil.getElementAttrValue(policyitemCfg, "desc"));
                 if (oatProject != null) {
@@ -386,7 +386,7 @@ public final class OatCfgUtil {
     }
 
     @NotNull
-    private static String getFilterName(final String policyType, final String policyName) {
+    public static String getFilterName(final String policyType, final String policyName) {
         String tmpFilterName = "defaultPolicyFilter";
         if (policyType.equals("copyright")) {
             tmpFilterName = "copyrightPolicyFilter";

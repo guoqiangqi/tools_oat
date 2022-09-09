@@ -17,8 +17,10 @@ package ohos.oat.input;
 
 import ohos.oat.OatLicenseMain;
 import ohos.oat.config.OatConfig;
+import ohos.oat.config.OatPolicy;
 import ohos.oat.excutor.IOatExcutor;
 import ohos.oat.excutor.OatComplianceExcutor;
+import ohos.oat.input.model.OatCommandLinePolicyPara;
 import ohos.oat.utils.OatCfgUtil;
 import ohos.oat.utils.OatFileUtils;
 import ohos.oat.utils.OatLogUtil;
@@ -57,8 +59,8 @@ public class OatSingleModeCommandLine extends AbstractOatCommandLine {
         this.options.addOption("k", false, "Trace skipped files and ignored files");
         this.options.addOption("g", false, "Ignore project OAT configuration");
         this.options.addOption("policy", true, "Specify check policy rules to replace the tool's default rules, \n"
-            + "eg:repotype:upstream|oh; license:Apache-2.0@.*|MIT|BSD;copyright:Huawei Device Co., Ltd.;"
-            + "filename:README.md@root");
+            + "eg:repotype:upstream|dev; license:Apache-2.0@dirA/.*|MIT@dirB/.*|BSD@dirC/.*;copyright:Huawei Device Co"
+            + "., Ltd.@dirA/.*;filename:README.md@root;filetype:!binary|!archive;compatibility:Apache-2.0");
         return IOatCommandLine.accept(args, this.options, "s");
     }
 
@@ -156,6 +158,10 @@ public class OatSingleModeCommandLine extends AbstractOatCommandLine {
         }
         final String policystring = commandLine.getOptionValue("policy");
         if (policystring != null) {
+            final OatPolicy oatPolicy = OatCommandLinePolicyPara.getOatPolicy(policystring);
+            if (oatPolicy == null) {
+                return null;
+            }
             oatConfig.putData("policy", policystring);
         }
 
