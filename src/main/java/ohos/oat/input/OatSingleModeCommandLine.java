@@ -59,8 +59,12 @@ public class OatSingleModeCommandLine extends AbstractOatCommandLine {
         this.options.addOption("k", false, "Trace skipped files and ignored files");
         this.options.addOption("g", false, "Ignore project OAT configuration");
         this.options.addOption("policy", true, "Specify check policy rules to replace the tool's default rules, \n"
-            + "eg:repotype:upstream|dev; license:Apache-2.0@dirA/.*|MIT@dirB/.*|BSD@dirC/.*;copyright:Huawei Device Co"
-            + "., Ltd.@dirA/.*;filename:README.md@root;filetype:!binary|!archive;compatibility:Apache-2.0");
+            + "eg:repotype:upstream; license:Apache-2.0@dirA/.*|MIT@dirB/.*|BSD@dirC/.*;copyright:Huawei Device Co"
+            + "., Ltd.@dirA/.*;filename:README.md@projectroot;filetype:!binary|!archive;compatibility:Apache-2.0 \n"
+            + "Note:\n" + "repotype:'upstreaam' means 3rd software, 'dev' means self developed \n"
+            + "license: used to check license header \n copyright: used to check copyright header \n filename: used "
+            + "to check whether there is the specified file in the specified directory \n filetype: used to check "
+            + "where there are some binary or archive files \n compatibility: used to check license compatibility");
         return IOatCommandLine.accept(args, this.options, "s");
     }
 

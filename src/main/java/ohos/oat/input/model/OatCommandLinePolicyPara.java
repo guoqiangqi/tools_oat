@@ -88,7 +88,11 @@ public class OatCommandLinePolicyPara {
             oatPolicyItem.setGroup("defaultGroup");
             oatPolicyItem.setRule("may");
             oatPolicyItem.setName(tmpName);
-            oatPolicyItem.setPath(tmpPath);
+            if ("projectroot".equals(tmpPath)) {
+                oatPolicyItem.setPath(tmpPath);
+            } else {
+                oatPolicyItem.setPath("defaultProject/" + tmpPath);
+            }
             oatPolicyItem.setDesc("");
             oatPolicyItem.setFileFilter(OatCfgUtil.getFilterName(policyType, ""));
             oatPolicy.addPolicyItem(oatPolicyItem);
