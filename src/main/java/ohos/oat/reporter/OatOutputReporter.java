@@ -33,9 +33,7 @@ import org.apache.rat.api.MetaData;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -98,26 +96,20 @@ public class OatOutputReporter extends AbstractOatReporter {
         this.importList = this.resultMap.get("Import");
         this.redundantLicenseList = this.resultMap.get("RedundantLicense");
 
-        final String reportFile = oatConfig.getData("reportFile");
-        final Date date = new Date();
-        final SimpleDateFormat simpleDataFormat = new SimpleDateFormat("yyyy-MM-dd-HH_mm_ss");
-        final String startTime = simpleDataFormat.format(date);
-        final String resultfolder = "./" + startTime;
-        if (reportFile.length() <= 0) {
-            final File dir = new File(resultfolder);
-            if (!dir.exists()) {
-                final boolean success = dir.mkdirs();
-                if (!success) {
-                    OatLogUtil.warn(this.getClass().getSimpleName(), "Create dir failed");
-                }
+        String reportFolder = oatConfig.getData("reportFolder");
+
+        if (reportFolder.length() <= 0) {
+            reportFolder = "./";
+        }
+        final File dir = new File(reportFolder);
+        if (!dir.exists()) {
+            final boolean success = dir.mkdirs();
+            if (!success) {
+                OatLogUtil.warn(this.getClass().getSimpleName(), "Create dir failed");
             }
         }
-        final File resultFile;
-        if (reportFile.length() > 0) {
-            resultFile = new File(reportFile);
-        } else {
-            resultFile = new File(resultfolder + "/" + this.reportFileName + oatTask.getNamne() + ".txt");
-        }
+
+        final File resultFile = new File(reportFolder + "/" + this.reportFileName + oatTask.getNamne() + ".txt");
         OatLogUtil.println("", "Result file path:\t" + resultFile);
         FileWriter fileWriter = null;
         try {

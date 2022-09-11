@@ -327,11 +327,17 @@ public final class OatCfgUtil {
     private static void initPolicy(final OatConfig oatConfig, final XMLConfiguration xmlconfig,
         final OatProject oatProject) {
         // Init global OAT configuration using command line para, not OAT.xml in project
-        if (oatProject == null) {
+        if (oatProject == null) {//oatProject == null means init global OAT.xml
             final String policystring = oatConfig.getData("policy");
             if (policystring != null && policystring.length() > 0) {
                 final OatPolicy oatPolicy = OatCommandLinePolicyPara.getOatPolicy(policystring);
+                oatPolicy.setName("defaultPolicy");
                 oatConfig.addPolicy(oatPolicy);
+
+                final OatPolicy thirdOatPolicy = OatCommandLinePolicyPara.getOatPolicy(policystring);
+                oatPolicy.setName("3rdDefaultPolicy");
+                oatConfig.addPolicy(oatPolicy);
+
                 return;
             }
         }

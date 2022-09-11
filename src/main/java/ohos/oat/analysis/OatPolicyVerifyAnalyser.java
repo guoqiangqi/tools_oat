@@ -381,11 +381,25 @@ public class OatPolicyVerifyAnalyser extends AbstraceOatAnalyser {
     private boolean isMatched(final OatFileDocument subject, final String shortFilePathUnderPrj,
         final OatPolicyItem policyItem) {
         String piPath = policyItem.getPath();
+        final boolean canusepath = !piPath.startsWith("!");
+        String tmpPiPath = piPath;
+        if (!canusepath) {
+            tmpPiPath = piPath.substring(1);
+        }
+
+        if (tmpPiPath.startsWith("projectroot/")) {
+            tmpPiPath = tmpPiPath.replace("projectroot/", subject.getOatProject().getPath());
+        }
+        if (canusepath) {
+            piPath = tmpPiPath;
+        } else {
+            piPath = "!" + tmpPiPath;
+        }
         if ("projectroot".equals(piPath)) {
             // in default OAT.xml
             piPath = subject.getOatProject().getPath();
         }
-        final boolean canusepath = !piPath.startsWith("!");
+
         final OatFileFilter fileFilter = policyItem.getFileFilterObj();
         String subjectname = subject.getName();
         if (subject.isDirectory()) {

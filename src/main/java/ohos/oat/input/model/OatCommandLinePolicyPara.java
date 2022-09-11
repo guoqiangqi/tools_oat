@@ -35,7 +35,6 @@ public class OatCommandLinePolicyPara {
 
         final String tmpPara = para.trim();
         final OatPolicy oatPolicy = new OatPolicy();
-        oatPolicy.setName("defaultPolicy");
         oatPolicy.setDesc("Command line policy str: " + tmpPara);
         final String[] strOatPolicyItems = OatCfgUtil.getSplitStrings(tmpPara, ";");
         if (strOatPolicyItems.length <= 0) {
@@ -88,11 +87,11 @@ public class OatCommandLinePolicyPara {
             oatPolicyItem.setGroup("defaultGroup");
             oatPolicyItem.setRule("may");
             oatPolicyItem.setName(tmpName);
-            if ("projectroot".equals(tmpPath)) {
-                oatPolicyItem.setPath(tmpPath);
-            } else {
-                oatPolicyItem.setPath("defaultProject/" + tmpPath);
-            }
+            // if ("projectroot".equals(tmpPath)) {
+            oatPolicyItem.setPath(tmpPath);
+            // } else {
+            //     oatPolicyItem.setPath("projectroot/" + tmpPath);
+            // }
             oatPolicyItem.setDesc("");
             oatPolicyItem.setFileFilter(OatCfgUtil.getFilterName(policyType, ""));
             oatPolicy.addPolicyItem(oatPolicyItem);

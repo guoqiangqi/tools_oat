@@ -22,6 +22,8 @@ import ohos.oat.utils.OatCfgUtil;
 import ohos.oat.utils.OatFileUtils;
 import ohos.oat.utils.OatLogUtil;
 
+import org.jetbrains.annotations.Nullable;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -60,28 +62,40 @@ public class OatCollectSubProjectsExcutor extends AbstractOatExcutor {
         }
         final OatProject oatProject = projectList.get(0);
         final String prjDirectory = OatCollectSubProjectsExcutor.getPrjDirectory(oatConfig, oatProject);
-        final File prjFile = new File(prjDirectory);
-        if (!prjFile.exists() || prjFile.isFile()) {
+        final List<OatProject> subProjects = OatCollectSubProjectsExcutor.getSubProjects(prjDirectory);
+        if (subProjects == null) {
             return;
         }
-        final String prjPath = OatCfgUtil.formatPath(OatFileUtils.getFileCanonicalPath(prjFile)) + "/";
-        final List<String> subProjects = new ArrayList<>();
+        for (final OatProject subProject : subProjects) {
+            OatLogUtil.warn("",
+                "<project name=\"" + subProject.getName() + "\" path=\"" + subProject.getPath() + "\"/>");
+        }
+    }
 
+    @Nullable
+    public static List<OatProject> getSubProjects(final String prjDirectory) {
+        final File prjFile = new File(prjDirectory);
+        if (!prjFile.exists() || prjFile.isFile()) {
+            return null;
+        }
+        final String prjPath = OatCfgUtil.formatPath(OatFileUtils.getFileCanonicalPath(prjFile)) + "/";
+        final List<OatProject> subProjects = new ArrayList<>();
+        OatCollectSubProjectsExcutor.fillProject(subProjects, prjPath, prjFile);
         final File[] files = prjFile.listFiles();
         if (files != null && files.length > 0) {
             for (final File file : files) {
                 if (!file.isDirectory()) {
                     continue;
                 }
-                if (file.getName().equals(".git") || file.getName().equals(".repo")) {
+                if (file.getName().equals(".git") || file.getName().equals(".repo") || file.getName().equals(".svn")
+                    || file.getName().equals(".idea")) {
+
                     continue;
                 }
                 OatCollectSubProjectsExcutor.collectSubPrjects(subProjects, prjPath, file, 1);
             }
         }
-        for (final String subProject : subProjects) {
-            OatLogUtil.warn("", "<project name=\"" + subProject + "\" path=\"" + subProject + "\"/>");
-        }
+        return subProjects;
     }
 
     /**
@@ -90,9 +104,9 @@ public class OatCollectSubProjectsExcutor extends AbstractOatExcutor {
      * @param file
      * @param depth
      */
-    private static void collectSubPrjects(final List<String> subProjects, final String prjPath, final File file,
+    private static void collectSubPrjects(final List<OatProject> subProjects, final String prjPath, final File file,
         final int depth) {
-        if (depth > 4) {
+        if (depth > 6) {
             return;
         }
         final int nextDepth = depth + 1;
@@ -100,17 +114,36 @@ public class OatCollectSubProjectsExcutor extends AbstractOatExcutor {
         if (subFiles != null && subFiles.length > 0) {
             for (final File subFile : subFiles) {
                 if (!subFile.isDirectory()) {
+                    if (subFile.getName().startsWith(".git") || subFile.getName().startsWith(".repo")
+                        || subFile.getName().startsWith(".svn")) {
+                        OatCollectSubProjectsExcutor.fillProject(subProjects, prjPath, file);
+                    }
                     continue;
                 }
-                if (subFile.getName().equals(".git")) {
-                    final String subPath = OatCfgUtil.formatPath(OatFileUtils.getFileCanonicalPath(file)) + "/";
-                    final String subPrjPath = subPath.replace(prjPath, "");
-                    subProjects.add(subPrjPath);
+                if (subFile.getName().equals(".git") || subFile.getName().equals(".repo") || subFile.getName()
+                    .equals(".svn") || subFile.getName().equals(".idea")) {
+                    OatCollectSubProjectsExcutor.fillProject(subProjects, prjPath, file);
                     continue;
                 }
                 OatCollectSubProjectsExcutor.collectSubPrjects(subProjects, prjPath, subFile, nextDepth);
             }
         }
+    }
+
+    private static void fillProject(final List<OatProject> subProjects, final String prjPath, final File file) {
+        final String subPath = OatCfgUtil.formatPath(OatFileUtils.getFileCanonicalPath(file)) + "/";
+        final String subPrjPath = subPath.replace(prjPath, "");
+        String subPrjName = subPrjPath;
+        if (file.getPath().contains("third_party")) {
+            subPrjName = "third_party_" + subPrjPath;
+        }
+        for (final OatProject subProject : subProjects) {
+            if (subProject.getName().equals(subPrjName)) {
+                return;
+            }
+        }
+        final OatProject oatProject = new OatProject(subPrjName, subPrjPath);
+        subProjects.add(oatProject);
     }
 
     /**

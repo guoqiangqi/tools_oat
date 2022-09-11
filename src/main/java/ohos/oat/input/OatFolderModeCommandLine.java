@@ -16,8 +16,10 @@
 package ohos.oat.input;
 
 import ohos.oat.config.OatConfig;
+import ohos.oat.config.OatPolicy;
 import ohos.oat.excutor.IOatExcutor;
-import ohos.oat.excutor.OatComplianceExcutor;
+import ohos.oat.excutor.OatFolderCheckExcutor;
+import ohos.oat.input.model.OatCommandLinePolicyPara;
 import ohos.oat.utils.OatCfgUtil;
 import ohos.oat.utils.OatFileUtils;
 import ohos.oat.utils.OatLogUtil;
@@ -48,9 +50,9 @@ public class OatFolderModeCommandLine extends AbstractOatCommandLine {
         this.options.addOption("h", false, "Help message");
         this.options.addOption("l", false, "Log switch, used to enable the logger");
         this.options.addOption("s", true, "Source code repository path, eg: c:/test/");
-        this.options.addOption("r", true, "Report file path, eg: c:/oatresult.txt");
         this.options.addOption("k", false, "Trace skipped files and ignored files");
         this.options.addOption("g", false, "Ignore project OAT configuration");
+        this.options.addOption("p", false, "Ignore project OAT policy");
         return IOatCommandLine.accept(args, this.options, "f");
     }
 
@@ -86,23 +88,23 @@ public class OatFolderModeCommandLine extends AbstractOatCommandLine {
         oatConfig.setBasedir(sourceCodeRepoPath);
         OatLogUtil.warn(this.getClass().getSimpleName(), "CommandLine\tsourceCodeRepoPath\t" + sourceCodeRepoPath);
 
-        // To be deleted
-        oatConfig.setRepositoryName("defaultProject");
-        OatLogUtil.warn(this.getClass().getSimpleName(), "CommandLine\tnameOfRepository\tdefaultProject");
-        oatConfig.setPluginCheckMode("0");
-        OatLogUtil.warn(this.getClass().getSimpleName(), "CommandLine" + "\tmode\t" + "0");
-        final String fileList = "";
-        oatConfig.setSrcFileList(fileList);
-        OatLogUtil.warn(this.getClass().getSimpleName(), "CommandLine" + "\tfileList\t" + fileList);
-
         if (commandLine.hasOption("k")) {
             oatConfig.putData("TraceSkippedAndIgnoredFiles", "true");
         }
         if (commandLine.hasOption("g")) {
             oatConfig.putData("IgnoreProjectOAT", "true");
         }
-
-        OatCfgUtil.initOatConfig(oatConfig, "");
+        if (commandLine.hasOption("p")) {
+            oatConfig.putData("IgnoreProjectPolicy", "true");
+        }
+        final String policystring = commandLine.getOptionValue("policy");
+        if (policystring != null) {
+            final OatPolicy oatPolicy = OatCommandLinePolicyPara.getOatPolicy(policystring);
+            if (oatPolicy == null) {
+                return null;
+            }
+            oatConfig.putData("policy", policystring);
+        }
         return oatConfig;
     }
 
@@ -114,7 +116,7 @@ public class OatFolderModeCommandLine extends AbstractOatCommandLine {
     @Override
     public void transmit2Excutor(final OatConfig oatConfig) {
         final List<IOatExcutor> oatExcutors = new ArrayList<>();
-        oatExcutors.add(new OatComplianceExcutor());
+        oatExcutors.add(new OatFolderCheckExcutor());
         IOatCommandLine.transmit2Excutor(oatConfig, oatExcutors);
 
     }

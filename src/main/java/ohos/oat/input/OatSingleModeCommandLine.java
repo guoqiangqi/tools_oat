@@ -21,6 +21,7 @@ import ohos.oat.config.OatPolicy;
 import ohos.oat.excutor.IOatExcutor;
 import ohos.oat.excutor.OatComplianceExcutor;
 import ohos.oat.input.model.OatCommandLinePolicyPara;
+import ohos.oat.utils.IOatCommonUtils;
 import ohos.oat.utils.OatCfgUtil;
 import ohos.oat.utils.OatFileUtils;
 import ohos.oat.utils.OatLogUtil;
@@ -52,12 +53,13 @@ public class OatSingleModeCommandLine extends AbstractOatCommandLine {
         this.options.addOption("h", false, "Help message");
         this.options.addOption("l", false, "Log switch, used to enable the logger");
         this.options.addOption("s", true, "Source code repository path, eg: c:/test/");
-        this.options.addOption("r", true, "Report file path, eg: c:/oatresult.txt");
+        this.options.addOption("r", true, "Report file folder, eg: c:/oatresult/");
         this.options.addOption("n", true, "Name of repository, used to match the default policy");
         this.options.addOption("w", true, "Check way, 0 means full check, 1 means only check the file list");
         this.options.addOption("f", true, "File list to check, separated by |");
         this.options.addOption("k", false, "Trace skipped files and ignored files");
         this.options.addOption("g", false, "Ignore project OAT configuration");
+        this.options.addOption("p", false, "Ignore project OAT policy");
         this.options.addOption("policy", true, "Specify check policy rules to replace the tool's default rules, \n"
             + "eg:repotype:upstream; license:Apache-2.0@dirA/.*|MIT@dirB/.*|BSD@dirC/.*;copyright:Huawei Device Co"
             + "., Ltd.@dirA/.*;filename:README.md@projectroot;filetype:!binary|!archive;compatibility:Apache-2.0 \n"
@@ -117,13 +119,14 @@ public class OatSingleModeCommandLine extends AbstractOatCommandLine {
         OatLogUtil.warn(this.getClass().getSimpleName(), "CommandLine" + "\tinitOATCfgFile\t" + initOATCfgFile);
 
         // Init report file path
-        String reportFile = "./OATResult.txt";
+        String reportFolder = "./" + IOatCommonUtils.getDateTimeString();
         final String optionValue_r = commandLine.getOptionValue("r");
         if (null != optionValue_r) {
-            reportFile = OatCfgUtil.formatPath(optionValue_r);
+            reportFolder = OatCfgUtil.formatPath(optionValue_r);
         }
-        oatConfig.putData("reportFile", reportFile);
-        OatLogUtil.warn(this.getClass().getSimpleName(), "CommandLine" + "\treportFile\t" + reportFile);
+        reportFolder = reportFolder + "/single";
+        oatConfig.putData("reportFolder", reportFolder);
+        OatLogUtil.warn(this.getClass().getSimpleName(), "CommandLine" + "\treportFolder\t" + reportFolder);
 
         // Init repository name
         String nameOfRepository = "defaultProject";
@@ -160,6 +163,9 @@ public class OatSingleModeCommandLine extends AbstractOatCommandLine {
         if (commandLine.hasOption("g")) {
             oatConfig.putData("IgnoreProjectOAT", "true");
         }
+        if (commandLine.hasOption("p")) {
+            oatConfig.putData("IgnoreProjectPolicy", "true");
+        }
         final String policystring = commandLine.getOptionValue("policy");
         if (policystring != null) {
             final OatPolicy oatPolicy = OatCommandLinePolicyPara.getOatPolicy(policystring);
@@ -167,6 +173,7 @@ public class OatSingleModeCommandLine extends AbstractOatCommandLine {
                 return null;
             }
             oatConfig.putData("policy", policystring);
+            oatConfig.putData("reportFolder", oatConfig.getData("reportFolder") + "_policy");
         }
 
         OatCfgUtil.initOatConfig(oatConfig, sourceCodeRepoPath);

@@ -16,8 +16,11 @@
 package ohos.oat.input;
 
 import ohos.oat.config.OatConfig;
+import ohos.oat.config.OatPolicy;
 import ohos.oat.excutor.IOatExcutor;
 import ohos.oat.excutor.OatComplianceExcutor;
+import ohos.oat.input.model.OatCommandLinePolicyPara;
+import ohos.oat.utils.IOatCommonUtils;
 import ohos.oat.utils.OatCfgUtil;
 import ohos.oat.utils.OatLogUtil;
 
@@ -46,9 +49,17 @@ public class OatMultiModeCommandLine extends AbstractOatCommandLine {
         this.options.addOption("h", false, "Help message");
         this.options.addOption("l", false, "Log switch, used to enable the logger");
         this.options.addOption("i", true, "OAT.xml file path, default vaule is OAT.xml in the running path");
+        this.options.addOption("r", true, "Report file folder, eg: c:/oatresult/");
         this.options.addOption("k", false, "Trace skipped files and ignored files");
         this.options.addOption("g", false, "Ignore project OAT configuration");
         this.options.addOption("p", false, "Ignore project OAT policy");
+        this.options.addOption("policy", true, "Specify check policy rules to replace the tool's default rules, \n"
+            + "eg:repotype:upstream; license:Apache-2.0@dirA/.*|MIT@dirB/.*|BSD@dirC/.*;copyright:Huawei Device Co"
+            + "., Ltd.@dirA/.*;filename:README.md@projectroot;filetype:!binary|!archive;compatibility:Apache-2.0 \n"
+            + "Note:\n" + "repotype:'upstreaam' means 3rd software, 'dev' means self developed \n"
+            + "license: used to check license header \n copyright: used to check copyright header \n filename: used "
+            + "to check whether there is the specified file in the specified directory \n filetype: used to check "
+            + "where there are some binary or archive files \n compatibility: used to check license compatibility");
         return IOatCommandLine.accept(args, this.options, "m");
     }
 
@@ -73,14 +84,19 @@ public class OatMultiModeCommandLine extends AbstractOatCommandLine {
         oatConfig.putData("initOATCfgFile", initOATCfgFile);
         OatLogUtil.warn(this.getClass().getSimpleName(), "CommandLine" + "\tinitOATCfgFile\t" + initOATCfgFile);
 
+        // Init report file path
+        String reportFolder = "./" + IOatCommonUtils.getDateTimeString();
+        final String optionValue_r = commandLine.getOptionValue("r");
+        if (null != optionValue_r) {
+            reportFolder = OatCfgUtil.formatPath(optionValue_r);
+        }
+        reportFolder = reportFolder + "/multi";
+        oatConfig.putData("reportFolder", reportFolder);
+        OatLogUtil.warn(this.getClass().getSimpleName(), "CommandLine" + "\treportFolder\t" + reportFolder);
+
         // To be deleted
         oatConfig.setRepositoryName("defaultProject");
         OatLogUtil.warn(this.getClass().getSimpleName(), "CommandLine\tnameOfRepository\tdefaultProject");
-        oatConfig.setPluginCheckMode("0");
-        OatLogUtil.warn(this.getClass().getSimpleName(), "CommandLine" + "\tmode\t" + "0");
-        final String fileList = "";
-        oatConfig.setSrcFileList(fileList);
-        OatLogUtil.warn(this.getClass().getSimpleName(), "CommandLine" + "\tfileList\t" + fileList);
 
         if (commandLine.hasOption("k")) {
             oatConfig.putData("TraceSkippedAndIgnoredFiles", "true");
@@ -91,7 +107,15 @@ public class OatMultiModeCommandLine extends AbstractOatCommandLine {
         if (commandLine.hasOption("p")) {
             oatConfig.putData("IgnoreProjectPolicy", "true");
         }
-
+        final String policystring = commandLine.getOptionValue("policy");
+        if (policystring != null) {
+            final OatPolicy oatPolicy = OatCommandLinePolicyPara.getOatPolicy(policystring);
+            if (oatPolicy == null) {
+                return null;
+            }
+            oatConfig.putData("policy", policystring);
+            oatConfig.putData("reportFolder", oatConfig.getData("reportFolder") + "_policy");
+        }
         OatCfgUtil.initOatConfig(oatConfig, "");
         return oatConfig;
     }
