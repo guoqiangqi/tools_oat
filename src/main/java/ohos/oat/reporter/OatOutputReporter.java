@@ -24,6 +24,7 @@ package ohos.oat.reporter;
 import static org.apache.rat.api.MetaData.RAT_URL_DOCUMENT_CATEGORY;
 
 import ohos.oat.config.OatConfig;
+import ohos.oat.config.OatProject;
 import ohos.oat.config.OatTask;
 import ohos.oat.document.OatFileDocument;
 import ohos.oat.utils.OatLogUtil;
@@ -109,7 +110,13 @@ public class OatOutputReporter extends AbstractOatReporter {
             }
         }
 
-        final File resultFile = new File(reportFolder + "/" + this.reportFileName + oatTask.getNamne() + ".txt");
+        String filePrefix = oatTask.getNamne();
+        final List<OatProject> oatProjects = oatTask.getProjectList();
+        if (oatProjects.size() == 1) {
+            filePrefix = oatProjects.get(0).getName();
+        }
+        filePrefix = filePrefix.replace("/", "_");
+        final File resultFile = new File(reportFolder + "/" + this.reportFileName + filePrefix + ".txt");
         OatLogUtil.println("", "Result file path:\t" + resultFile);
         FileWriter fileWriter = null;
         try {

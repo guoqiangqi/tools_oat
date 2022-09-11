@@ -536,6 +536,7 @@ public final class OatCfgUtil {
     private static void initProjectDefaultPolicy(final OatConfig oatConfig, final OatProject oatProject) {
         if (oatConfig.getRepositoryName().toLowerCase(Locale.ENGLISH).contains("third_party")) {
             oatProject.setPolicy("3rdDefaultPolicy");
+            oatProject.setUpstreamPrj(true);
         } else {
             oatProject.setPolicy("defaultPolicy");
         }

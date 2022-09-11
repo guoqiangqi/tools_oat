@@ -133,16 +133,20 @@ public class OatCollectSubProjectsExcutor extends AbstractOatExcutor {
     private static void fillProject(final List<OatProject> subProjects, final String prjPath, final File file) {
         final String subPath = OatCfgUtil.formatPath(OatFileUtils.getFileCanonicalPath(file)) + "/";
         final String subPrjPath = subPath.replace(prjPath, "");
-        String subPrjName = subPrjPath;
-        if (file.getPath().contains("third_party")) {
-            subPrjName = "third_party_" + subPrjPath;
-        }
+        final String subPrjName = subPrjPath;
+
         for (final OatProject subProject : subProjects) {
             if (subProject.getName().equals(subPrjName)) {
                 return;
             }
         }
         final OatProject oatProject = new OatProject(subPrjName, subPrjPath);
+        if (file.getPath().contains("third_party")) {
+            oatProject.setUpstreamPrj(true);
+        }
+        if (subPrjName.length() <= 0) {
+            oatProject.setName(file.getName());
+        }
         subProjects.add(oatProject);
     }
 

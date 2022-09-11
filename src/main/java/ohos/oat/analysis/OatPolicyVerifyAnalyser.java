@@ -166,7 +166,7 @@ public class OatPolicyVerifyAnalyser extends AbstraceOatAnalyser {
         if (!document.isProjectRoot()) {
             return;
         }
-        if (!oatProject.getPath().contains("third_party")) {
+        if (!oatProject.isUpstreamPrj()) {
             final List<String> licenseFiles = document.getListData("LICENSEFILE");
             OatMetaData.setMetaData(metaData, "LicenseFile", "false");
             for (final String licenseFile : licenseFiles) {
