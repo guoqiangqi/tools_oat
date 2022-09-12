@@ -26,6 +26,8 @@ import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -80,7 +82,7 @@ public class OatCollectSubProjectsExcutor extends AbstractOatExcutor {
         }
         final String prjPath = OatCfgUtil.formatPath(OatFileUtils.getFileCanonicalPath(prjFile)) + "/";
         final List<OatProject> subProjects = new ArrayList<>();
-        OatCollectSubProjectsExcutor.fillProject(subProjects, prjPath, prjFile);
+
         final File[] files = prjFile.listFiles();
         if (files != null && files.length > 0) {
             for (final File file : files) {
@@ -95,6 +97,8 @@ public class OatCollectSubProjectsExcutor extends AbstractOatExcutor {
                 OatCollectSubProjectsExcutor.collectSubPrjects(subProjects, prjPath, file, 1);
             }
         }
+        OatCollectSubProjectsExcutor.fillProject(subProjects, prjPath, prjFile, true);
+
         return subProjects;
     }
 
@@ -116,13 +120,13 @@ public class OatCollectSubProjectsExcutor extends AbstractOatExcutor {
                 if (!subFile.isDirectory()) {
                     if (subFile.getName().startsWith(".git") || subFile.getName().startsWith(".repo")
                         || subFile.getName().startsWith(".svn")) {
-                        OatCollectSubProjectsExcutor.fillProject(subProjects, prjPath, file);
+                        OatCollectSubProjectsExcutor.fillProject(subProjects, prjPath, file, false);
                     }
                     continue;
                 }
                 if (subFile.getName().equals(".git") || subFile.getName().equals(".repo") || subFile.getName()
                     .equals(".svn") || subFile.getName().equals(".idea")) {
-                    OatCollectSubProjectsExcutor.fillProject(subProjects, prjPath, file);
+                    OatCollectSubProjectsExcutor.fillProject(subProjects, prjPath, file, false);
                     continue;
                 }
                 OatCollectSubProjectsExcutor.collectSubPrjects(subProjects, prjPath, subFile, nextDepth);
@@ -130,7 +134,8 @@ public class OatCollectSubProjectsExcutor extends AbstractOatExcutor {
         }
     }
 
-    private static void fillProject(final List<OatProject> subProjects, final String prjPath, final File file) {
+    private static void fillProject(final List<OatProject> subProjects, final String prjPath, final File file,
+        final boolean isRootPrj) {
         final String subPath = OatCfgUtil.formatPath(OatFileUtils.getFileCanonicalPath(file)) + "/";
         final String subPrjPath = subPath.replace(prjPath, "");
         final String subPrjName = subPrjPath;
@@ -148,6 +153,27 @@ public class OatCollectSubProjectsExcutor extends AbstractOatExcutor {
             oatProject.setName(file.getName());
         }
         subProjects.add(oatProject);
+        if (isRootPrj) {
+            OatCollectSubProjectsExcutor.reArrangeProject(subProjects);
+        }
+    }
+
+    private static void reArrangeProject(final List<OatProject> oatProjects) {
+        Collections.sort(oatProjects, new Comparator<OatProject>() {
+            @Override
+            public int compare(final OatProject o1, final OatProject o2) {
+                return o1.getPath().compareTo(o2.getPath()); // up
+            }
+        });
+        for (int i = 0; i < oatProjects.size(); i++) {
+            final OatProject oatProject = oatProjects.get(i);
+            for (int i1 = i + 1; i1 < oatProjects.size(); i1++) {
+                final OatProject oatProject1 = oatProjects.get(i1);
+                if (oatProject1.getPath().startsWith(oatProject.getPath())) {
+                    oatProject.addIncludedPrj(oatProject1);
+                }
+            }
+        }
     }
 
     /**

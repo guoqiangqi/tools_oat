@@ -16,9 +16,11 @@
 package ohos.oat.input;
 
 import ohos.oat.config.OatConfig;
+import ohos.oat.config.OatFileFilter;
 import ohos.oat.config.OatPolicy;
 import ohos.oat.excutor.IOatExcutor;
 import ohos.oat.excutor.OatComplianceExcutor;
+import ohos.oat.input.model.OatCommandLineFilterPara;
 import ohos.oat.input.model.OatCommandLinePolicyPara;
 import ohos.oat.utils.IOatCommonUtils;
 import ohos.oat.utils.OatCfgUtil;
@@ -55,11 +57,15 @@ public class OatMultiModeCommandLine extends AbstractOatCommandLine {
         this.options.addOption("p", false, "Ignore project OAT policy");
         this.options.addOption("policy", true, "Specify check policy rules to replace the tool's default rules, \n"
             + "eg:repotype:upstream; license:Apache-2.0@dirA/.*|MIT@dirB/.*|BSD@dirC/.*;copyright:Huawei Device Co"
-            + "., Ltd.@dirA/.*;filename:README.md@projectroot;filetype:!binary|!archive;compatibility:Apache-2.0 \n"
-            + "Note:\n" + "repotype:'upstreaam' means 3rd software, 'dev' means self developed \n"
+            + "., Ltd.@dirA/.*;filename:README.md@projectroot;filetype:!binary~must|!archive~must;"
+            + "compatibility:Apache-2.0 \n" + "Note:\n"
+            + "repotype:'upstreaam' means 3rd software, 'dev' means self developed \n"
             + "license: used to check license header \n copyright: used to check copyright header \n filename: used "
             + "to check whether there is the specified file in the specified directory \n filetype: used to check "
             + "where there are some binary or archive files \n compatibility: used to check license compatibility");
+        this.options.addOption("filter", true,
+            "Specify filtering rules to filter some files or directories that do not need to be checked. \n"
+                + "eg:filename:.*.dat|.*.rar; filepath:projectroot/target/.*");
         return IOatCommandLine.accept(args, this.options, "m");
     }
 
@@ -116,6 +122,16 @@ public class OatMultiModeCommandLine extends AbstractOatCommandLine {
             oatConfig.putData("policy", policystring);
             oatConfig.putData("reportFolder", oatConfig.getData("reportFolder") + "_policy");
         }
+
+        final String filterstring = commandLine.getOptionValue("filter");
+        if (filterstring != null) {
+            final OatFileFilter oatFileFilter = OatCommandLineFilterPara.getOatFileFilter(filterstring);
+            if (oatFileFilter == null) {
+                return null;
+            }
+            oatConfig.putData("filter", filterstring);
+        }
+        
         OatCfgUtil.initOatConfig(oatConfig, "");
         return oatConfig;
     }

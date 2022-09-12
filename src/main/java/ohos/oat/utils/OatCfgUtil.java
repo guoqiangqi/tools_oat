@@ -30,6 +30,7 @@ import ohos.oat.config.OatPolicy;
 import ohos.oat.config.OatPolicyItem;
 import ohos.oat.config.OatProject;
 import ohos.oat.config.OatTask;
+import ohos.oat.input.model.OatCommandLineFilterPara;
 import ohos.oat.input.model.OatCommandLinePolicyPara;
 
 import org.apache.commons.configuration2.HierarchicalConfiguration;
@@ -252,6 +253,17 @@ public final class OatCfgUtil {
             final List<HierarchicalConfiguration<ImmutableNode>> fileFilterItemListCfg = fileFilterCfg.configurationsAt(
                 "filteritem");
             OatCfgUtil.initFilterItems(oatProject, oatFileFilter, fileFilterItemListCfg);
+
+            // Init global OAT filter using command line para, this will work together with OAT.xml in project
+            if (oatProject == null && oatFileFilter.getName()
+                .equals("defaultFilter")) {//oatProject == null means init global OAT.xml
+                final String filterstring = oatConfig.getData("filter");
+                if (filterstring != null && filterstring.length() > 0) {
+                    final OatFileFilter oatFileFilter1 = OatCommandLineFilterPara.getOatFileFilter(filterstring);
+                    oatFileFilter.merge(oatFileFilter1);
+                }
+            }
+
             OatCfgUtil.initFilterItems2Policy(oatProject, oatFileFilter);
             OatCfgUtil.initFilterItems2Project(oatProject, oatFileFilter);
         } // end of filefilter
@@ -322,6 +334,7 @@ public final class OatCfgUtil {
                         + "\tDesc\t" + desc);
             }
         } // end of filter items
+
     }
 
     private static void initPolicy(final OatConfig oatConfig, final XMLConfiguration xmlconfig,

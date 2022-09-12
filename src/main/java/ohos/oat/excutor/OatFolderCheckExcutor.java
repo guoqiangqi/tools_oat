@@ -66,6 +66,20 @@ public class OatFolderCheckExcutor extends AbstractOatExcutor {
             cmdLine += "#-n#" + (subProject.getName().length() > 0
                 ? subProject.getName()
                 : (subProject.isUpstreamPrj() ? "third_party_root" : "root"));
+            String filterString = "";
+            if (subProject.getIncludedPrjList().size() > 0) {
+                filterString += "#-filter#filepath:";
+                int index = 0;
+                for (final OatProject oatProject : subProject.getIncludedPrjList()) {
+                    if (index == 0) {
+                        filterString += "projectroot/" + oatProject.getPath();
+                    } else {
+                        filterString += "|projectroot/" + oatProject.getPath();
+                    }
+                    index++;
+                }
+            }
+            cmdLine += filterString;
             final String cmd = cmdLine;
             new Thread((new Runnable() {
                 @Override
