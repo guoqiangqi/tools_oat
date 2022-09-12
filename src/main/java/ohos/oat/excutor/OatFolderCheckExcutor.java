@@ -54,7 +54,7 @@ public class OatFolderCheckExcutor extends AbstractOatExcutor {
             "#-policy#\"repotype:dev; license:Apache-2.0@!.*LICENSE |ApacheStyleLicense@.*LICENSE| Apache-2.0@"
                 + ".*LICENSE;"
                 + "copyright:Huawei Device Co., Ltd.;filename:LICENSE@projectroot|README.md@projectroot|README_zh"
-                + ".md@projectroot;filetype:!binary|!archive;\"";
+                + ".md@projectroot;filetype:!binary~must|!archive~must;\"";
 
         for (final OatProject subProject : subProjects) {
 

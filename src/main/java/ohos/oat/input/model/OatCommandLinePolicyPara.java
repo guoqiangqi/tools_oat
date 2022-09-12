@@ -71,12 +71,13 @@ public class OatCommandLinePolicyPara {
 
     private static void fillPolicy(final OatPolicy oatPolicy, final String policyType, final String vstring) {
 
-        final String[] nameparts = OatCfgUtil.getSplitStrings(vstring);
-        for (final String namepart : nameparts) {
+        final String[] valueparts = OatCfgUtil.getSplitStrings(vstring); // part split by |
+        for (final String valuepart : valueparts) {
 
-            String tmpName = namepart;
+            String tmpName = valuepart;
             String tmpPath = ".*";
-            final String[] vstringparts = OatCfgUtil.getSplitStrings(namepart, "@");
+            String rule = "may";
+            final String[] vstringparts = OatCfgUtil.getSplitStrings(valuepart, "@");
             if (vstringparts.length == 2) {
                 tmpName = vstringparts[0].trim();
                 tmpPath = vstringparts[1].trim();
@@ -85,13 +86,13 @@ public class OatCommandLinePolicyPara {
             final OatPolicyItem oatPolicyItem = new OatPolicyItem();
             oatPolicyItem.setType(policyType);
             oatPolicyItem.setGroup("defaultGroup");
-            oatPolicyItem.setRule("may");
+            if (tmpName.endsWith("~must")) {
+                rule = "must";
+                tmpName = tmpName.replace("~must", "");
+            }
             oatPolicyItem.setName(tmpName);
-            // if ("projectroot".equals(tmpPath)) {
             oatPolicyItem.setPath(tmpPath);
-            // } else {
-            //     oatPolicyItem.setPath("projectroot/" + tmpPath);
-            // }
+            oatPolicyItem.setRule(rule);
             oatPolicyItem.setDesc("");
             oatPolicyItem.setFileFilter(OatCfgUtil.getFilterName(policyType, ""));
             oatPolicy.addPolicyItem(oatPolicyItem);
