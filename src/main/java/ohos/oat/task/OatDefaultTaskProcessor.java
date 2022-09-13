@@ -27,6 +27,8 @@
 
 package ohos.oat.task;
 
+import static ohos.oat.utils.IOatCommonUtils.getTaskDefaultPrjName;
+
 import ohos.oat.analysis.IOatAnalyser;
 import ohos.oat.analysis.OatHeaderMatchAnalyser;
 import ohos.oat.analysis.OatPolicyVerifyAnalyser;
@@ -82,8 +84,8 @@ public class OatDefaultTaskProcessor extends AbstractOatTaskProcessor {
         }
 
         final long costTime = (System.currentTimeMillis() - startTime) / 1000;
-        OatLogUtil.warn(this.getClass().getSimpleName(),
-            this.oatTask.getNamne() + "\tWalker task costTime\t" + costTime);
+        final String taskDefaultPrjName = getTaskDefaultPrjName(this.oatTask);
+        OatLogUtil.warn(this.getClass().getSimpleName(), taskDefaultPrjName + "\tWalker task costTime\t" + costTime);
 
     }
 
@@ -123,8 +125,9 @@ public class OatDefaultTaskProcessor extends AbstractOatTaskProcessor {
             OatLogUtil.traceException(e);
         }
         final long costTime = (System.currentTimeMillis() - startTime) / 1000;
-        OatLogUtil.warn(this.getClass().getSimpleName(),
-            this.oatTask.getNamne() + "\tAnalyse task costTime\t" + costTime);
+        final String taskDefaultPrjName = getTaskDefaultPrjName(this.oatTask);
+        OatLogUtil.warn(this.getClass().getSimpleName(), taskDefaultPrjName + "\tAnalyse task costTime\t" + costTime);
+        OatLogUtil.println("", taskDefaultPrjName + ":\tAnalyse task finished, costTime\t" + costTime);
     }
 
     /**
@@ -142,8 +145,9 @@ public class OatDefaultTaskProcessor extends AbstractOatTaskProcessor {
         }
         IOatTaskProcessor.writeReport(this.oatReporters);
         final long costTime = (System.currentTimeMillis() - startTime) / 1000;
-        OatLogUtil.warn(this.getClass().getSimpleName(),
-            this.oatTask.getNamne() + "\tReport task costTime\t" + costTime);
+        final String taskDefaultPrjName = getTaskDefaultPrjName(this.oatTask);
+        OatLogUtil.warn(this.getClass().getSimpleName(), taskDefaultPrjName + "\tReport task costTime\t" + costTime);
+        OatLogUtil.println("", taskDefaultPrjName + ":\tReport task finished, costTime\t" + costTime);
     }
 
 }

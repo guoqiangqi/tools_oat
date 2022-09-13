@@ -17,14 +17,12 @@ package ohos.oat.excutor;
 
 import ohos.oat.config.OatProject;
 import ohos.oat.input.OatCommandLineMgr;
-import ohos.oat.utils.OatLogUtil;
 
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
 
 /**
  * OAT excutor，Used to collect all projects in the directory specified by the command line and check projects
@@ -61,6 +59,10 @@ public class OatFolderCheckExcutor extends AbstractOatExcutor {
                 + "copyright:Huawei Device Co., Ltd.;filename:LICENSE@projectroot|README.md@projectroot|README_zh"
                 + ".md@projectroot;filetype:!binary~must|!archive~must;\"";
 
+        final String upstreampolicystr =
+            "#-policy#\"repotype:upstream; compatibility:Apache|BSD|MIT|FSFULLR|MulanPSL|!APSL-1.0~must;"
+                + "filename:LICENSE@projectroot|README.OpenSource@projectroot;filetype:!binary~must|!archive~must;\"";
+
         final ExecutorService exec = Executors.newFixedThreadPool(16);
         int count = 0;
         for (final OatProject subProject : subProjects) {
@@ -73,7 +75,11 @@ public class OatFolderCheckExcutor extends AbstractOatExcutor {
                     OatCommandLineMgr.runCommand(cmd.split("#"));
                 }
             });
-            cmdLine += defaultpolicystr;
+            if (subProject.isUpstreamPrj()) {
+                cmdLine += upstreampolicystr;
+            } else {
+                cmdLine += defaultpolicystr;
+            }
             final String cmd2 = cmdLine + postStr;
             exec.execute(new Runnable() {
                 @Override
@@ -87,20 +93,14 @@ public class OatFolderCheckExcutor extends AbstractOatExcutor {
             if (count >= 16) {
                 count = 0;
                 try {
-                    Thread.sleep(5000);
+                    Thread.sleep(3000);
                 } catch (final InterruptedException e) {
                     throw new RuntimeException(e);
                 }
             }
 
         }
-        try {
-            // wait the pool until finish
-            while (!exec.awaitTermination(3, TimeUnit.SECONDS)) {
-            }
-        } catch (final InterruptedException e) {
-            OatLogUtil.traceException(e);
-        }
+        exec.shutdown();
     }
 
     @NotNull

@@ -15,10 +15,14 @@
 
 package ohos.oat.utils;
 
+import ohos.oat.config.OatProject;
+import ohos.oat.config.OatTask;
+
 import org.jetbrains.annotations.NotNull;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Common tool
@@ -35,4 +39,14 @@ public interface IOatCommonUtils {
         final String startTime = simpleDataFormat.format(date);
         return startTime;
     }
+
+    static String getTaskDefaultPrjName(final OatTask oatTask) {
+        String filePrefix = oatTask.getNamne();
+        final List<OatProject> oatProjects = oatTask.getProjectList();
+        if (oatProjects.size() == 1) {
+            filePrefix = oatProjects.get(0).getName();
+        }
+        return filePrefix;
+    }
+
 }
