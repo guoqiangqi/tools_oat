@@ -83,6 +83,7 @@
                         <configuration>
                             <!-- 把依赖的所有maven jar包拷贝到lib目录中（这样所有的jar包都在lib目录中） -->
                             <outputDirectory>${project.build.directory}/libs</outputDirectory>
+                            <excludeArtifactIds>annotations,jsr305</excludeArtifactIds>
                         </configuration>
                     </execution>
                 </executions>
