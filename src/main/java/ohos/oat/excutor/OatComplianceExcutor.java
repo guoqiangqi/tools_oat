@@ -22,9 +22,7 @@ import ohos.oat.task.OatDefaultTaskProcessor;
 import ohos.oat.utils.OatLogUtil;
 import ohos.oat.utils.OatSpdxLicenseUtil;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -59,11 +57,6 @@ public class OatComplianceExcutor extends AbstractOatExcutor {
             maxThread = 1;
         }
         final ExecutorService exec = Executors.newFixedThreadPool(maxThread);
-        
-        final Date date = new Date();
-        final SimpleDateFormat simpleDataFormat = new SimpleDateFormat("yyyy-MM-dd-HH_mm_ss");
-        final String startTime = simpleDataFormat.format(date);
-        OatLogUtil.println("", startTime + " Start analyzing....");
 
         for (final OatTask oatTask : taskList) {
             exec.execute(new Runnable() {
