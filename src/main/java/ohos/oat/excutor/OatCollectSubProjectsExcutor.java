@@ -89,8 +89,7 @@ public class OatCollectSubProjectsExcutor extends AbstractOatExcutor {
                 if (!file.isDirectory()) {
                     continue;
                 }
-                if (file.getName().equals(".git") || file.getName().equals(".repo") || file.getName().equals(".svn")
-                    || file.getName().equals(".idea")) {
+                if (file.getName().equals(".git") || file.getName().equals(".repo") || file.getName().equals(".svn")) {
 
                     continue;
                 }
@@ -118,14 +117,10 @@ public class OatCollectSubProjectsExcutor extends AbstractOatExcutor {
         if (subFiles != null && subFiles.length > 0) {
             for (final File subFile : subFiles) {
                 if (!subFile.isDirectory()) {
-                    if (subFile.getName().startsWith(".git") || subFile.getName().startsWith(".repo")
-                        || subFile.getName().startsWith(".svn")) {
-                        OatCollectSubProjectsExcutor.fillProject(subProjects, prjPath, file, false);
-                    }
                     continue;
                 }
                 if (subFile.getName().equals(".git") || subFile.getName().equals(".repo") || subFile.getName()
-                    .equals(".svn") || subFile.getName().equals(".idea")) {
+                    .equals(".svn")) {
                     OatCollectSubProjectsExcutor.fillProject(subProjects, prjPath, file, false);
                     continue;
                 }
