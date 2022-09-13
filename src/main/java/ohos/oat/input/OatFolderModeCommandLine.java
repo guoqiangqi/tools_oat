@@ -20,6 +20,7 @@ import ohos.oat.config.OatPolicy;
 import ohos.oat.excutor.IOatExcutor;
 import ohos.oat.excutor.OatFolderCheckExcutor;
 import ohos.oat.input.model.OatCommandLinePolicyPara;
+import ohos.oat.utils.IOatCommonUtils;
 import ohos.oat.utils.OatCfgUtil;
 import ohos.oat.utils.OatFileUtils;
 import ohos.oat.utils.OatLogUtil;
@@ -50,6 +51,7 @@ public class OatFolderModeCommandLine extends AbstractOatCommandLine {
         this.options.addOption("h", false, "Help message");
         this.options.addOption("l", false, "Log switch, used to enable the logger");
         this.options.addOption("s", true, "Source code repository path, eg: c:/test/");
+        this.options.addOption("r", true, "Report file folder, eg: c:/oatresult/");
         this.options.addOption("k", false, "Trace skipped files and ignored files");
         this.options.addOption("g", false, "Ignore project OAT configuration");
         this.options.addOption("p", false, "Ignore project OAT policy");
@@ -87,6 +89,15 @@ public class OatFolderModeCommandLine extends AbstractOatCommandLine {
         }
         oatConfig.setBasedir(sourceCodeRepoPath);
         OatLogUtil.warn(this.getClass().getSimpleName(), "CommandLine\tsourceCodeRepoPath\t" + sourceCodeRepoPath);
+
+        // Init report file path
+        String reportFolder = "./" + IOatCommonUtils.getDateTimeString();
+        final String optionValue_r = commandLine.getOptionValue("r");
+        if (null != optionValue_r) {
+            reportFolder = OatCfgUtil.formatPath(optionValue_r);
+        }
+        oatConfig.putData("reportFolder", reportFolder);
+        OatLogUtil.warn(this.getClass().getSimpleName(), "CommandLine" + "\treportFolder\t" + reportFolder);
 
         if (commandLine.hasOption("k")) {
             oatConfig.putData("TraceSkippedAndIgnoredFiles", "true");

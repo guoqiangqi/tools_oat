@@ -51,7 +51,10 @@ public class OatFolderCheckExcutor extends AbstractOatExcutor {
         if (this.oatConfig.getData("IgnoreProjectPolicy").equals("true")) {
             postStr += "#-p";
         }
-
+        final String reportFolder = this.oatConfig.getData("reportFolder");
+        if (reportFolder.length() > 0) {
+            postStr += "#-r#" + reportFolder;
+        }
         final String defaultpolicystr =
             "#-policy#\"repotype:dev; license:Apache-2.0@!.*LICENSE |ApacheStyleLicense@.*LICENSE| Apache-2.0@"
                 + ".*LICENSE;"

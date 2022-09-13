@@ -100,7 +100,6 @@ public class OatMultiModeCommandLine extends AbstractOatCommandLine {
         oatConfig.putData("reportFolder", reportFolder);
         OatLogUtil.warn(this.getClass().getSimpleName(), "CommandLine" + "\treportFolder\t" + reportFolder);
 
-        // To be deleted
         oatConfig.setRepositoryName("defaultProject");
         OatLogUtil.warn(this.getClass().getSimpleName(), "CommandLine\tnameOfRepository\tdefaultProject");
 
@@ -131,7 +130,7 @@ public class OatMultiModeCommandLine extends AbstractOatCommandLine {
             }
             oatConfig.putData("filter", filterstring);
         }
-        
+
         OatCfgUtil.initOatConfig(oatConfig, "");
         return oatConfig;
     }
