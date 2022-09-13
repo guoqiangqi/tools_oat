@@ -56,6 +56,8 @@ public class OatDefaultTaskProcessor extends AbstractOatTaskProcessor {
 
     private final List<IOatReporter> oatReporters = new ArrayList<>();
 
+    private String costTimeAnalyse = "";
+
     /**
      * Constructor
      */
@@ -127,7 +129,7 @@ public class OatDefaultTaskProcessor extends AbstractOatTaskProcessor {
         final long costTime = (System.currentTimeMillis() - startTime) / 1000;
         final String taskDefaultPrjName = getTaskDefaultPrjName(this.oatTask);
         OatLogUtil.warn(this.getClass().getSimpleName(), taskDefaultPrjName + "\tAnalyse task costTime\t" + costTime);
-        OatLogUtil.println("", taskDefaultPrjName + ":\tAnalyse task finished, costTime\t" + costTime);
+        this.costTimeAnalyse = "" + costTime;
     }
 
     /**
@@ -147,7 +149,8 @@ public class OatDefaultTaskProcessor extends AbstractOatTaskProcessor {
         final long costTime = (System.currentTimeMillis() - startTime) / 1000;
         final String taskDefaultPrjName = getTaskDefaultPrjName(this.oatTask);
         OatLogUtil.warn(this.getClass().getSimpleName(), taskDefaultPrjName + "\tReport task costTime\t" + costTime);
-        OatLogUtil.println("", taskDefaultPrjName + ":\tReport task finished, costTime\t" + costTime);
+        OatLogUtil.println("",
+            taskDefaultPrjName + " cost time(Analyse|Report):\t" + this.costTimeAnalyse + "|" + costTime);
     }
 
 }
