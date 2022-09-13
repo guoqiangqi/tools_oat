@@ -55,6 +55,8 @@ public class OatFolderModeCommandLine extends AbstractOatCommandLine {
         this.options.addOption("k", false, "Trace skipped files and ignored files");
         this.options.addOption("g", false, "Ignore project OAT configuration");
         this.options.addOption("p", false, "Ignore project OAT policy");
+        this.options.addOption("a", false,
+            "Output single mode detection results, include 'single' and 'single_policy' folder");
         return IOatCommandLine.accept(args, this.options, "f");
     }
 
@@ -108,6 +110,10 @@ public class OatFolderModeCommandLine extends AbstractOatCommandLine {
         if (commandLine.hasOption("p")) {
             oatConfig.putData("IgnoreProjectPolicy", "true");
         }
+        if (commandLine.hasOption("a")) {
+            oatConfig.putData("allreports", "true");
+        }
+
         final String policystring = commandLine.getOptionValue("policy");
         if (policystring != null) {
             final OatPolicy oatPolicy = OatCommandLinePolicyPara.getOatPolicy(policystring);

@@ -62,12 +62,15 @@ public class OatFolderCheckExcutor extends AbstractOatExcutor {
         final String upstreampolicystr =
             "#-policy#\"repotype:upstream; compatibility:Apache|BSD|MIT|FSFULLR|MulanPSL|!APSL-1.0~must;"
                 + "filename:LICENSE@projectroot|README.OpenSource@projectroot;filetype:!binary~must|!archive~must;\"";
-
+        boolean outputallreports = false;
+        if (this.oatConfig.getData("allreports").equals("true")) {
+            outputallreports = true;
+        }
         final ExecutorService exec = Executors.newFixedThreadPool(16);
         int count = 0;
         for (final OatProject subProject : subProjects) {
 
-            String cmdLine = assembleCmdline(sourceCodeRepoPath, subProject);
+            String cmdLine = OatFolderCheckExcutor.assembleCmdline(sourceCodeRepoPath, subProject);
             final String cmd = cmdLine + postStr;
             exec.execute(new Runnable() {
                 @Override
@@ -75,18 +78,21 @@ public class OatFolderCheckExcutor extends AbstractOatExcutor {
                     OatCommandLineMgr.runCommand(cmd.split("#"));
                 }
             });
-            if (subProject.isUpstreamPrj()) {
-                cmdLine += upstreampolicystr;
-            } else {
-                cmdLine += defaultpolicystr;
-            }
-            final String cmd2 = cmdLine + postStr;
-            exec.execute(new Runnable() {
-                @Override
-                public void run() {
-                    OatCommandLineMgr.runCommand(cmd2.split("#"));
+            if (outputallreports) {
+                // Check with policy options
+                if (subProject.isUpstreamPrj()) {
+                    cmdLine += upstreampolicystr;
+                } else {
+                    cmdLine += defaultpolicystr;
                 }
-            });
+                final String cmd2 = cmdLine + postStr;
+                exec.execute(new Runnable() {
+                    @Override
+                    public void run() {
+                        OatCommandLineMgr.runCommand(cmd2.split("#"));
+                    }
+                });
+            }
 
             //Limit the number of concurrency to prevent OOM
             count++;
