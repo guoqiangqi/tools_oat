@@ -17,8 +17,14 @@ package ohos.oat.excutor;
 
 import ohos.oat.config.OatProject;
 import ohos.oat.input.OatCommandLineMgr;
+import ohos.oat.utils.OatLogUtil;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 /**
  * OAT excutor，Used to collect all projects in the directory specified by the command line and check projects
@@ -45,10 +51,6 @@ public class OatFolderCheckExcutor extends AbstractOatExcutor {
         if (this.oatConfig.getData("IgnoreProjectPolicy").equals("true")) {
             postStr += "#-p";
         }
-        final String policystr = this.oatConfig.getData("policy");
-        if (policystr.length() > 0) {
-            postStr += "#-policy#" + policystr;
-        }
 
         final String defaultpolicystr =
             "#-policy#\"repotype:dev; license:Apache-2.0@!.*LICENSE |ApacheStyleLicense@.*LICENSE| Apache-2.0@"
@@ -56,47 +58,71 @@ public class OatFolderCheckExcutor extends AbstractOatExcutor {
                 + "copyright:Huawei Device Co., Ltd.;filename:LICENSE@projectroot|README.md@projectroot|README_zh"
                 + ".md@projectroot;filetype:!binary~must|!archive~must;\"";
 
+        final ExecutorService exec = Executors.newFixedThreadPool(16);
+        int count = 0;
         for (final OatProject subProject : subProjects) {
 
-            String cmdLine = "-mode#";
-            cmdLine += "s#-s#" + sourceCodeRepoPath + (subProject.getPath().length() > 0
-                ? "/" + subProject.getPath()
-                : "");
-            // cmdLine += " -r ./";
-            cmdLine += "#-n#" + (subProject.getName().length() > 0
-                ? subProject.getName()
-                : (subProject.isUpstreamPrj() ? "third_party_root" : "root"));
-            String filterString = "";
-            if (subProject.getIncludedPrjList().size() > 0) {
-                filterString += "#-filter#filepath:";
-                int index = 0;
-                for (final OatProject oatProject : subProject.getIncludedPrjList()) {
-                    if (index == 0) {
-                        filterString += "projectroot/" + oatProject.getPath();
-                    } else {
-                        filterString += "|projectroot/" + oatProject.getPath();
-                    }
-                    index++;
-                }
-            }
-            cmdLine += filterString;
-            final String cmd = cmdLine;
-            new Thread((new Runnable() {
+            String cmdLine = assembleCmdline(sourceCodeRepoPath, subProject);
+            final String cmd = cmdLine + postStr;
+            exec.execute(new Runnable() {
                 @Override
                 public void run() {
                     OatCommandLineMgr.runCommand(cmd.split("#"));
                 }
-            })).start();
+            });
             cmdLine += defaultpolicystr;
-            final String cmd2 = cmdLine;
-            new Thread((new Runnable() {
+            final String cmd2 = cmdLine + postStr;
+            exec.execute(new Runnable() {
                 @Override
                 public void run() {
                     OatCommandLineMgr.runCommand(cmd2.split("#"));
                 }
-            })).start();
-        }
+            });
 
+            //Limit the number of concurrency to prevent OOM
+            count++;
+            if (count >= 16) {
+                count = 0;
+                try {
+                    Thread.sleep(5000);
+                } catch (final InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+
+        }
+        try {
+            // wait the pool until finish
+            while (!exec.awaitTermination(3, TimeUnit.SECONDS)) {
+            }
+        } catch (final InterruptedException e) {
+            OatLogUtil.traceException(e);
+        }
+    }
+
+    @NotNull
+    private static String assembleCmdline(final String sourceCodeRepoPath, final OatProject subProject) {
+        String cmdLine = "-mode#";
+        cmdLine += "s#-s#" + sourceCodeRepoPath + (subProject.getPath().length() > 0 ? "/" + subProject.getPath() : "");
+        // cmdLine += " -r ./";
+        cmdLine += "#-n#" + (subProject.getName().length() > 0
+            ? subProject.getName()
+            : (subProject.isUpstreamPrj() ? "third_party_root" : "root"));
+        String filterString = "";
+        if (subProject.getIncludedPrjList().size() > 0) {
+            filterString += "#-filter#filepath:";
+            int index = 0;
+            for (final OatProject oatProject : subProject.getIncludedPrjList()) {
+                if (index == 0) {
+                    filterString += "projectroot/" + oatProject.getPath();
+                } else {
+                    filterString += "|projectroot/" + oatProject.getPath();
+                }
+                index++;
+            }
+        }
+        cmdLine += filterString;
+        return cmdLine;
     }
 
 }
