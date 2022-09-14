@@ -18,8 +18,8 @@ package ohos.oat.input;
 import ohos.oat.config.OatConfig;
 import ohos.oat.config.OatProject;
 import ohos.oat.config.OatTask;
-import ohos.oat.excutor.IOatExcutor;
-import ohos.oat.excutor.OatCollectSubProjectsExcutor;
+import ohos.oat.executor.IOatExecutor;
+import ohos.oat.executor.OatCollectSubProjectsExecutor;
 import ohos.oat.utils.OatCfgUtil;
 import ohos.oat.utils.OatFileUtils;
 import ohos.oat.utils.OatLogUtil;
@@ -68,7 +68,7 @@ public class OatCollectSubPrjectsCommandLine extends AbstractOatCommandLine {
         if (null == commandLine || null == optionValue_s || commandLine.hasOption("h")) {
             return null;
         }
- 
+
         // Init Source code repository path, same with basedir
         String sourceCodeRepoPath = "";
         sourceCodeRepoPath = OatCfgUtil.formatPath(optionValue_s);
@@ -99,10 +99,10 @@ public class OatCollectSubPrjectsCommandLine extends AbstractOatCommandLine {
      * @param oatConfig OAT configuration data structure
      */
     @Override
-    public void transmit2Excutor(final OatConfig oatConfig) {
-        final List<IOatExcutor> oatExcutors = new ArrayList<>();
-        oatExcutors.add(new OatCollectSubProjectsExcutor());
-        IOatCommandLine.transmit2Excutor(oatConfig, oatExcutors);
+    public void transmit2Executor(final OatConfig oatConfig) {
+        final List<IOatExecutor> oatExecutors = new ArrayList<>();
+        oatExecutors.add(new OatCollectSubProjectsExecutor());
+        IOatCommandLine.transmit2Executor(oatConfig, oatExecutors);
     }
 
 }

@@ -51,7 +51,7 @@ public class OatCommandLineMgr {
                 final OatConfig oatConfig = iOatCommandLine.parseArgs2Config(args);
                 if (null != oatConfig) {
                     bMatched = true;
-                    iOatCommandLine.transmit2Excutor(oatConfig);
+                    iOatCommandLine.transmit2Executor(oatConfig);
                     return;
                 } else {
                     // Print command options of this mode only

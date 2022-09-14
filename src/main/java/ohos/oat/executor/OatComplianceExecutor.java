@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-package ohos.oat.excutor;
+package ohos.oat.executor;
 
 import ohos.oat.config.OatConfig;
 import ohos.oat.config.OatTask;
@@ -28,20 +28,20 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 /**
- * OAT excutor，used to check code compatibility
+ * OAT executor，used to check code compatibility
  *
  * @author chenyaxun
  * @since 2.0
  */
-public class OatComplianceExcutor extends AbstractOatExcutor {
+public class OatComplianceExecutor extends AbstractOatExecutor {
 
     /**
      * Execute the specified task on the command line
      */
     @Override
-    public void excute() {
+    public void execute() {
         OatSpdxLicenseUtil.initSpdxLicenseList(this.oatConfig);
-        this.excuteTasks(this.oatConfig);
+        OatComplianceExecutor.executeTasks(this.oatConfig);
     }
 
     /**
@@ -49,34 +49,39 @@ public class OatComplianceExcutor extends AbstractOatExcutor {
      *
      * @param oatConfig OAT configuration data structure Config in oat.xml
      */
-    private void excuteTasks(final OatConfig oatConfig) {
+    private static void executeTasks(final OatConfig oatConfig) {
         final List<OatTask> taskList = oatConfig.getTaskList();
         final int size = taskList.size();
-        int maxThread = Math.min(size, 100);
+        // Single-item checks do not need to start a new thread
+        if (size <= 1) {
+            OatComplianceExecutor.executeTask(taskList.get(0), oatConfig);
+            return;
+        }
+        int maxThread = Math.min(size, 16);
         if (maxThread <= 0) {
             maxThread = 1;
         }
         final ExecutorService exec = Executors.newFixedThreadPool(maxThread);
-
         for (final OatTask oatTask : taskList) {
             exec.execute(new Runnable() {
                 @Override
                 public void run() {
-                    this.repoort();
+                    OatComplianceExecutor.executeTask(oatTask, oatConfig);
                 }
 
-                private void repoort() {
-                    try {
-                        final List<IOatTaskProcessor> taskProcessors = new ArrayList<>();
-                        taskProcessors.add(new OatDefaultTaskProcessor());
-                        IOatExcutor.transmit2TaskProcessor(oatTask, oatConfig, taskProcessors);
-                    } catch (final Exception e) {
-                        OatLogUtil.traceException(e);
-                    }
-                }
             });
         }
         exec.shutdown();
+    }
+
+    private static void executeTask(final OatTask oatTask, final OatConfig oatConfig) {
+        try {
+            final List<IOatTaskProcessor> taskProcessors = new ArrayList<>();
+            taskProcessors.add(new OatDefaultTaskProcessor());
+            IOatExecutor.transmit2TaskProcessor(oatTask, oatConfig, taskProcessors);
+        } catch (final Exception e) {
+            OatLogUtil.traceException(e);
+        }
     }
 
 }
