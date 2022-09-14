@@ -17,8 +17,8 @@ package ohos.oat.input;
 
 import ohos.oat.config.OatConfig;
 import ohos.oat.config.OatPolicy;
-import ohos.oat.excutor.IOatExcutor;
-import ohos.oat.excutor.OatFolderCheckExcutor;
+import ohos.oat.executor.IOatExecutor;
+import ohos.oat.executor.OatFolderCheckExecutor;
 import ohos.oat.input.model.OatCommandLinePolicyPara;
 import ohos.oat.utils.IOatCommonUtils;
 import ohos.oat.utils.OatCfgUtil;
@@ -131,10 +131,10 @@ public class OatFolderModeCommandLine extends AbstractOatCommandLine {
      * @param oatConfig OAT configuration data structure
      */
     @Override
-    public void transmit2Excutor(final OatConfig oatConfig) {
-        final List<IOatExcutor> oatExcutors = new ArrayList<>();
-        oatExcutors.add(new OatFolderCheckExcutor());
-        IOatCommandLine.transmit2Excutor(oatConfig, oatExcutors);
+    public void transmit2Executor(final OatConfig oatConfig) {
+        final List<IOatExecutor> oatExecutors = new ArrayList<>();
+        oatExecutors.add(new OatFolderCheckExecutor());
+        IOatCommandLine.transmit2Executor(oatConfig, oatExecutors);
 
     }
 

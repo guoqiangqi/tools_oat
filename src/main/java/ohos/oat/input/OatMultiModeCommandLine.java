@@ -18,8 +18,8 @@ package ohos.oat.input;
 import ohos.oat.config.OatConfig;
 import ohos.oat.config.OatFileFilter;
 import ohos.oat.config.OatPolicy;
-import ohos.oat.excutor.IOatExcutor;
-import ohos.oat.excutor.OatComplianceExcutor;
+import ohos.oat.executor.IOatExecutor;
+import ohos.oat.executor.OatComplianceExecutor;
 import ohos.oat.input.model.OatCommandLineFilterPara;
 import ohos.oat.input.model.OatCommandLinePolicyPara;
 import ohos.oat.utils.IOatCommonUtils;
@@ -141,10 +141,10 @@ public class OatMultiModeCommandLine extends AbstractOatCommandLine {
      * @param oatConfig OAT configuration data structure
      */
     @Override
-    public void transmit2Excutor(final OatConfig oatConfig) {
-        final List<IOatExcutor> oatExcutors = new ArrayList<>();
-        oatExcutors.add(new OatComplianceExcutor());
-        IOatCommandLine.transmit2Excutor(oatConfig, oatExcutors);
+    public void transmit2Executor(final OatConfig oatConfig) {
+        final List<IOatExecutor> oatExecutors = new ArrayList<>();
+        oatExecutors.add(new OatComplianceExecutor());
+        IOatCommandLine.transmit2Executor(oatConfig, oatExecutors);
 
     }
 }
