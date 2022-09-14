@@ -13,29 +13,29 @@
  * limitations under the License.
  */
 
-package ohos.oat.excutor;
+package ohos.oat.executor;
 
 import ohos.oat.config.OatConfig;
 
 /**
- * Default IOatExcutor method implementations
+ * Default IOatExecutor method implementations
  *
  * @author chenyaxun
  * @since 2.0
  */
-public abstract class AbstractOatExcutor implements IOatExcutor {
+public abstract class AbstractOatExecutor implements IOatExecutor {
     /**
      * OAT configuration data structure
      */
     protected OatConfig oatConfig;
- 
+
     /**
      * init instance
      *
      * @param oatConfig OAT configuration data structure
      */
     @Override
-    public IOatExcutor init(final OatConfig oatConfig) {
+    public IOatExecutor init(final OatConfig oatConfig) {
         this.oatConfig = oatConfig;
         return this;
     }

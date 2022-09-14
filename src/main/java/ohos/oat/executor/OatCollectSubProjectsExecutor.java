@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-package ohos.oat.excutor;
+package ohos.oat.executor;
 
 import ohos.oat.config.OatConfig;
 import ohos.oat.config.OatProject;
@@ -31,19 +31,19 @@ import java.util.Comparator;
 import java.util.List;
 
 /**
- * OAT excutor，Used to collect all projects in the directory specified by the command line
+ * OAT executor，Used to collect all projects in the directory specified by the command line
  *
  * @author chenyaxun
  * @since 2.0
  */
-public class OatCollectSubProjectsExcutor extends AbstractOatExcutor {
+public class OatCollectSubProjectsExecutor extends AbstractOatExecutor {
 
     /**
      * Execute the specified task on the command line
      */
     @Override
-    public void excute() {
-        OatCollectSubProjectsExcutor.logSubProjects(this.oatConfig);
+    public void execute() {
+        OatCollectSubProjectsExecutor.logSubProjects(this.oatConfig);
     }
 
     /**
@@ -63,8 +63,8 @@ public class OatCollectSubProjectsExcutor extends AbstractOatExcutor {
             return;
         }
         final OatProject oatProject = projectList.get(0);
-        final String prjDirectory = OatCollectSubProjectsExcutor.getPrjDirectory(oatConfig, oatProject);
-        final List<OatProject> subProjects = OatCollectSubProjectsExcutor.getSubProjects(prjDirectory);
+        final String prjDirectory = OatCollectSubProjectsExecutor.getPrjDirectory(oatConfig, oatProject);
+        final List<OatProject> subProjects = OatCollectSubProjectsExecutor.getSubProjects(prjDirectory);
         if (subProjects == null) {
             return;
         }
@@ -93,10 +93,10 @@ public class OatCollectSubProjectsExcutor extends AbstractOatExcutor {
 
                     continue;
                 }
-                OatCollectSubProjectsExcutor.collectSubPrjects(subProjects, prjPath, file, 1);
+                OatCollectSubProjectsExecutor.collectSubPrjects(subProjects, prjPath, file, 1);
             }
         }
-        OatCollectSubProjectsExcutor.fillProject(subProjects, prjPath, prjFile, true);
+        OatCollectSubProjectsExecutor.fillProject(subProjects, prjPath, prjFile, true);
 
         return subProjects;
     }
@@ -121,10 +121,10 @@ public class OatCollectSubProjectsExcutor extends AbstractOatExcutor {
                 }
                 if (subFile.getName().equals(".git") || subFile.getName().equals(".repo") || subFile.getName()
                     .equals(".svn")) {
-                    OatCollectSubProjectsExcutor.fillProject(subProjects, prjPath, file, false);
+                    OatCollectSubProjectsExecutor.fillProject(subProjects, prjPath, file, false);
                     continue;
                 }
-                OatCollectSubProjectsExcutor.collectSubPrjects(subProjects, prjPath, subFile, nextDepth);
+                OatCollectSubProjectsExecutor.collectSubPrjects(subProjects, prjPath, subFile, nextDepth);
             }
         }
     }
@@ -149,7 +149,7 @@ public class OatCollectSubProjectsExcutor extends AbstractOatExcutor {
         }
         subProjects.add(oatProject);
         if (isRootPrj) {
-            OatCollectSubProjectsExcutor.reArrangeProject(subProjects);
+            OatCollectSubProjectsExecutor.reArrangeProject(subProjects);
         }
     }
 

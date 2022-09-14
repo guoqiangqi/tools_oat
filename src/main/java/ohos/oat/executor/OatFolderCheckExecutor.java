@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-package ohos.oat.excutor;
+package ohos.oat.executor;
 
 import ohos.oat.config.OatConfig;
 import ohos.oat.config.OatProject;
@@ -29,12 +29,12 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 /**
- * OAT excutor，Used to collect all projects in the directory specified by the command line and check projects
+ * OAT executor，Used to collect all projects in the directory specified by the command line and check projects
  *
  * @author chenyaxun
  * @since 2.0
  */
-public class OatFolderCheckExcutor extends AbstractOatExcutor {
+public class OatFolderCheckExecutor extends AbstractOatExecutor {
     private final Map<Integer, List<OatProject>> prjectMap = new HashMap<>();
 
     private final static int THREAD_POOL_SIZE = 16;
@@ -56,9 +56,9 @@ public class OatFolderCheckExcutor extends AbstractOatExcutor {
      * @return
      */
     @Override
-    public IOatExcutor init(final OatConfig oatConfig) {
+    public IOatExecutor init(final OatConfig oatConfig) {
         super.init(oatConfig);
-        final List<OatProject> subProjects = OatCollectSubProjectsExcutor.getSubProjects(this.oatConfig.getBasedir());
+        final List<OatProject> subProjects = OatCollectSubProjectsExecutor.getSubProjects(this.oatConfig.getBasedir());
         this.initProjectMap();
         this.allocateProject2List(subProjects);
 
@@ -97,29 +97,29 @@ public class OatFolderCheckExcutor extends AbstractOatExcutor {
      * Execute the specified task on the command line
      */
     @Override
-    public void excute() {
+    public void execute() {
 
-        final ExecutorService exec = Executors.newFixedThreadPool(OatFolderCheckExcutor.THREAD_POOL_SIZE);
-        for (int i = 0; i < OatFolderCheckExcutor.THREAD_POOL_SIZE; i++) {
+        final ExecutorService exec = Executors.newFixedThreadPool(OatFolderCheckExecutor.THREAD_POOL_SIZE);
+        for (int i = 0; i < OatFolderCheckExecutor.THREAD_POOL_SIZE; i++) {
             final List<OatProject> oatProjects = this.prjectMap.get(i);
             exec.execute(new Runnable() {
                 @Override
                 public void run() {
                     for (final OatProject oatProject : oatProjects) {
-                        String cmdLine = OatFolderCheckExcutor.assembleCmdline(
-                            OatFolderCheckExcutor.this.oatConfig.getBasedir(), oatProject);
-                        final String cmd = cmdLine + OatFolderCheckExcutor.this.postStr;
+                        String cmdLine = OatFolderCheckExecutor.assembleCmdline(
+                            OatFolderCheckExecutor.this.oatConfig.getBasedir(), oatProject);
+                        final String cmd = cmdLine + OatFolderCheckExecutor.this.postStr;
 
                         OatCommandLineMgr.runCommand(cmd.split("#"));
 
-                        if (OatFolderCheckExcutor.this.outputallreports) {
+                        if (OatFolderCheckExecutor.this.outputallreports) {
                             // Check with policy options
                             if (oatProject.isUpstreamPrj()) {
-                                cmdLine += OatFolderCheckExcutor.this.upstreampolicystr;
+                                cmdLine += OatFolderCheckExecutor.this.upstreampolicystr;
                             } else {
-                                cmdLine += OatFolderCheckExcutor.this.defaultpolicystr;
+                                cmdLine += OatFolderCheckExecutor.this.defaultpolicystr;
                             }
-                            final String cmd2 = cmdLine + OatFolderCheckExcutor.this.postStr;
+                            final String cmd2 = cmdLine + OatFolderCheckExecutor.this.postStr;
 
                             OatCommandLineMgr.runCommand(cmd2.split("#"));
 
@@ -137,14 +137,14 @@ public class OatFolderCheckExcutor extends AbstractOatExcutor {
         for (final OatProject subProject : subProjects) {
             this.prjectMap.get(this.index).add(subProject);
             this.index++;
-            if (this.index >= OatFolderCheckExcutor.THREAD_POOL_SIZE) {
+            if (this.index >= OatFolderCheckExecutor.THREAD_POOL_SIZE) {
                 this.index = 0;
             }
         }
     }
 
     private void initProjectMap() {
-        for (int i = 0; i < OatFolderCheckExcutor.THREAD_POOL_SIZE; i++) {
+        for (int i = 0; i < OatFolderCheckExecutor.THREAD_POOL_SIZE; i++) {
             this.prjectMap.put(i, new ArrayList<>());
         }
     }

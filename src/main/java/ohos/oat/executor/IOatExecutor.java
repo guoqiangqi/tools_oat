@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-package ohos.oat.excutor;
+package ohos.oat.executor;
 
 import ohos.oat.config.OatConfig;
 import ohos.oat.config.OatTask;
@@ -22,24 +22,24 @@ import ohos.oat.task.IOatTaskProcessor;
 import java.util.List;
 
 /**
- * OAT excutor，used to process tasks passed in by OatCommandLine
+ * OAT executor，used to process tasks passed in by OatCommandLine
  *
  * @author chenyaxun
  * @since 2.0
  */
-public interface IOatExcutor {
+public interface IOatExecutor {
 
     /**
      * init instance
      *
      * @param oatConfig OAT configuration data structure
      */
-    IOatExcutor init(OatConfig oatConfig);
+    IOatExecutor init(OatConfig oatConfig);
 
     /**
      * Execute the specified task on the command line
      */
-    void excute();
+    void execute();
 
     /**
      * Pass the task to the IOatTaskProcessor handler for execution

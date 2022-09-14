@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-package ohos.oat.excutor;
+package ohos.oat.executor;
 
 import ohos.oat.config.OatConfig;
 import ohos.oat.config.OatTask;
@@ -28,20 +28,20 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 /**
- * OAT excutor，used to check code compatibility
+ * OAT executor，used to check code compatibility
  *
  * @author chenyaxun
  * @since 2.0
  */
-public class OatComplianceExcutor extends AbstractOatExcutor {
+public class OatComplianceExecutor extends AbstractOatExecutor {
 
     /**
      * Execute the specified task on the command line
      */
     @Override
-    public void excute() {
+    public void execute() {
         OatSpdxLicenseUtil.initSpdxLicenseList(this.oatConfig);
-        OatComplianceExcutor.excuteTasks(this.oatConfig);
+        OatComplianceExecutor.executeTasks(this.oatConfig);
     }
 
     /**
@@ -49,12 +49,12 @@ public class OatComplianceExcutor extends AbstractOatExcutor {
      *
      * @param oatConfig OAT configuration data structure Config in oat.xml
      */
-    private static void excuteTasks(final OatConfig oatConfig) {
+    private static void executeTasks(final OatConfig oatConfig) {
         final List<OatTask> taskList = oatConfig.getTaskList();
         final int size = taskList.size();
         // Single-item checks do not need to start a new thread
         if (size <= 1) {
-            OatComplianceExcutor.executeTask(taskList.get(0), oatConfig);
+            OatComplianceExecutor.executeTask(taskList.get(0), oatConfig);
             return;
         }
         int maxThread = Math.min(size, 16);
@@ -66,7 +66,7 @@ public class OatComplianceExcutor extends AbstractOatExcutor {
             exec.execute(new Runnable() {
                 @Override
                 public void run() {
-                    OatComplianceExcutor.executeTask(oatTask, oatConfig);
+                    OatComplianceExecutor.executeTask(oatTask, oatConfig);
                 }
 
             });
@@ -78,7 +78,7 @@ public class OatComplianceExcutor extends AbstractOatExcutor {
         try {
             final List<IOatTaskProcessor> taskProcessors = new ArrayList<>();
             taskProcessors.add(new OatDefaultTaskProcessor());
-            IOatExcutor.transmit2TaskProcessor(oatTask, oatConfig, taskProcessors);
+            IOatExecutor.transmit2TaskProcessor(oatTask, oatConfig, taskProcessors);
         } catch (final Exception e) {
             OatLogUtil.traceException(e);
         }

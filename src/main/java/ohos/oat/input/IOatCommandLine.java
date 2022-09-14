@@ -16,7 +16,7 @@
 package ohos.oat.input;
 
 import ohos.oat.config.OatConfig;
-import ohos.oat.excutor.IOatExcutor;
+import ohos.oat.executor.IOatExecutor;
 import ohos.oat.utils.OatLogUtil;
 
 import org.apache.commons.cli.CommandLine;
@@ -55,14 +55,12 @@ public interface IOatCommandLine {
      */
     OatConfig parseArgs2Config(String[] args);
 
-    // IOatCommandLine addExcutor(Class<IOatExcutor> oatExcutorClass);
-
     /**
      * Perform tasks
      *
      * @param oatConfig OAT configuration data structure OAT configuration data structure
      */
-    void transmit2Excutor(OatConfig oatConfig);
+    void transmit2Executor(OatConfig oatConfig);
 
     /**
      * Command line options
@@ -132,12 +130,12 @@ public interface IOatCommandLine {
      * Tool function, defined as static to avoid instantiation
      *
      * @param oatConfig OAT configuration data structure
-     * @param oatExcutors OAT Excutors
+     * @param oatExecutors OAT Executors
      */
-    static void transmit2Excutor(final OatConfig oatConfig, final List<IOatExcutor> oatExcutors) {
-        oatExcutors.forEach(oatExcutor -> {
+    static void transmit2Executor(final OatConfig oatConfig, final List<IOatExecutor> oatExecutors) {
+        oatExecutors.forEach(oatExecutor -> {
 
-            oatExcutor.init(oatConfig).excute();
+            oatExecutor.init(oatConfig).execute();
 
         });
     }
