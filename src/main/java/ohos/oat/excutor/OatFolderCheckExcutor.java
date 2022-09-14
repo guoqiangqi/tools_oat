@@ -15,12 +15,16 @@
 
 package ohos.oat.excutor;
 
+import ohos.oat.config.OatConfig;
 import ohos.oat.config.OatProject;
 import ohos.oat.input.OatCommandLineMgr;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -31,82 +35,118 @@ import java.util.concurrent.Executors;
  * @since 2.0
  */
 public class OatFolderCheckExcutor extends AbstractOatExcutor {
+    private final Map<Integer, List<OatProject>> prjectMap = new HashMap<>();
+
+    private final static int THREAD_POOL_SIZE = 16;
+
+    private int index = 0;
+
+    private String postStr = "";
+
+    private String defaultpolicystr = "";
+
+    private String upstreampolicystr = "";
+
+    private boolean outputallreports = false;
+
+    /**
+     * Init instance with paras
+     *
+     * @param oatConfig OAT configuration data structure
+     * @return
+     */
+    @Override
+    public IOatExcutor init(final OatConfig oatConfig) {
+        super.init(oatConfig);
+        final List<OatProject> subProjects = OatCollectSubProjectsExcutor.getSubProjects(this.oatConfig.getBasedir());
+        this.initProjectMap();
+        this.allocateProject2List(subProjects);
+
+        if (this.oatConfig.getData("TraceSkippedAndIgnoredFiles").equals("true")) {
+            this.postStr += "#-k";
+        }
+        if (this.oatConfig.getData("IgnoreProjectOAT").equals("true")) {
+            this.postStr += "#-g";
+        }
+        if (this.oatConfig.getData("IgnoreProjectPolicy").equals("true")) {
+            this.postStr += "#-p";
+        }
+        final String reportFolder = this.oatConfig.getData("reportFolder");
+        if (reportFolder.length() > 0) {
+            this.postStr += "#-r#" + reportFolder;
+        }
+
+        this.defaultpolicystr =
+            "#-policy#\"repotype:dev; license:Apache-2.0@!.*LICENSE |ApacheStyleLicense@.*LICENSE| Apache-2.0@"
+                + ".*LICENSE;"
+                + "copyright:Huawei Device Co., Ltd.;filename:LICENSE@projectroot|README.md@projectroot|README_zh"
+                + ".md@projectroot;filetype:!binary~must|!archive~must;\"";
+
+        this.upstreampolicystr =
+            "#-policy#\"repotype:upstream; compatibility:Apache|BSD|MIT|FSFULLR|MulanPSL|!APSL-1.0~must;"
+                + "filename:LICENSE@projectroot|README.OpenSource@projectroot;filetype:!binary~must|!archive~must;\"";
+
+        if (this.oatConfig.getData("allreports").equals("true")) {
+            this.outputallreports = true;
+        }
+
+        return this;
+    }
 
     /**
      * Execute the specified task on the command line
      */
     @Override
     public void excute() {
-        final String sourceCodeRepoPath = this.oatConfig.getBasedir();
-        final List<OatProject> subProjects = OatCollectSubProjectsExcutor.getSubProjects(sourceCodeRepoPath);
-        String postStr = "";
-        if (this.oatConfig.getData("TraceSkippedAndIgnoredFiles").equals("true")) {
-            postStr += "#-k";
-        }
-        if (this.oatConfig.getData("IgnoreProjectOAT").equals("true")) {
-            postStr += "#-g";
-        }
-        if (this.oatConfig.getData("IgnoreProjectPolicy").equals("true")) {
-            postStr += "#-p";
-        }
-        final String reportFolder = this.oatConfig.getData("reportFolder");
-        if (reportFolder.length() > 0) {
-            postStr += "#-r#" + reportFolder;
-        }
-        final String defaultpolicystr =
-            "#-policy#\"repotype:dev; license:Apache-2.0@!.*LICENSE |ApacheStyleLicense@.*LICENSE| Apache-2.0@"
-                + ".*LICENSE;"
-                + "copyright:Huawei Device Co., Ltd.;filename:LICENSE@projectroot|README.md@projectroot|README_zh"
-                + ".md@projectroot;filetype:!binary~must|!archive~must;\"";
 
-        final String upstreampolicystr =
-            "#-policy#\"repotype:upstream; compatibility:Apache|BSD|MIT|FSFULLR|MulanPSL|!APSL-1.0~must;"
-                + "filename:LICENSE@projectroot|README.OpenSource@projectroot;filetype:!binary~must|!archive~must;\"";
-        boolean outputallreports = false;
-        if (this.oatConfig.getData("allreports").equals("true")) {
-            outputallreports = true;
-        }
-        final ExecutorService exec = Executors.newFixedThreadPool(16);
-        int count = 0;
-        for (final OatProject subProject : subProjects) {
-
-            String cmdLine = OatFolderCheckExcutor.assembleCmdline(sourceCodeRepoPath, subProject);
-            final String cmd = cmdLine + postStr;
+        final ExecutorService exec = Executors.newFixedThreadPool(OatFolderCheckExcutor.THREAD_POOL_SIZE);
+        for (int i = 0; i < OatFolderCheckExcutor.THREAD_POOL_SIZE; i++) {
+            final List<OatProject> oatProjects = this.prjectMap.get(i);
             exec.execute(new Runnable() {
                 @Override
                 public void run() {
-                    OatCommandLineMgr.runCommand(cmd.split("#"));
+                    for (final OatProject oatProject : oatProjects) {
+                        String cmdLine = OatFolderCheckExcutor.assembleCmdline(
+                            OatFolderCheckExcutor.this.oatConfig.getBasedir(), oatProject);
+                        final String cmd = cmdLine + OatFolderCheckExcutor.this.postStr;
+
+                        OatCommandLineMgr.runCommand(cmd.split("#"));
+
+                        if (OatFolderCheckExcutor.this.outputallreports) {
+                            // Check with policy options
+                            if (oatProject.isUpstreamPrj()) {
+                                cmdLine += OatFolderCheckExcutor.this.upstreampolicystr;
+                            } else {
+                                cmdLine += OatFolderCheckExcutor.this.defaultpolicystr;
+                            }
+                            final String cmd2 = cmdLine + OatFolderCheckExcutor.this.postStr;
+
+                            OatCommandLineMgr.runCommand(cmd2.split("#"));
+
+                        }
+                    }
                 }
             });
-            if (outputallreports) {
-                // Check with policy options
-                if (subProject.isUpstreamPrj()) {
-                    cmdLine += upstreampolicystr;
-                } else {
-                    cmdLine += defaultpolicystr;
-                }
-                final String cmd2 = cmdLine + postStr;
-                exec.execute(new Runnable() {
-                    @Override
-                    public void run() {
-                        OatCommandLineMgr.runCommand(cmd2.split("#"));
-                    }
-                });
-            }
-
-            //Limit the number of concurrency to prevent OOM
-            count++;
-            if (count >= 16) {
-                count = 0;
-                try {
-                    Thread.sleep(3000);
-                } catch (final InterruptedException e) {
-                    throw new RuntimeException(e);
-                }
-            }
 
         }
+
         exec.shutdown();
+    }
+
+    private void allocateProject2List(final List<OatProject> subProjects) {
+        for (final OatProject subProject : subProjects) {
+            this.prjectMap.get(this.index).add(subProject);
+            this.index++;
+            if (this.index >= OatFolderCheckExcutor.THREAD_POOL_SIZE) {
+                this.index = 0;
+            }
+        }
+    }
+
+    private void initProjectMap() {
+        for (int i = 0; i < OatFolderCheckExcutor.THREAD_POOL_SIZE; i++) {
+            this.prjectMap.put(i, new ArrayList<>());
+        }
     }
 
     @NotNull

@@ -41,7 +41,7 @@ public class OatComplianceExcutor extends AbstractOatExcutor {
     @Override
     public void excute() {
         OatSpdxLicenseUtil.initSpdxLicenseList(this.oatConfig);
-        this.excuteTasks(this.oatConfig);
+        OatComplianceExcutor.excuteTasks(this.oatConfig);
     }
 
     /**
@@ -49,34 +49,39 @@ public class OatComplianceExcutor extends AbstractOatExcutor {
      *
      * @param oatConfig OAT configuration data structure Config in oat.xml
      */
-    private void excuteTasks(final OatConfig oatConfig) {
+    private static void excuteTasks(final OatConfig oatConfig) {
         final List<OatTask> taskList = oatConfig.getTaskList();
         final int size = taskList.size();
-        int maxThread = Math.min(size, 100);
+        // Single-item checks do not need to start a new thread
+        if (size <= 1) {
+            OatComplianceExcutor.executeTask(taskList.get(0), oatConfig);
+            return;
+        }
+        int maxThread = Math.min(size, 16);
         if (maxThread <= 0) {
             maxThread = 1;
         }
         final ExecutorService exec = Executors.newFixedThreadPool(maxThread);
-
         for (final OatTask oatTask : taskList) {
             exec.execute(new Runnable() {
                 @Override
                 public void run() {
-                    this.repoort();
+                    OatComplianceExcutor.executeTask(oatTask, oatConfig);
                 }
 
-                private void repoort() {
-                    try {
-                        final List<IOatTaskProcessor> taskProcessors = new ArrayList<>();
-                        taskProcessors.add(new OatDefaultTaskProcessor());
-                        IOatExcutor.transmit2TaskProcessor(oatTask, oatConfig, taskProcessors);
-                    } catch (final Exception e) {
-                        OatLogUtil.traceException(e);
-                    }
-                }
             });
         }
         exec.shutdown();
+    }
+
+    private static void executeTask(final OatTask oatTask, final OatConfig oatConfig) {
+        try {
+            final List<IOatTaskProcessor> taskProcessors = new ArrayList<>();
+            taskProcessors.add(new OatDefaultTaskProcessor());
+            IOatExcutor.transmit2TaskProcessor(oatTask, oatConfig, taskProcessors);
+        } catch (final Exception e) {
+            OatLogUtil.traceException(e);
+        }
     }
 
 }
