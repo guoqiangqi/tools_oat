@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 Huawei Device Co., Ltd.
+ * Copyright (c) 2021-2022 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -121,7 +121,7 @@ import java.util.Map;
  * @author chenyaxun
  * @since 1.0
  */
-public class OatProcessor {
+public class OatFileAnalyser {
     private int processLineCount = 150;
 
     private static final String[] SKIP_STRINGS = {
@@ -182,7 +182,7 @@ public class OatProcessor {
      * @param fileReader File reader of the fileDocument, not null
      * @param fileDocument FileDocument of the file to be checked, not null
      */
-    public OatProcessor(final Reader fileReader, final Document fileDocument, final OatConfig oatConfig) {
+    public OatFileAnalyser(final Reader fileReader, final Document fileDocument, final OatConfig oatConfig) {
         this.fileReader = new BufferedReader(fileReader);
         if (fileDocument instanceof OatFileDocument) {
             this.fileDocument = (OatFileDocument) fileDocument;
@@ -200,9 +200,9 @@ public class OatProcessor {
         final String licensefilename = OatCfgUtil.getShortPath(this.oatConfig, fileDocument.getName());
         if (this.fileDocument != null) {
             if (this.fileDocument.getOatProject()
-                    .getProjectFileDocument()
-                    .getListData("LICENSEFILE")
-                    .contains(licensefilename)) {
+                .getProjectFileDocument()
+                .getListData("LICENSEFILE")
+                .contains(licensefilename)) {
                 this.processLineCount = 3000;
             }
         }
@@ -314,11 +314,11 @@ public class OatProcessor {
         }
         if (this.fileDocument != null) {
             for (final Map.Entry<String, List<String>> stringListEntry : this.fileDocument.getOatProject()
-                    .getPrjLicenseText2NameMap()
-                    .entrySet()) {
+                .getPrjLicenseText2NameMap()
+                .entrySet()) {
                 for (final String licenseTxt : stringListEntry.getValue()) {
                     this.customizedHeaderMatchersClean.add(new OatCustomizedTextLicenseMatcher(stringListEntry.getKey(),
-                            OatLicenseTextUtil.cleanAndLowerCaseLetter(licenseTxt)));
+                        OatLicenseTextUtil.cleanAndLowerCaseLetter(licenseTxt)));
                 }
             }
         }
@@ -441,7 +441,7 @@ public class OatProcessor {
         }
 
         if (line.trim().length() > 0) {
-            for (final String skipString : OatProcessor.SKIP_STRINGS) {
+            for (final String skipString : OatFileAnalyser.SKIP_STRINGS) {
                 if (line.contains(skipString)) {
                     this.fileDocument.putData("isSkipedFile", "true");
                     return false;
@@ -487,8 +487,8 @@ public class OatProcessor {
                 return !line.startsWith("function ") && !line.startsWith("var ") && !line.startsWith("class ")
                     && !line.startsWith("export ") && !line.startsWith("import ");
             } else if (fileName.endsWith(".ts")) {
-                return !line.startsWith("import ") && !line.startsWith("export ") && !line.startsWith("class ") && !line
-                    .startsWith("export ");
+                return !line.startsWith("import ") && !line.startsWith("export ") && !line.startsWith("class ")
+                    && !line.startsWith("export ");
             }
         }
         return true;

@@ -17,14 +17,18 @@ package ohos.oat.input;
 
 import ohos.oat.OatLicenseMain;
 import ohos.oat.config.OatConfig;
-import ohos.oat.excutor.IOatExcutor;
-import ohos.oat.excutor.OatComplianceExcutor;
+import ohos.oat.config.OatFileFilter;
+import ohos.oat.config.OatPolicy;
+import ohos.oat.executor.IOatExecutor;
+import ohos.oat.executor.OatComplianceExecutor;
+import ohos.oat.input.model.OatCommandLineFilterPara;
+import ohos.oat.input.model.OatCommandLinePolicyPara;
+import ohos.oat.utils.IOatCommonUtils;
 import ohos.oat.utils.OatCfgUtil;
 import ohos.oat.utils.OatFileUtils;
 import ohos.oat.utils.OatLogUtil;
 
 import org.apache.commons.cli.CommandLine;
-import org.apache.commons.cli.Options;
 
 import java.io.File;
 import java.net.URL;
@@ -32,13 +36,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * Single project scan mode, scan the directory specified by the -s parameter as the project root directory
+ *
  * @author chenyaxun
- * @since 2022/08
+ * @since 2.0
  */
-public class OatSingleModeCommandLine implements IOatCommandLine {
-    private final Options options = new Options();
-
-    private final String cmdLineSyntax = "java -jar ohos_ossaudittool-VERSION.jar ";
+public class OatSingleModeCommandLine extends AbstractOatCommandLine {
 
     /**
      * Receive command line parameters and determine whether the command line corresponds to the operating mode
@@ -52,12 +55,24 @@ public class OatSingleModeCommandLine implements IOatCommandLine {
         this.options.addOption("h", false, "Help message");
         this.options.addOption("l", false, "Log switch, used to enable the logger");
         this.options.addOption("s", true, "Source code repository path, eg: c:/test/");
-        this.options.addOption("r", true, "Report file path, eg: c:/oatresult.txt");
+        this.options.addOption("r", true, "Report file folder, eg: c:/oatresult/");
         this.options.addOption("n", true, "Name of repository, used to match the default policy");
         this.options.addOption("w", true, "Check way, 0 means full check, 1 means only check the file list");
         this.options.addOption("f", true, "File list to check, separated by |");
         this.options.addOption("k", false, "Trace skipped files and ignored files");
         this.options.addOption("g", false, "Ignore project OAT configuration");
+        this.options.addOption("p", false, "Ignore project OAT policy");
+        this.options.addOption("policy", true, "Specify check policy rules to replace the tool's default rules. \n"
+            + "eg:repotype:upstream; license:Apache-2.0@dirA/.*|MIT@dirB/.*|BSD@dirC/.*;copyright:Huawei Device Co"
+            + "., Ltd.@dirA/.*;filename:README.md@projectroot;filetype:!binary~must|!archive~must;"
+            + "compatibility:Apache-2.0 \n" + "Note:\n"
+            + "repotype:'upstreaam' means 3rd software, 'dev' means self developed \n"
+            + "license: used to check license header \n copyright: used to check copyright header \n filename: used "
+            + "to check whether there is the specified file in the specified directory \n filetype: used to check "
+            + "where there are some binary or archive files \n compatibility: used to check license compatibility");
+        this.options.addOption("filter", true,
+            "Specify filtering rules to filter some files or directories that do not need to be checked. \n"
+                + "eg:filename:.*.dat|.*.rar; filepath:projectroot/target/.*");
         return IOatCommandLine.accept(args, this.options, "s");
     }
 
@@ -110,13 +125,14 @@ public class OatSingleModeCommandLine implements IOatCommandLine {
         OatLogUtil.warn(this.getClass().getSimpleName(), "CommandLine" + "\tinitOATCfgFile\t" + initOATCfgFile);
 
         // Init report file path
-        String reportFile = "./OATResult.txt";
+        String reportFolder = "./" + IOatCommonUtils.getDateTimeString();
         final String optionValue_r = commandLine.getOptionValue("r");
         if (null != optionValue_r) {
-            reportFile = OatCfgUtil.formatPath(optionValue_r);
+            reportFolder = OatCfgUtil.formatPath(optionValue_r);
         }
-        oatConfig.putData("reportFile", reportFile);
-        OatLogUtil.warn(this.getClass().getSimpleName(), "CommandLine" + "\treportFile\t" + reportFile);
+        reportFolder = reportFolder + "/single";
+        oatConfig.putData("reportFolder", reportFolder);
+        OatLogUtil.warn(this.getClass().getSimpleName(), "CommandLine" + "\treportFolder\t" + reportFolder);
 
         // Init repository name
         String nameOfRepository = "defaultProject";
@@ -153,35 +169,41 @@ public class OatSingleModeCommandLine implements IOatCommandLine {
         if (commandLine.hasOption("g")) {
             oatConfig.putData("IgnoreProjectOAT", "true");
         }
+        if (commandLine.hasOption("p")) {
+            oatConfig.putData("IgnoreProjectPolicy", "true");
+        }
+        final String policystring = commandLine.getOptionValue("policy");
+        if (policystring != null) {
+            final OatPolicy oatPolicy = OatCommandLinePolicyPara.getOatPolicy(policystring);
+            if (oatPolicy == null) {
+                return null;
+            }
+            oatConfig.putData("policy", policystring);
+            oatConfig.putData("reportFolder", oatConfig.getData("reportFolder") + "_policy");
+        }
 
+        final String filterstring = commandLine.getOptionValue("filter");
+        if (filterstring != null) {
+            final OatFileFilter oatFileFilter = OatCommandLineFilterPara.getOatFileFilter(filterstring);
+            if (oatFileFilter == null) {
+                return null;
+            }
+            oatConfig.putData("filter", filterstring);
+        }
         OatCfgUtil.initOatConfig(oatConfig, sourceCodeRepoPath);
         return oatConfig;
     }
 
     /**
-     * @param oatConfig
+     * Perform tasks
+     *
+     * @param oatConfig OAT configuration data structure
      */
     @Override
-    public void excuteTask(final OatConfig oatConfig) {
-        final List<IOatExcutor> lstOatExcutors = new ArrayList<>();
-        lstOatExcutors.add(new OatComplianceExcutor());
-        IOatCommandLine.excuteTask(oatConfig, lstOatExcutors);
-    }
+    public void transmit2Executor(final OatConfig oatConfig) {
+        final List<IOatExecutor> oatExecutors = new ArrayList<>();
+        oatExecutors.add(new OatComplianceExecutor());
+        IOatCommandLine.transmit2Executor(oatConfig, oatExecutors);
 
-    /**
-     * @return Options
-     */
-    @Override
-    public Options getOptions() {
-        return this.options;
     }
-
-    /**
-     * @return cmdLineSyntax
-     */
-    @Override
-    public String getCmdLineSyntax() {
-        return this.cmdLineSyntax;
-    }
-
 }

@@ -36,18 +36,8 @@
 
 package ohos.oat;
 
-import ohos.oat.config.OatConfig;
-import ohos.oat.config.OatProject;
-import ohos.oat.config.OatTask;
 import ohos.oat.input.OatCommandLineMgr;
-import ohos.oat.utils.OatFileUtils;
 import ohos.oat.utils.OatLogUtil;
-
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Main class of the license and copyright analyser
@@ -64,7 +54,7 @@ public class OatLicenseMain {
 
     private static final String PROMPT_MESSAGE_NAME = "OpenHarmony OSS Audit Tool";
 
-    private static final String PROMPT_MESSAGE_COPY = "Copyright (C) 2021 Huawei Device Co., Ltd.";
+    private static final String PROMPT_MESSAGE_COPY = "Copyright (C) 2021-2022 Huawei Device Co., Ltd.";
 
     private static final String PROMPT_MESSAGE_FEEDBACK =
         "If you have any questions or concerns, please create issue at https://gitee"
@@ -79,11 +69,9 @@ public class OatLicenseMain {
     /**
      * Main for OAT
      *
-     * @param args Use -i to pass OAT config file path, the default file name is OAT.xml while in plugin mode, the first
-     * para must be the project root dir, the second para must be the output file dir
-     * @throws Exception exception wile process
+     * @param args Command line paras
      */
-    public static void main(final String[] args) throws Exception {
+    public static void main(final String[] args) {
         OatLogUtil.println("", OatLicenseMain.PROMPT_MESSAGE_SEPARATOR);
         OatLogUtil.println("", OatLicenseMain.PROMPT_MESSAGE_NAME);
         OatLogUtil.println("", OatLicenseMain.PROMPT_MESSAGE_COPY);
@@ -92,81 +80,6 @@ public class OatLicenseMain {
 
         OatCommandLineMgr.runCommand(args);
 
-    }
-
-    @SuppressWarnings("unused")
-    private static void printMissedFiles(final OatConfig oatConfig, final List<OatTask> taskList,
-        final String resultfolder) throws IOException {
-        if (oatConfig.isPluginMode()) {
-            return;
-        }
-
-        // Files defined in tasklist in oat config file
-        final List<String> definedfiles = new ArrayList<>();
-        for (final OatTask oatTask : taskList) {
-            for (final OatProject oatProject : oatTask.getProjectList()) {
-                final String path = oatConfig.getBasedir() + oatProject.getPath();
-                definedfiles.add(path);
-            }
-        }
-
-        final List<String> allfiles = new ArrayList<>();
-        final File rootfile = new File(oatConfig.getBasedir());
-
-        // add files in the base dir but not defined in tasklist in oat config file to allfiles list
-        OatLicenseMain.readFiles(rootfile, allfiles, definedfiles);
-        final File missedFiles = new File(resultfolder + "/oat_missed_files.txt");
-        try (final FileWriter fileWriter = new FileWriter(missedFiles)) {
-            for (final String allfile : allfiles) {
-                fileWriter.write(allfile + "\n");
-            }
-            fileWriter.flush();
-        } catch (final Exception ex) {
-            OatLogUtil.traceException(ex);
-        }
-    }
-
-    /**
-     * Recursive method to gather all files in the para allfiles folder
-     *
-     * @param file file folder
-     * @param allfiles all files in folder
-     * @param definedFiles all files defined in OAT config file
-     */
-    private static void readFiles(final File file, final List<String> allfiles, final List<String> definedFiles) {
-        if (null == file) {
-            return;
-        }
-        final File[] files = file.listFiles();
-
-        if (files == null) {
-            return;
-        }
-
-        for (final File file1 : files) {
-            String filePath = "";
-            filePath = OatFileUtils.getFileCanonicalPath(file1).replace('\\', '/');
-
-            if (filePath.contains(".repo") || filePath.contains(".git")) {
-                continue;
-            }
-            boolean matched = false;
-            for (final String readfile : definedFiles) {
-                if (filePath.startsWith(readfile)) {
-                    matched = true;
-                    break;
-                }
-            }
-            if (matched) {
-                continue;
-            }
-
-            if (file1.isDirectory()) {
-                OatLicenseMain.readFiles(file1, allfiles, definedFiles);
-            } else {
-                allfiles.add(filePath);
-            }
-        }
     }
 
 }

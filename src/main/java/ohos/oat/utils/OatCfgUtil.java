@@ -30,6 +30,8 @@ import ohos.oat.config.OatPolicy;
 import ohos.oat.config.OatPolicyItem;
 import ohos.oat.config.OatProject;
 import ohos.oat.config.OatTask;
+import ohos.oat.input.model.OatCommandLineFilterPara;
+import ohos.oat.input.model.OatCommandLinePolicyPara;
 
 import org.apache.commons.configuration2.HierarchicalConfiguration;
 import org.apache.commons.configuration2.XMLConfiguration;
@@ -37,6 +39,7 @@ import org.apache.commons.configuration2.builder.fluent.Configurations;
 import org.apache.commons.configuration2.tree.DefaultExpressionEngine;
 import org.apache.commons.configuration2.tree.DefaultExpressionEngineSymbols;
 import org.apache.commons.configuration2.tree.ImmutableNode;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.util.List;
@@ -253,6 +256,17 @@ public final class OatCfgUtil {
             final List<HierarchicalConfiguration<ImmutableNode>> fileFilterItemListCfg = fileFilterCfg.configurationsAt(
                 "filteritem");
             OatCfgUtil.initFilterItems(oatProject, oatFileFilter, fileFilterItemListCfg);
+
+            // Init global OAT filter using command line para, this will work together with OAT.xml in project
+            if (oatProject == null && oatFileFilter.getName()
+                .equals("defaultFilter")) {//oatProject == null means init global OAT.xml
+                final String filterstring = oatConfig.getData("filter");
+                if (filterstring != null && filterstring.length() > 0) {
+                    final OatFileFilter oatFileFilter1 = OatCommandLineFilterPara.getOatFileFilter(filterstring);
+                    oatFileFilter.merge(oatFileFilter1);
+                }
+            }
+
             OatCfgUtil.initFilterItems2Policy(oatProject, oatFileFilter);
             OatCfgUtil.initFilterItems2Project(oatProject, oatFileFilter);
         } // end of filefilter
@@ -342,8 +356,25 @@ public final class OatCfgUtil {
 
     private static void initPolicy(final OatConfig oatConfig, final XMLConfiguration xmlconfig,
         final OatProject oatProject) {
+        // Init global OAT configuration using command line para, not OAT.xml in project
+        if (oatProject == null) {//oatProject == null means init global OAT.xml
+            final String policystring = oatConfig.getData("policy");
+            if (policystring != null && policystring.length() > 0) {
+                final OatPolicy oatPolicy = OatCommandLinePolicyPara.getOatPolicy(policystring);
+                oatPolicy.setName("defaultPolicy");
+                oatConfig.addPolicy(oatPolicy);
+
+                final OatPolicy thirdOatPolicy = OatCommandLinePolicyPara.getOatPolicy(policystring);
+                oatPolicy.setName("3rdDefaultPolicy");
+                oatConfig.addPolicy(oatPolicy);
+
+                return;
+            }
+        }
+
         final List<HierarchicalConfiguration<ImmutableNode>> policylistCfg = OatCfgUtil.getElements(xmlconfig,
             OatCfgUtil.ROOTNODE, "policylist.policy");
+        // Start init policy
         for (final HierarchicalConfiguration<ImmutableNode> policyCfg : policylistCfg) {
             final OatPolicy oatPolicy = new OatPolicy();
             oatPolicy.setName(OatCfgUtil.getElementAttrValue(policyCfg, "name"));
@@ -368,19 +399,8 @@ public final class OatCfgUtil {
                 final String policyType = oatPolicyItem.getType();
                 final String policyName = oatPolicyItem.getName();
 
-                String tmpFilterName = "defaultPolicyFilter";
-                if (policyType.equals("copyright")) {
-                    tmpFilterName = "copyrightPolicyFilter";
-                } else if (policyType.equals("filename") && policyName.equals("LICENSE")) {
-                    tmpFilterName = "licenseFileNamePolicyFilter";
-                } else if (policyType.equals("filename") && policyName.contains("README.OpenSource")) {
-                    tmpFilterName = "readmeOpenSourcefileNamePolicyFilter";
-                } else if (policyType.equals("filename") && policyName.contains("README")) {
-                    tmpFilterName = "readmeFileNamePolicyFilter";
-                } else if (policyType.equals("filetype")) {
-                    tmpFilterName = "binaryFileTypePolicyFilter";
-                }
-                oatPolicyItem.setFileFilter(OatCfgUtil.getElementAttrValue(policyitemCfg, "filefilter", tmpFilterName));
+                final String filterName = OatCfgUtil.getFilterName(policyType, policyName);
+                oatPolicyItem.setFileFilter(OatCfgUtil.getElementAttrValue(policyitemCfg, "filefilter", filterName));
                 oatPolicyItem.setDesc(OatCfgUtil.getElementAttrValue(policyitemCfg, "desc"));
                 if (oatProject != null) {
                     // Project OAT XML
@@ -399,6 +419,23 @@ public final class OatCfgUtil {
                 }
             } // End of policy items
         } // end of policy
+    }
+
+    @NotNull
+    public static String getFilterName(final String policyType, final String policyName) {
+        String tmpFilterName = "defaultPolicyFilter";
+        if (policyType.equals("copyright")) {
+            tmpFilterName = "copyrightPolicyFilter";
+        } else if (policyType.equals("filename") && policyName.equals("LICENSE")) {
+            tmpFilterName = "licenseFileNamePolicyFilter";
+        } else if (policyType.equals("filename") && policyName.contains("README.OpenSource")) {
+            tmpFilterName = "readmeOpenSourcefileNamePolicyFilter";
+        } else if (policyType.equals("filename") && policyName.contains("README")) {
+            tmpFilterName = "readmeFileNamePolicyFilter";
+        } else if (policyType.equals("filetype")) {
+            tmpFilterName = "binaryFileTypePolicyFilter";
+        }
+        return tmpFilterName;
     }
 
     private static void initLicenseMatcher(final OatConfig oatConfig, final XMLConfiguration xmlconfig,
@@ -529,6 +566,7 @@ public final class OatCfgUtil {
     private static void initProjectDefaultPolicy(final OatConfig oatConfig, final OatProject oatProject) {
         if (oatConfig.getRepositoryName().toLowerCase(Locale.ENGLISH).contains("third_party")) {
             oatProject.setPolicy("3rdDefaultPolicy");
+            oatProject.setUpstreamPrj(true);
         } else {
             oatProject.setPolicy("defaultPolicy");
         }

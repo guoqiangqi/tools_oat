@@ -65,6 +65,8 @@ public class OatProject {
 
     private OatFileDocument projectFileDocument;
 
+    private boolean isUpstreamPrj;
+
     public OatProject() {
 
     }
@@ -159,6 +161,14 @@ public class OatProject {
         this.policy = policy;
     }
 
+    public boolean isUpstreamPrj() {
+        return this.isUpstreamPrj;
+    }
+
+    public void setUpstreamPrj(final boolean upstreamPrj) {
+        this.isUpstreamPrj = upstreamPrj;
+    }
+
     public Map<String, List<String>> getPrjLicenseText2NameMap() {
         return this.prjLicenseText2NameMap;
     }
@@ -192,13 +202,10 @@ public class OatProject {
     @Override
     public String toString() {
         return "OatProject{" + "prjLicenseText2NameMap=" + this.prjLicenseText2NameMap + ", prjLicenseCompatibilityMap="
-            + this.prjLicenseCompatibilityMap + ", includedPrjList=" + this.includedPrjList
-            + ", oatPolicy=" + this.oatPolicy
-            + ", name='" + this.name + '\'' + ", licenseFiles=" + Arrays.toString(
-            this.licenseFiles) + ", path='" + this.path + '\''
-            + ", fileFilterObj=" + this.fileFilterObj + ", fileFilter='" + this.fileFilter
-            + '\'' + ", policy='" + this.policy + '\''
-            + '}';
+            + this.prjLicenseCompatibilityMap + ", includedPrjList=" + this.includedPrjList + ", oatPolicy="
+            + this.oatPolicy + ", name='" + this.name + '\'' + ", licenseFiles=" + Arrays.toString(this.licenseFiles)
+            + ", path='" + this.path + '\'' + ", fileFilterObj=" + this.fileFilterObj + ", fileFilter='"
+            + this.fileFilter + '\'' + ", policy='" + this.policy + '\'' + '}';
     }
 
     @Override
@@ -210,12 +217,12 @@ public class OatProject {
             return false;
         }
         final OatProject project = (OatProject) o;
-        return this.prjLicenseText2NameMap.equals(project.prjLicenseText2NameMap) && this.prjLicenseCompatibilityMap.equals(
-            project.prjLicenseCompatibilityMap) && this.includedPrjList.equals(project.includedPrjList) && this.oatPolicy
-            .equals(
-            project.oatPolicy) && this.name.equals(project.name) && Arrays.equals(this.licenseFiles, project.licenseFiles) && this.path
-            .equals(project.path) && this.fileFilterObj.equals(project.fileFilterObj) && this.fileFilter.equals(
-            project.fileFilter) && this.policy.equals(project.policy);
+        return this.prjLicenseText2NameMap.equals(project.prjLicenseText2NameMap)
+            && this.prjLicenseCompatibilityMap.equals(project.prjLicenseCompatibilityMap)
+            && this.includedPrjList.equals(project.includedPrjList) && this.oatPolicy.equals(project.oatPolicy)
+            && this.name.equals(project.name) && Arrays.equals(this.licenseFiles, project.licenseFiles)
+            && this.path.equals(project.path) && this.fileFilterObj.equals(project.fileFilterObj)
+            && this.fileFilter.equals(project.fileFilter) && this.policy.equals(project.policy);
     }
 
     @Override

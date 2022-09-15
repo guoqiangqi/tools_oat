@@ -74,18 +74,32 @@ OAT是基于Java语言开发的，因此可以运行在多种操作系统中，�
 
 ```
 java -jar ohos_ossaudittool-xx.jar -mode s -s sourcedir -r reportdir -n nameOfRepo
+                                                                                         
+options:                                                                                                                                
+ -mode <arg>     Operating mode, 's' for check single project                                                                           
+ -h              Help message                                                                                                           
+ -l              Log switch, used to enable the logger                                                                                  
+ -s <arg>        Source code repository path, eg: c:/test/                                                                              
+ -r <arg>        Report file folder, eg: c:/oatresult/                                                                                  
+ -n <arg>        Name of repository, used to match the default policy                                                                   
+ -w <arg>        Check way, 0 means full check, 1 means only check the file list                                                        
+ -f <arg>        File list to check, separated by |                                                                                     
+ -k              Trace skipped files and ignored files
+ -g              Ignore project OAT configuration
+ -p              Ignore project OAT policy
+ -policy <arg>   Specify check policy rules to replace the tool's default rules.
+                 eg:repotype:upstream; license:Apache-2.0@dirA/.*|MIT@dirB/.*|BSD@dirC/.*;copyright:Huawei Device Co.,
+                 Ltd.@dirA/.*;filename:README.md@projectroot;filetype:!binary~must|!archive~must;compatibility:Apache-2.0
+                 Note:
+                 repotype:'upstreaam' means 3rd software, 'dev' means self developed
+                 license: used to check license header
+                 copyright: used to check copyright header
+                 filename: used to check whether there is the specified file in the specified directory
+                 filetype: used to check where there are some binary or archive files
+                 compatibility: used to check license compatibility
+ -filter <arg>   Specify filtering rules to filter some files or directories that do not need to be checked.
+                 eg:filename:.*.dat|.*.rar; filepath:projectroot/target/.*
 
-options:
- -mode <arg>   Operating mode, 's' for check single project
- -h            Help message
- -l            Log switch, used to enable the logger
- -s <arg>      Source code repository path, eg: c:/test/
- -r <arg>      Report file path, eg: c:/oatresult.txt
- -n <arg>      Name of repository, used to match the default policy
- -w <arg>      Check way, 0 means full check, 1 means only check the file list
- -f <arg>      File list to check, separated by |
- -k            Trace skipped files and ignored files
- -g            Ignore project OAT configuration
 ```
 
 其中第一个参数是待扫描项目的根目录路径，第二个参数为报告输出路径，本模式采用resources/OAT-Default.xml中的定义作为默认规则，如果默认规则不满足业务要求，您同样可以在开源仓根目录放置一个命名为 "OAT.xml"
@@ -99,13 +113,27 @@ OAT已集成到OpenHarmony社区门禁，门禁被触发时即以此模式在运
 java -jar ohos_ossaudittool-xx.jar -mode m -i OAT-ALL.xml
 
 options:
- -mode <arg>   Operating mode, 'm' for check multiple projects
- -h            Help message
- -l            Log switch, used to enable the logger
- -i <arg>      OAT.xml file path, default vaule is OAT.xml in the running path
- -k            Trace skipped files and ignored files
- -g            Ignore project OAT configuration
- -p            Ignore project OAT policy
+ -mode <arg>     Operating mode, 'm' for check multiple projects
+ -h              Help message
+ -l              Log switch, used to enable the logger
+ -i <arg>        OAT.xml file path, default vaule is OAT.xml in the running path
+ -r <arg>        Report file folder, eg: c:/oatresult/
+ -k              Trace skipped files and ignored files
+ -g              Ignore project OAT configuration
+ -p              Ignore project OAT policy
+ -policy <arg>   Specify check policy rules to replace the tool's default rules,
+                 eg:repotype:upstream; license:Apache-2.0@dirA/.*|MIT@dirB/.*|BSD@dirC/.*;copyright:Huawei Device Co.,
+                 Ltd.@dirA/.*;filename:README.md@projectroot;filetype:!binary~must|!archive~must;compatibility:Apache-2.0
+                 Note:
+                 repotype:'upstreaam' means 3rd software, 'dev' means self developed
+                 license: used to check license header
+                 copyright: used to check copyright header
+                 filename: used to check whether there is the specified file in the specified directory
+                 filetype: used to check where there are some binary or archive files
+                 compatibility: used to check license compatibility
+ -filter <arg>   Specify filtering rules to filter some files or directories that do not need to be checked.
+                 eg:filename:.*.dat|.*.rar; filepath:projectroot/target/.*
+
 ```
 
 批量模式生成的报告位于OAT的运行目录，其中OAT-ALL.xml用于配置待扫描的项目清单及默认的许可证、Copyright等策略及默认的过滤规则，您可基于resources/OAT-Default.xml修改生成OAT-ALL.xml。

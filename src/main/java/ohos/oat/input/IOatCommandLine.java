@@ -16,13 +16,12 @@
 package ohos.oat.input;
 
 import ohos.oat.config.OatConfig;
-import ohos.oat.excutor.IOatExcutor;
+import ohos.oat.executor.IOatExecutor;
 import ohos.oat.utils.OatLogUtil;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.DefaultParser;
-import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import org.apache.commons.lang3.ArrayUtils;
@@ -30,11 +29,11 @@ import org.apache.commons.lang3.ArrayUtils;
 import java.util.List;
 
 /**
- * Command line parameter Interface for converting command line parameters into OAT configuration data structures
+ * Command line parameter Interface for converting command line parameters into OAT configuration data structure
  * extract this Interface to support more detection scenarios
  *
  * @author chenyaxun
- * @since 2022/08
+ * @since 2.0
  */
 public interface IOatCommandLine {
     String PROMPT_MESSAGE_SEPARATOR = "--------------------------------------------------------------------------";
@@ -52,16 +51,16 @@ public interface IOatCommandLine {
      * Parse command line arguments and convert to OatConfig data structure
      *
      * @param args Command line arguments
-     * @return OatConfig data structure
+     * @return OAT configuration data structure
      */
-    OatConfig parseArgs2Config(final String[] args);
+    OatConfig parseArgs2Config(String[] args);
 
     /**
      * Perform tasks
      *
-     * @param oatConfig
+     * @param oatConfig OAT configuration data structure OAT configuration data structure
      */
-    void excuteTask(OatConfig oatConfig);
+    void transmit2Executor(OatConfig oatConfig);
 
     /**
      * Command line options
@@ -78,21 +77,15 @@ public interface IOatCommandLine {
     String getCmdLineSyntax();
 
     /**
-     * Tool function, Print usage of this commandline，defined as static to avoid instantiation
+     *
      */
-    default void printUsage() {
-        final HelpFormatter helpFormatter = new HelpFormatter();
-        helpFormatter.setOptionComparator(null);
-        helpFormatter.setWidth(140);
-        helpFormatter.printHelp(this.getCmdLineSyntax(), IOatCommandLine.PROMPT_MESSAGE_HEADER, this.getOptions(),
-            IOatCommandLine.PROMPT_MESSAGE_SEPARATOR, true);
-    }
+    void printUsage();
 
     /**
      * Tool function, defined as static to avoid instantiation
      *
-     * @param args
-     * @param options
+     * @param args Command line arguments
+     * @param options Command line options
      * @param mode
      * @return
      */
@@ -106,7 +99,9 @@ public interface IOatCommandLine {
         if (null == commandLine) {
             return false;
         }
-        OatLogUtil.setDebugMode(commandLine.hasOption("l"));
+        if (commandLine.hasOption("l")) {
+            OatLogUtil.setDebugMode(true);
+        }
         OatLogUtil.warn(IOatCommandLine.class.getSimpleName(),
             "CommandLine" + "\tlogSwitch\t" + commandLine.hasOption("l"));
         final String modeValue = commandLine.getOptionValue("mode");
@@ -116,9 +111,9 @@ public interface IOatCommandLine {
     /**
      * Tool function, defined as static to avoid instantiation
      *
-     * @param args
-     * @param options
-     * @return
+     * @param args Command line arguments
+     * @param options Command line options
+     * @return CommandLine
      */
     static CommandLine parseOptions(final String[] args, final Options options) {
         final CommandLineParser parser = new DefaultParser();
@@ -134,10 +129,15 @@ public interface IOatCommandLine {
     /**
      * Tool function, defined as static to avoid instantiation
      *
-     * @param oatConfig
-     * @param oatExcutors
+     * @param oatConfig OAT configuration data structure
+     * @param oatExecutors OAT Executors
      */
-    static void excuteTask(final OatConfig oatConfig, final List<IOatExcutor> oatExcutors) {
-        oatExcutors.forEach(iOatExcutor -> iOatExcutor.excute(oatConfig));
+    static void transmit2Executor(final OatConfig oatConfig, final List<IOatExecutor> oatExecutors) {
+        oatExecutors.forEach(oatExecutor -> {
+
+            oatExecutor.init(oatConfig).execute();
+
+        });
     }
+
 }

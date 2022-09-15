@@ -87,13 +87,26 @@ multiple projects in a batch.
 java -jar ohos_ossaudittool-xx.jar -mode m -i OAT-ALL.xml
 
 options:
- -mode <arg>   Operating mode, 'm' for check multiple projects
- -h            Help message
- -l            Log switch, used to enable the logger
- -i <arg>      OAT.xml file path, default vaule is OAT.xml in the running path
- -k            Trace skipped files and ignored files
- -g            Ignore project OAT configuration
- -p            Ignore project OAT policy
+ -mode <arg>     Operating mode, 'm' for check multiple projects
+ -h              Help message
+ -l              Log switch, used to enable the logger
+ -i <arg>        OAT.xml file path, default vaule is OAT.xml in the running path
+ -r <arg>        Report file folder, eg: c:/oatresult/
+ -k              Trace skipped files and ignored files
+ -g              Ignore project OAT configuration
+ -p              Ignore project OAT policy
+ -policy <arg>   Specify check policy rules to replace the tool's default rules,
+                 eg:repotype:upstream; license:Apache-2.0@dirA/.*|MIT@dirB/.*|BSD@dirC/.*;copyright:Huawei Device Co.,
+                 Ltd.@dirA/.*;filename:README.md@projectroot;filetype:!binary~must|!archive~must;compatibility:Apache-2.0
+                 Note:
+                 repotype:'upstreaam' means 3rd software, 'dev' means self developed
+                 license: used to check license header
+                 copyright: used to check copyright header
+                 filename: used to check whether there is the specified file in the specified directory
+                 filetype: used to check where there are some binary or archive files
+                 compatibility: used to check license compatibility
+ -filter <arg>   Specify filtering rules to filter some files or directories that do not need to be checked.
+                 eg:filename:.*.dat|.*.rar; filepath:projectroot/target/.*
 ```
 
 In this mode, the report is generated in the running directory of OAT. The  **OAT-ALL.xml**  file is used to configure the list of projects to be scanned, the default license and copyright policy, and
@@ -138,18 +151,31 @@ Configure the projects to be scanned and their paths as follows:
 
 ```
 java -jar ohos_ossaudittool-xx.jar -mode s -s sourcedir -r reportdir -n nameOfRepo
-
-options:
- -mode <arg>   Operating mode, 's' for check single project
- -h            Help message
- -l            Log switch, used to enable the logger
- -s <arg>      Source code repository path, eg: c:/test/
- -r <arg>      Report file path, eg: c:/oatresult.txt
- -n <arg>      Name of repository, used to match the default policy
- -w <arg>      Check way, 0 means full check, 1 means only check the file list
- -f <arg>      File list to check, separated by |
- -k            Trace skipped files and ignored files
- -g            Ignore project OAT configuration
+                                                                                         
+options:                                                                                                                                
+ -mode <arg>     Operating mode, 's' for check single project                                                                           
+ -h              Help message                                                                                                           
+ -l              Log switch, used to enable the logger                                                                                  
+ -s <arg>        Source code repository path, eg: c:/test/                                                                              
+ -r <arg>        Report file folder, eg: c:/oatresult/                                                                                  
+ -n <arg>        Name of repository, used to match the default policy                                                                   
+ -w <arg>        Check way, 0 means full check, 1 means only check the file list                                                        
+ -f <arg>        File list to check, separated by |                                                                                     
+ -k              Trace skipped files and ignored files
+ -g              Ignore project OAT configuration
+ -p              Ignore project OAT policy
+ -policy <arg>   Specify check policy rules to replace the tool's default rules.
+                 eg:repotype:upstream; license:Apache-2.0@dirA/.*|MIT@dirB/.*|BSD@dirC/.*;copyright:Huawei Device Co.,
+                 Ltd.@dirA/.*;filename:README.md@projectroot;filetype:!binary~must|!archive~must;compatibility:Apache-2.0
+                 Note:
+                 repotype:'upstreaam' means 3rd software, 'dev' means self developed
+                 license: used to check license header
+                 copyright: used to check copyright header
+                 filename: used to check whether there is the specified file in the specified directory
+                 filetype: used to check where there are some binary or archive files
+                 compatibility: used to check license compatibility
+ -filter <arg>   Specify filtering rules to filter some files or directories that do not need to be checked.
+                 eg:filename:.*.dat|.*.rar; filepath:projectroot/target/.*
 ```
 
 **sourcedir**  indicates the root directory of the project to be scanned, and  **reportdir**  indicates the directory used to store the generated report. In this mode, the rules defined in  **
@@ -216,7 +242,7 @@ The policies define how OAT audits code. Each project is associated with a speci
 
 7. **policyitem filefilter**: specifies the file filter. A file that meets the filtering condition will not be displayed in the report even if the file does not meet the  **policyitem**.
 
-8. **policyitem desc**: specifies the reason for using the policy. 
+8. **policyitem desc**: specifies the reason for using the policy.
 
 - Configuring filters
 

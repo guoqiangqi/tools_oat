@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 Huawei Device Co., Ltd.
+ * Copyright (c) 2021-2022 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -19,19 +19,19 @@
  * Modified by jalenchen
  */
 
-package ohos.oat.report;
+package ohos.oat.reporter;
 
+import static ohos.oat.utils.IOatCommonUtils.getTaskDefaultPrjName;
 import static org.apache.rat.api.MetaData.RAT_URL_DOCUMENT_CATEGORY;
 
 import ohos.oat.config.OatConfig;
+import ohos.oat.config.OatTask;
 import ohos.oat.document.OatFileDocument;
 import ohos.oat.utils.OatLogUtil;
 
-import org.apache.rat.api.Document;
 import org.apache.rat.api.MetaData;
-import org.apache.rat.api.RatException;
-import org.apache.rat.report.RatReport;
 
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -45,12 +45,12 @@ import java.util.Map;
  * @author chenyaxun
  * @since 1.0
  */
-public class OatOutputReport implements RatReport {
+public class OatOutputReporter extends AbstractOatReporter {
     private final Map<String, List<ReportItem>> resultMap = new HashMap<>();
 
-    private final FileWriter writer;
+    private final String reportFileName = "PlainReport_";
 
-    private final OatConfig oatConfig;
+    private FileWriter writer;
 
     private List<ReportItem> archiveList;
 
@@ -71,18 +71,13 @@ public class OatOutputReport implements RatReport {
     private List<ReportItem> redundantLicenseList;
 
     /**
-     * Constructor
-     *
-     * @param writer FilterWriter to write result text
-     * @param oatConfig Oat config  information data structure
+     * @param oatConfig OAT configuration data structure
+     * @param oatTask Task
      */
-    public OatOutputReport(final FileWriter writer, final OatConfig oatConfig) {
-        this.writer = writer;
-        this.oatConfig = oatConfig;
-    }
-
     @Override
-    public void startReport() throws RatException {
+    public IOatReporter init(final OatConfig oatConfig, final OatTask oatTask) {
+        super.init(oatConfig, oatTask);
+
         this.resultMap.put("Archive", new ArrayList());
         this.resultMap.put("Compatibility", new ArrayList());
         this.resultMap.put("LicenseHeader", new ArrayList());
@@ -101,17 +96,45 @@ public class OatOutputReport implements RatReport {
         this.readmeList = this.resultMap.get("Readme");
         this.importList = this.resultMap.get("Import");
         this.redundantLicenseList = this.resultMap.get("RedundantLicense");
+
+        String reportFolder = oatConfig.getData("reportFolder");
+
+        if (reportFolder.length() <= 0) {
+            reportFolder = "./";
+        }
+        final File dir = new File(reportFolder);
+        if (!dir.exists()) {
+            final boolean success = dir.mkdirs();
+            if (!success) {
+                OatLogUtil.warn(this.getClass().getSimpleName(), "Create dir failed");
+            }
+        }
+
+        String filePrefix = getTaskDefaultPrjName(oatTask);
+        filePrefix = filePrefix.replace("/", "_");
+        if (filePrefix.length() > 1 && filePrefix.endsWith("_")) {
+            filePrefix = filePrefix.substring(0, filePrefix.length() - 1);
+        }
+        final File resultFile = new File(reportFolder + "/" + this.reportFileName + filePrefix + ".txt");
+        OatLogUtil.println("", "Result file path:\t" + resultFile);
+        FileWriter fileWriter = null;
+        try {
+            fileWriter = new FileWriter(resultFile, false);
+        } catch (final IOException e) {
+            e.printStackTrace();
+            return this;
+        }
+        this.writer = fileWriter;
+        return this;
     }
 
+    /**
+     * Report document
+     *
+     * @param oatFileDocument OatFileDocument
+     */
     @Override
-    public void report(final Document document) throws RatException {
-        OatFileDocument oatFileDocument = null;
-        if (document instanceof OatFileDocument) {
-            oatFileDocument = (OatFileDocument) document;
-        }
-        if (oatFileDocument == null) {
-            throw new RatException("get document error");
-        }
+    public void report(final OatFileDocument oatFileDocument) {
         final MetaData metaData = oatFileDocument.getMetaData();
         String tmpString = metaData.value(MetaData.RAT_URL_APPROVED_LICENSE);
         if (tmpString != null && tmpString.equals("false")) {
@@ -158,8 +181,11 @@ public class OatOutputReport implements RatReport {
         }
     }
 
+    /**
+     * Write report to file
+     */
     @Override
-    public void endReport() throws RatException {
+    public void writeReport() {
         try {
             this.writer.write("\nInvalid File Type Total Count: " + this.archiveList.size() + "\n");
             this.writeReport(this.archiveList);
@@ -179,6 +205,8 @@ public class OatOutputReport implements RatReport {
             this.writeReport(this.importList);
             this.writer.write("\nRedundant License File Total Count: " + this.redundantLicenseList.size() + "\n");
             this.writeReport(this.redundantLicenseList);
+            this.writer.flush();
+            this.writer.close();
         } catch (final IOException e) {
             OatLogUtil.traceException(e);
         }
@@ -190,6 +218,9 @@ public class OatOutputReport implements RatReport {
         }
     }
 
+    /**
+     * @return To string
+     */
     @Override
     public String toString() {
         return "OatOutputReport{" + "archiveList=" + this.archiveList + ", compatibilityList=" + this.compatibilityList
@@ -222,14 +253,14 @@ public class OatOutputReport implements RatReport {
         @Override
         public String toString() {
             String string = "";
-            if (OatOutputReport.this.oatConfig.isPluginMode()) {
+            if (OatOutputReporter.this.oatConfig.isPluginMode()) {
                 string = "Name:\t" + this.name + "\tContent:\t" + this.content + "\tLine:\t" + this.line
                     + "\tProject:\t" + this.project + "\tFile:\t" + this.file + "\n";
             } else {
                 string = this.name + "\t" + this.content + "\t" + this.line + "\t" + this.project + "\t" + this.file
                     + "\n";
             }
-//            final String[] sss = string.split("\t");
+            //            final String[] sss = string.split("\t");
             return string;
         }
 

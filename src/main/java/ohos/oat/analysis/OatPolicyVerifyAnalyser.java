@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 Huawei Device Co., Ltd.
+ * Copyright (c) 2021-2022 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -32,7 +32,6 @@ import static org.apache.rat.api.MetaData.RAT_URL_DOCUMENT_CATEGORY;
 import static org.apache.rat.api.MetaData.RAT_URL_LICENSE_FAMILY_NAME;
 
 import ohos.oat.analysis.headermatcher.OatMatchUtils;
-import ohos.oat.config.OatConfig;
 import ohos.oat.config.OatFileFilter;
 import ohos.oat.config.OatMetaData;
 import ohos.oat.config.OatPolicy;
@@ -45,8 +44,6 @@ import ohos.oat.utils.OatLogUtil;
 
 import org.apache.rat.api.Document;
 import org.apache.rat.api.MetaData;
-import org.apache.rat.document.IDocumentAnalyser;
-import org.apache.rat.document.RatDocumentAnalysisException;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -63,56 +60,35 @@ import java.util.regex.Pattern;
  * @author chenyaxun
  * @since 1.0
  */
-public class OatPostAnalyser4Output implements IDocumentAnalyser {
-    private final OatConfig oatConfig;
-
-    /**
-     * Constructor
-     *
-     * @param initOatConfig Data structure with OAT.xml information
-     */
-    public OatPostAnalyser4Output(final OatConfig initOatConfig) {
-        this.oatConfig = initOatConfig;
-    }
+public class OatPolicyVerifyAnalyser extends AbstraceOatAnalyser {
 
     @Override
-    public void analyse(final Document subject) throws RatDocumentAnalysisException {
-        if (subject == null) {
-            return;
-        }
-
-        OatFileDocument document = null;
-        if (subject instanceof OatFileDocument) {
-            document = (OatFileDocument) subject;
-        } else {
-            return;
-        }
-
-        final MetaData metaData = document.getMetaData();
+    public void analyse() {
+        final MetaData metaData = this.oatFileDocument.getMetaData();
         final String baseDir = this.oatConfig.getBasedir();
-        final OatProject oatProject = document.getOatProject();
+        final OatProject oatProject = this.oatFileDocument.getOatProject();
         final OatPolicy oatPolicy = oatProject.getOatPolicy();
         String prjPath = oatProject.getPath();
         if (this.oatConfig.isPluginMode()) {
             prjPath = "";
         }
-        String shortFileUnderProject = document.getName().replace(baseDir + prjPath, "");
-        if (document.isDirectory()) {
+        String shortFileUnderProject = this.oatFileDocument.getName().replace(baseDir + prjPath, "");
+        if (this.oatFileDocument.isDirectory()) {
             // If the doc is directory, add "/"
-            shortFileUnderProject = (document.getName() + "/").replace(baseDir + prjPath, "");
-            this.verifyFileName(document, oatPolicy, shortFileUnderProject);
+            shortFileUnderProject = (this.oatFileDocument.getName() + "/").replace(baseDir + prjPath, "");
+            this.verifyFileName(this.oatFileDocument, oatPolicy, shortFileUnderProject);
         }
 
         final String[] defLicenseFiles = oatProject.getLicenseFiles();
-        final String name = document.getMetaData().value(RAT_URL_LICENSE_FAMILY_NAME);
-        final String LicenseHeaderText = document.getData("LicenseHeaderText");
+        final String name = this.oatFileDocument.getMetaData().value(RAT_URL_LICENSE_FAMILY_NAME);
+        final String LicenseHeaderText = this.oatFileDocument.getData("LicenseHeaderText");
         if (LicenseHeaderText != null && name != null && name.equals("InvalidLicense")) {
             OatLogUtil.warn(this.getClass().getSimpleName(),
                 oatProject.getPath() + "\tInvalidLicense\t" + shortFileUnderProject + "\t" + name + "\t"
                     + LicenseHeaderText);
         }
         boolean findIt = false;
-        if (!document.isDirectory()) {
+        if (!this.oatFileDocument.isDirectory()) {
             if (shortFileUnderProject.equals("LICENSE")) {
                 findIt = true;
                 OatLogUtil.logLicenseFile(this.getClass().getSimpleName(),
@@ -129,8 +105,8 @@ public class OatPostAnalyser4Output implements IDocumentAnalyser {
             }
         }
 
-        if (!findIt && !document.isDirectory()) {
-            final String fName = document.getFileName().toLowerCase(Locale.ENGLISH);
+        if (!findIt && !this.oatFileDocument.isDirectory()) {
+            final String fName = this.oatFileDocument.getFileName().toLowerCase(Locale.ENGLISH);
             if (!fName.contains(".") || fName.endsWith(".md") || fName.endsWith(".txt") || fName.endsWith(".html")
                 || fName.endsWith(".htm") || fName.endsWith(".pdf")) {
                 if (fName.contains("license") || fName.contains("licence") || fName.contains("copying")
@@ -142,14 +118,14 @@ public class OatPostAnalyser4Output implements IDocumentAnalyser {
                 }
             }
         }
-        OatPostAnalyser4Output.analyseProjectRoot(document, metaData, oatProject, prjPath);
-        if (document.isDirectory()) {
+        OatPolicyVerifyAnalyser.analyseProjectRoot(this.oatFileDocument, metaData, oatProject, prjPath);
+        if (this.oatFileDocument.isDirectory()) {
             return;
         }
 
         // need readfile readme.opensource and check the software version future
         // SkipedFile is only for files
-        final String isSkiped = document.getData("isSkipedFile");
+        final String isSkiped = this.oatFileDocument.getData("isSkipedFile");
         if (isSkiped.equals("true")) {
             if (this.oatConfig.getData("TraceSkippedAndIgnoredFiles").equals("true")) {
                 OatLogUtil.warn(this.getClass().getSimpleName(),
@@ -160,28 +136,28 @@ public class OatPostAnalyser4Output implements IDocumentAnalyser {
         }
 
         MetaData.Datum documentCategory = null;
-        if (OatFileUtils.isArchiveFile(document)) {
+        if (OatFileUtils.isArchiveFile(this.oatFileDocument)) {
             documentCategory = MetaData.RAT_DOCUMENT_CATEGORY_DATUM_ARCHIVE;
-            document.getMetaData().set(documentCategory);
-        } else if (OatFileUtils.isBinaryFile(document)) {
+            this.oatFileDocument.getMetaData().set(documentCategory);
+        } else if (OatFileUtils.isBinaryFile(this.oatFileDocument)) {
             documentCategory = MetaData.RAT_DOCUMENT_CATEGORY_DATUM_BINARY;
-            document.getMetaData().set(documentCategory);
+            this.oatFileDocument.getMetaData().set(documentCategory);
         }
 
         final String docType = metaData.value(RAT_URL_DOCUMENT_CATEGORY);
         if (docType != null && (docType.equals("archive") || docType.equals("binary"))) {
-            this.verifyFileType(document, oatPolicy, shortFileUnderProject);
+            this.verifyFileType(this.oatFileDocument, oatPolicy, shortFileUnderProject);
         }
 
         if (docType == null || !docType.equals("standard")) {
             return;
         }
 
-        this.verifyLicenseHeader(document, oatPolicy, shortFileUnderProject);
-        this.verifyCompatibility(document, oatPolicy, shortFileUnderProject);
-        if (!OatFileUtils.isNote(document)) {
-            this.verifyImport(document, oatPolicy, shortFileUnderProject);
-            this.verifyCopyright(document, oatPolicy, shortFileUnderProject);
+        this.verifyLicenseHeader(this.oatFileDocument, oatPolicy, shortFileUnderProject);
+        this.verifyCompatibility(this.oatFileDocument, oatPolicy, shortFileUnderProject);
+        if (!OatFileUtils.isNote(this.oatFileDocument)) {
+            this.verifyImport(this.oatFileDocument, oatPolicy, shortFileUnderProject);
+            this.verifyCopyright(this.oatFileDocument, oatPolicy, shortFileUnderProject);
         }
     }
 
@@ -190,7 +166,7 @@ public class OatPostAnalyser4Output implements IDocumentAnalyser {
         if (!document.isProjectRoot()) {
             return;
         }
-        if (!oatProject.getPath().contains("third_party")) {
+        if (!oatProject.isUpstreamPrj()) {
             final List<String> licenseFiles = document.getListData("LICENSEFILE");
             OatMetaData.setMetaData(metaData, "LicenseFile", "false");
             for (final String licenseFile : licenseFiles) {
@@ -405,11 +381,25 @@ public class OatPostAnalyser4Output implements IDocumentAnalyser {
     private boolean isMatched(final OatFileDocument subject, final String shortFilePathUnderPrj,
         final OatPolicyItem policyItem) {
         String piPath = policyItem.getPath();
+        final boolean canusepath = !piPath.startsWith("!");
+        String tmpPiPath = piPath;
+        if (!canusepath) {
+            tmpPiPath = piPath.substring(1);
+        }
+
+        if (tmpPiPath.startsWith("projectroot/")) {
+            tmpPiPath = tmpPiPath.replace("projectroot/", subject.getOatProject().getPath());
+        }
+        if (canusepath) {
+            piPath = tmpPiPath;
+        } else {
+            piPath = "!" + tmpPiPath;
+        }
         if ("projectroot".equals(piPath)) {
             // in default OAT.xml
             piPath = subject.getOatProject().getPath();
         }
-        final boolean canusepath = !piPath.startsWith("!");
+
         final OatFileFilter fileFilter = policyItem.getFileFilterObj();
         String subjectname = subject.getName();
         if (subject.isDirectory()) {
@@ -433,7 +423,7 @@ public class OatPostAnalyser4Output implements IDocumentAnalyser {
                     return false;
                 }
             } else {
-                if (OatPostAnalyser4Output.isFiltered(fileFilter, fullPathFromBasedir, fileName, subject)) {
+                if (OatPolicyVerifyAnalyser.isFiltered(fileFilter, fullPathFromBasedir, fileName, subject)) {
                     subject.putData("FilterResult:" + fileFilter.getName(), "true");
                     return false;
                 } else {
@@ -512,7 +502,7 @@ public class OatPostAnalyser4Output implements IDocumentAnalyser {
         final String thisDir = OatCfgUtil.getShortPath(this.oatConfig, subject.getName() + "/");
         String name = "";
         if (list != null && list.size() > 0) {
-            StringBuffer buffer = new StringBuffer();
+            final StringBuffer buffer = new StringBuffer();
             for (final String fileName : list) {
                 if (!fileName.contains(thisDir)) {
                     continue;
@@ -557,8 +547,8 @@ public class OatPostAnalyser4Output implements IDocumentAnalyser {
         final List<OatPolicyItem> licensePolicyItems = oatPolicy.getPolicyItems("license");
         boolean isApproved = false;
         isApproved = this.verify(subject, filePath, name, licensePolicyItems);
-        subject.getMetaData().set(
-            isApproved ? MetaData.RAT_APPROVED_LICENSE_DATIM_TRUE : MetaData.RAT_APPROVED_LICENSE_DATIM_FALSE);
+        subject.getMetaData()
+            .set(isApproved ? MetaData.RAT_APPROVED_LICENSE_DATIM_TRUE : MetaData.RAT_APPROVED_LICENSE_DATIM_FALSE);
     }
 
     private void verifyCompatibility(final OatFileDocument subject, final OatPolicy oatPolicy, final String filePath) {
@@ -590,7 +580,7 @@ public class OatPostAnalyser4Output implements IDocumentAnalyser {
                 final StringBuffer strbuilder = new StringBuffer();
                 final String[] imports = OatCfgUtil.getSplitStrings(importname);
                 if (imports != null) {
-                    this.fillImportName(subject, importPolicyItems, strbuilder, imports);
+                    OatPolicyVerifyAnalyser.fillImportName(subject, importPolicyItems, strbuilder, imports);
                 }
             }
         }
@@ -598,7 +588,7 @@ public class OatPostAnalyser4Output implements IDocumentAnalyser {
         subject.getMetaData().set(new MetaData.Datum("import-name-approval", "" + isApproved));
     }
 
-    private void fillImportName(final OatFileDocument subject, final List<OatPolicyItem> importPolicyItems,
+    private static void fillImportName(final OatFileDocument subject, final List<OatPolicyItem> importPolicyItems,
         final StringBuffer strbuilder, final String[] imports) {
         for (final String anImport : imports) {
             for (final OatPolicyItem importPolicyItem : importPolicyItems) {
@@ -701,8 +691,9 @@ public class OatPostAnalyser4Output implements IDocumentAnalyser {
                         break;
                     }
                 }
-                if (isvalid == false) {
+                if (!isvalid) {
                     endValid = false;
+                    break;
                 }
             }
 

@@ -21,11 +21,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Command line parameter processing class for converting command line parameters into OAT configuration data structures
- * extract this class to support more detection scenarios
+ * Tool class for initializing command line mode
  *
  * @author chenyaxun
- * @since 2022/08
+ * @since 2.0
  */
 public class OatCommandLineMgr {
     /**
@@ -37,7 +36,7 @@ public class OatCommandLineMgr {
     /**
      * init oat config from program command para
      *
-     * @param args commmand para
+     * @param args command line paras
      */
     public static void runCommand(final String[] args) {
         final List<IOatCommandLine> lstOatCommandLine = new ArrayList<>();
@@ -52,7 +51,7 @@ public class OatCommandLineMgr {
                 final OatConfig oatConfig = iOatCommandLine.parseArgs2Config(args);
                 if (null != oatConfig) {
                     bMatched = true;
-                    iOatCommandLine.excuteTask(oatConfig);
+                    iOatCommandLine.transmit2Executor(oatConfig);
                     return;
                 } else {
                     // Print command options of this mode only
@@ -63,6 +62,7 @@ public class OatCommandLineMgr {
             }
         }
         if (!bMatched) {
+            // Print all command options
             lstOatCommandLine.forEach(k -> k.printUsage());
             System.exit(0);
         }

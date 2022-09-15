@@ -16,32 +16,32 @@
 package ohos.oat.input;
 
 import ohos.oat.config.OatConfig;
-import ohos.oat.excutor.IOatExcutor;
-import ohos.oat.excutor.OatCollectSubProjectsExcutor;
+import ohos.oat.config.OatProject;
+import ohos.oat.config.OatTask;
+import ohos.oat.executor.IOatExecutor;
+import ohos.oat.executor.OatCollectSubProjectsExecutor;
 import ohos.oat.utils.OatCfgUtil;
 import ohos.oat.utils.OatFileUtils;
 import ohos.oat.utils.OatLogUtil;
 
 import org.apache.commons.cli.CommandLine;
-import org.apache.commons.cli.Options;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * Used to collect all projects in the directory specified by the command line
+ *
  * @author chenyaxun
- * @since 2022/08
+ * @since 2.0
  */
-public class OatCollectSubPrjectsCommandLine implements IOatCommandLine {
-    private final Options options = new Options();
-
-    private final String cmdLineSyntax = "java -jar ohos_ossaudittool-VERSION.jar ";
+public class OatCollectSubPrjectsCommandLine extends AbstractOatCommandLine {
 
     /**
      * Receive command line parameters and determine whether the command line corresponds to the operating mode
      *
-     * @param args command line paras
+     * @param args Command line arguments
      * @return Match result
      */
     @Override
@@ -83,37 +83,26 @@ public class OatCollectSubPrjectsCommandLine implements IOatCommandLine {
         if (!sourceCodeRepoPath.endsWith("/")) {
             sourceCodeRepoPath += "/";
         }
-        oatConfig.setBasedir(sourceCodeRepoPath);
+        oatConfig.setBasedir("");
+        final OatTask oatTask = new OatTask();
+        oatConfig.addTask(oatTask);
+        final OatProject oatProject = new OatProject();
+        oatProject.setPath(sourceCodeRepoPath);
+        oatTask.addProject(oatProject);
         OatLogUtil.warn(this.getClass().getSimpleName(), "CommandLine\tsourceCodeRepoPath\t" + sourceCodeRepoPath);
-
         return oatConfig;
     }
 
     /**
-     * @param oatConfig
+     * Perform tasks
+     *
+     * @param oatConfig OAT configuration data structure
      */
     @Override
-    public void excuteTask(final OatConfig oatConfig) {
-
-        final List<IOatExcutor> lstOatExcutors = new ArrayList<>();
-        lstOatExcutors.add(new OatCollectSubProjectsExcutor());
-        IOatCommandLine.excuteTask(oatConfig, lstOatExcutors);
-    }
-
-    /**
-     * @return Options
-     */
-    @Override
-    public Options getOptions() {
-        return this.options;
-    }
-
-    /**
-     * @return cmdLineSyntax
-     */
-    @Override
-    public String getCmdLineSyntax() {
-        return this.cmdLineSyntax;
+    public void transmit2Executor(final OatConfig oatConfig) {
+        final List<IOatExecutor> oatExecutors = new ArrayList<>();
+        oatExecutors.add(new OatCollectSubProjectsExecutor());
+        IOatCommandLine.transmit2Executor(oatConfig, oatExecutors);
     }
 
 }

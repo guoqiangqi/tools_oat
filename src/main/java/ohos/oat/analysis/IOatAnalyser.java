@@ -13,21 +13,29 @@
  * limitations under the License.
  */
 
-package ohos.oat.excutor;
+package ohos.oat.analysis;
 
 import ohos.oat.config.OatConfig;
+import ohos.oat.document.OatFileDocument;
 
 /**
- * OAT excutor，used to process tasks passed in by OatCommandLine
+ * IOatAnalyser, used to analyse a file, one file corresponds to one IOatAnalyser instance
  *
  * @author chenyaxun
- * @since 2022/08
+ * @since 2.0
  */
-public interface IOatExcutor {
+public interface IOatAnalyser {
+ 
+    /**
+     * Init instance
+     *
+     * @param oatConfig OAT configuration data structure
+     * @param oatFileDocument FileDocument to analyse
+     */
+    IOatAnalyser init(OatConfig oatConfig, OatFileDocument oatFileDocument);
 
     /**
-     *
-     * @param oatConfig
+     * Analyse document
      */
-    void excute(OatConfig oatConfig);
+    void analyse();
 }

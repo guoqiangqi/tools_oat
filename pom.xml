@@ -20,7 +20,7 @@
     <groupId>openharmony</groupId>
     <artifactId>ohos_ossaudittool</artifactId>
     <packaging>jar</packaging>
-    <version>1.0</version>
+    <version>2.0.0-beta.1</version>
     <build>
         <resources>
             <resource>
@@ -45,6 +45,7 @@
                 <filtering>true</filtering>
                 <includes>
                     <include>LICENSE</include>
+                    <include>NOTICE</include>
                 </includes>
             </resource>
         </resources>
@@ -82,6 +83,7 @@
                         <configuration>
                             <!-- 把依赖的所有maven jar包拷贝到lib目录中（这样所有的jar包都在lib目录中） -->
                             <outputDirectory>${project.build.directory}/libs</outputDirectory>
+                            <excludeArtifactIds>annotations,jsr305</excludeArtifactIds>
                         </configuration>
                     </execution>
                 </executions>
