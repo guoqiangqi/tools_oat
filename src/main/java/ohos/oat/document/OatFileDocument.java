@@ -46,47 +46,27 @@ import java.util.concurrent.ConcurrentHashMap;
  * @since 1.0
  */
 public class OatFileDocument extends FileDocument {
-    private final Map<String, Boolean> matchResult = new HashMap<>();
 
-    private final Map<String, String> data = new HashMap<>();
+    private OatProject oatProject;
 
     private final File file;
-
-    // This will be used in concurrent threads
-    private final Map<String, List<String>> listData = new ConcurrentHashMap<>();
-
-    private int maxline = 0;
 
     private boolean isProjectRoot = false;
 
     private boolean isDirectory = false;
 
-    private OatProject oatProject;
+    private final Map<String, String> data = new HashMap<>();
+
+    // This will be used in concurrent threads
+    private final Map<String, List<String>> listData = new ConcurrentHashMap<>();
 
     public OatFileDocument(final File file) {
         super(file);
         this.file = file;
     }
 
-    public int getMaxline() {
-        return this.maxline;
-    }
-
-    public void addMaxline() {
-        this.maxline++;
-    }
-
-    public void putMatchResult(final String matcherName, final Boolean result) {
-        this.matchResult.put(matcherName, result);
-    }
-
     public File getFile() {
         return this.file;
-    }
-
-    public Boolean getMatchResult(final String matcherName) {
-        final Boolean tmp = this.matchResult.get(matcherName);
-        return tmp != null && tmp;
     }
 
     public boolean isProjectRoot() {
