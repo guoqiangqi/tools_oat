@@ -46,7 +46,7 @@ public class OatProjectWalker extends AbstractOatFileWalker {
     public void walkProject(final OatProject oatProject) {
 
         final long startTime = System.currentTimeMillis();
-        final IReportable base = OatProjectWalker.getDirectoryWalker(this.oatConfig, oatProject);
+        final IReportable directoryWalker = OatProjectWalker.getDirectoryWalker(this.oatConfig, oatProject);
         final RatReport report = new RatReport() {
             @Override
             public void startReport() throws RatException {
@@ -63,9 +63,9 @@ public class OatProjectWalker extends AbstractOatFileWalker {
 
             }
         };
-        if (base != null) {
+        if (directoryWalker != null) {
             try {
-                base.run(report);
+                directoryWalker.run(report);
             } catch (final RatException e) {
                 throw new RuntimeException(e);
             }

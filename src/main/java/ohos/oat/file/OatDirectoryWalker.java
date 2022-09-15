@@ -79,11 +79,11 @@ public class OatDirectoryWalker extends Walker {
     /**
      * The main fuction to process all file in current project
      *
-     * @param report RatReport to run on this Directory walker.
+     * @param ratReport RatReport to run on this Directory walker.
      * @throws RatException to pass errors
      */
     @Override
-    public void run(final RatReport report) throws RatException {
+    public void run(final RatReport ratReport) throws RatException {
         final File[] files = this.file.listFiles();
         if (files == null || files.length <= 0) {
             return;
@@ -98,7 +98,7 @@ public class OatDirectoryWalker extends Walker {
             }
         }
         if (needprocess) {
-            this.process(report, this.file);
+            this.process(ratReport, this.file);
         }
     }
 
@@ -235,11 +235,11 @@ public class OatDirectoryWalker extends Walker {
     /**
      * Report on the given file.
      *
-     * @param report Rat report to process the file with
+     * @param ratReport Rat ratReport to process the file with
      * @param file the file to be reported on
      * @throws RatException exception wile process
      */
-    private void report(final RatReport report, final File file) throws RatException {
+    private void report(final RatReport ratReport, final File file) throws RatException {
         if (file == null) {
             return;
         }
@@ -258,7 +258,7 @@ public class OatDirectoryWalker extends Walker {
                 this.collectLicenseFileNames(file, document);
             }
         }
-        report.report(document);
+        ratReport.report(document);
     }
 
     private void collectLicenseFileNames(final File file, final OatFileDocument document) {
