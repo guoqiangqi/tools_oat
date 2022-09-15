@@ -71,11 +71,7 @@ public class OatFileUtils {
 
     private static final String[] ARCHIVE_FILE_EXTENSION = new String[] {
         "jar", "gz", "zip", "tar", "bz", "bz2", "rar", "war", "ear", "mar", "par", "xar", "odb", "odf", "odg", "odp",
-        "ods", "odt", "har", "sar", "wsr", "tgz", "xz", "7z", "lz4", "rpm", "deb", "img"
-    };
-
-    private static final String[] PREBUILD_FILE_EXTENSION = new String[] {
-            "scr", "elf", "bin", "ocx", "cpl", "drv", "sys", "vxd"
+        "ods", "odt", "har", "sar", "wsr"
     };
 
     /**
@@ -129,25 +125,13 @@ public class OatFileUtils {
         }
     }
 
-    private static boolean isPreBuildFile(final String name) {
-        if (name != null) {
-            final String nameToLower = name.toLowerCase(Locale.US);
-            for (int i = 0; i < OatFileUtils.PREBUILD_FILE_EXTENSION.length; ++i) {
-                if (nameToLower.endsWith("." + OatFileUtils.PREBUILD_FILE_EXTENSION[i])) {
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
-
     public static boolean isBinaryFile(final Document document) {
         final String fileName = GuessUtils.normalise(document.getName());
         final boolean isNotBinary = BinaryGuesser.isNonBinary(fileName);
         if (isNotBinary) {
             return false;
         }
-        return BinaryGuesser.isBinary(document) || isPreBuildFile(fileName);
+        return BinaryGuesser.isBinary(document);
     }
 
     public static void saveJson2File(final String jsonString, final String filePath) {
