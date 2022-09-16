@@ -19,7 +19,7 @@
 
 package ohos.oat.analysis.headermatcher;
 
-import org.apache.rat.analysis.IHeaderMatcher;
+import ohos.oat.document.IOatDocument;
 
 /**
  * New oat matcher interface to support return the header matcher id.
@@ -27,8 +27,12 @@ import org.apache.rat.analysis.IHeaderMatcher;
  * @author chenyaxun
  * @since 1.0
  */
-public interface IOatHeaderMatcher extends IHeaderMatcher {
+public interface IOatHeaderMatcher {
 
     String getMatcherId();
+
+    void reset();
+
+    boolean match(IOatDocument oatDocument, String lineString);
 
 }

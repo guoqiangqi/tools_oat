@@ -19,9 +19,9 @@
 
 package ohos.oat.analysis.headermatcher;
 
-import org.apache.rat.analysis.RatHeaderAnalysisException;
+import ohos.oat.document.IOatDocument;
+
 import org.apache.rat.analysis.license.BaseLicense;
-import org.apache.rat.api.Document;
 import org.apache.rat.api.MetaData;
 
 /**
@@ -65,7 +65,8 @@ public class OatSimplePatternLicenseMatcher extends BaseLicense implements IOatH
     }
 
     @Override
-    public boolean match(final Document subject, final String line) throws RatHeaderAnalysisException {
+    public boolean match(final IOatDocument subject, final String line) {
+
         final boolean result = this.matches(line);
         if (result) {
             this.reportLicense(subject);
@@ -73,7 +74,15 @@ public class OatSimplePatternLicenseMatcher extends BaseLicense implements IOatH
         return result;
     }
 
-    protected void reportLicense(final Document subject) {
-        super.reportOnLicense(subject);
+    protected void reportLicense(final IOatDocument subject) {
+
+        final MetaData metaData = subject.getMetaData();
+        metaData.set(new MetaData.Datum("http://org/apache/rat/meta-data#HeaderSample", this.getNotes()));
+        final String licFamilyCategory = this.getLicenseFamilyCategory();
+        metaData.set(new MetaData.Datum("http://org/apache/rat/meta-data#HeaderCategory", licFamilyCategory));
+        metaData.set(new MetaData.Datum("http://org/apache/rat/meta-data#LicenseFamilyCategory", licFamilyCategory));
+        metaData.set(
+            new MetaData.Datum("http://org/apache/rat/meta-data#LicenseFamilyName", this.getLicenseFamilyName()));
+
     }
 }

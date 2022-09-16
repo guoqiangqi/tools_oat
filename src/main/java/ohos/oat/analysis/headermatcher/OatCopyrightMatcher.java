@@ -19,10 +19,9 @@
 
 package ohos.oat.analysis.headermatcher;
 
+import ohos.oat.document.IOatDocument;
 import ohos.oat.utils.OatLogUtil;
 
-import org.apache.rat.analysis.RatHeaderAnalysisException;
-import org.apache.rat.api.Document;
 import org.apache.rat.api.MetaData;
 
 import java.util.ArrayList;
@@ -45,11 +44,11 @@ public class OatCopyrightMatcher implements IOatHeaderMatcher {
     }
 
     @Override
-    public boolean match(final Document subject, final String licensHeaderText) throws RatHeaderAnalysisException {
+    public boolean match(final IOatDocument subject, final String licensHeaderText) {
         this.line++;
-//        if (this.line > 50) {
-//            // return true;
-//        }
+        //        if (this.line > 50) {
+        //            // return true;
+        //        }
         String tmpText = licensHeaderText;
         final MetaData metaData = subject.getMetaData();
         String owner = metaData.value("copyright-owner");

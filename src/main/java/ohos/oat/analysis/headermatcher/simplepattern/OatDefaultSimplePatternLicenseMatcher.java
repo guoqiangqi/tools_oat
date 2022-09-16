@@ -21,10 +21,9 @@ package ohos.oat.analysis.headermatcher.simplepattern;
 
 import ohos.oat.analysis.headermatcher.OatMatchUtils;
 import ohos.oat.analysis.headermatcher.OatSimplePatternLicenseMatcher;
+import ohos.oat.document.IOatDocument;
 import ohos.oat.utils.OatLicenseTextUtil;
 
-import org.apache.rat.analysis.RatHeaderAnalysisException;
-import org.apache.rat.api.Document;
 import org.apache.rat.api.MetaData;
 
 /**
@@ -46,7 +45,7 @@ public class OatDefaultSimplePatternLicenseMatcher extends OatSimplePatternLicen
     }
 
     @Override
-    public boolean match(final Document subject, final String line) throws RatHeaderAnalysisException {
+    public boolean match(final IOatDocument subject, final String line) {
         final String licenseName = subject.getMetaData().value(MetaData.RAT_URL_LICENSE_FAMILY_CATEGORY);
         if (OatMatchUtils.needMatchAgain(licenseName, this.getLicenseFamilyName())) {
             // copyleft need match again

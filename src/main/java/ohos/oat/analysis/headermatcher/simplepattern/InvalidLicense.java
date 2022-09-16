@@ -20,9 +20,8 @@ import static org.apache.rat.api.MetaData.RAT_URL_LICENSE_FAMILY_CATEGORY;
 import static org.apache.rat.api.MetaData.RAT_URL_LICENSE_FAMILY_NAME;
 
 import ohos.oat.analysis.headermatcher.OatSimplePatternLicenseMatcher;
+import ohos.oat.document.IOatDocument;
 
-import org.apache.rat.analysis.RatHeaderAnalysisException;
-import org.apache.rat.api.Document;
 import org.apache.rat.api.MetaData;
 
 /**
@@ -41,7 +40,7 @@ public class InvalidLicense extends OatSimplePatternLicenseMatcher {
     }
 
     @Override
-    public boolean match(final Document pSubject, final String pLine) throws RatHeaderAnalysisException {
+    public boolean match(final IOatDocument pSubject, final String pLine) {
         this.line++;
         if (this.line > 50) {
             return true;

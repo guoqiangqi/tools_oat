@@ -19,8 +19,8 @@
 
 package ohos.oat.analysis.headermatcher;
 
-import org.apache.rat.analysis.RatHeaderAnalysisException;
-import org.apache.rat.api.Document;
+import ohos.oat.document.IOatDocument;
+
 import org.apache.rat.api.MetaData;
 
 import java.util.ArrayList;
@@ -45,8 +45,8 @@ public class OatSpdxTextLicenseExceptionMatcher extends OatFullTextLicenseMatche
     }
 
     @Override
-    public boolean match(final Document subject, final String line) throws RatHeaderAnalysisException {
-//        final String licenseName = subject.getMetaData().value(MetaData.RAT_URL_LICENSE_FAMILY_NAME);
+    public boolean match(final IOatDocument subject, final String line) {
+        //        final String licenseName = subject.getMetaData().value(MetaData.RAT_URL_LICENSE_FAMILY_NAME);
         final boolean matchResult = super.match(subject, line);
         if (!matchResult) {
             for (final String url : this.urls) {
@@ -61,7 +61,7 @@ public class OatSpdxTextLicenseExceptionMatcher extends OatFullTextLicenseMatche
     }
 
     @Override
-    protected void reportLicense(final Document subject) {
+    protected void reportLicense(final IOatDocument subject) {
         final MetaData metaData = subject.getMetaData();
         final String licenseName = metaData.value(MetaData.RAT_URL_LICENSE_FAMILY_NAME);
         final String tmpStr = licenseName == null ? "" : licenseName;

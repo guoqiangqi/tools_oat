@@ -30,6 +30,7 @@ import ohos.oat.analysis.headermatcher.OatMatchUtils;
 import ohos.oat.config.OatConfig;
 import ohos.oat.config.OatProject;
 import ohos.oat.document.OatFileDocument;
+import ohos.oat.task.IOatTaskProcessor;
 import ohos.oat.utils.OatCfgUtil;
 import ohos.oat.utils.OatLogUtil;
 
@@ -61,6 +62,8 @@ public class OatDirectoryWalker extends Walker {
     // config of this process
     private final OatConfig oatConfig;
 
+    protected IOatTaskProcessor taskProcessor;
+
     /**
      * Constructor method
      *
@@ -68,22 +71,30 @@ public class OatDirectoryWalker extends Walker {
      * @param oatProject Oat project of this walker
      * @param projectRootDir Root dir of current scanning project
      * @param filter Filter information
+     * @param taskProcessor Task Processor
      */
     public OatDirectoryWalker(final OatConfig oatConfig, final OatProject oatProject, final File projectRootDir,
-        final FilenameFilter filter) {
+        final FilenameFilter filter, final IOatTaskProcessor taskProcessor) {
         super(projectRootDir.getPath(), projectRootDir, filter);
         this.oatProject = oatProject;
         this.oatConfig = oatConfig;
+        this.taskProcessor = taskProcessor;
     }
 
     /**
-     * The main fuction to process all file in current project
+     * Not used
      *
-     * @param ratReport RatReport to run on this Directory walker.
+     * @param ratReport RatReport
      * @throws RatException to pass errors
      */
     @Override
     public void run(final RatReport ratReport) throws RatException {
+    }
+
+    /**
+     * The main fuction to process all file in current project
+     */
+    public void walkProjectFiles() {
         final File[] files = this.file.listFiles();
         if (files == null || files.length <= 0) {
             return;
@@ -98,7 +109,7 @@ public class OatDirectoryWalker extends Walker {
             }
         }
         if (needprocess) {
-            this.process(ratReport, this.file);
+            this.process(this.file);
         }
     }
 
@@ -181,36 +192,32 @@ public class OatDirectoryWalker extends Walker {
     /**
      * Process a directory, ignoring any files/directories set to be ignored.
      *
-     * @param report RatReport object to analyse this file
      * @param file File to process
-     * @throws RatException exception wile process
      */
-    private void process(final RatReport report, final File file) throws RatException {
+    private void process(final File file) {
         if (this.needCheck(file)) {
             final File[] files = file.listFiles();
             if (files != null) {
                 Arrays.sort(files, this.comparator);
                 // breadth first traversal
-                this.processNonDirectories(report, files);
-                this.processDirectories(report, files);
+                this.processNonDirectories(files);
+                this.processDirectories(files);
             }
             // Also process folder
-            this.report(report, file);
+            this.report(file);
         }
     }
 
     /**
      * Process all files in a directory
      *
-     * @param report Rat report to analyse files
      * @param files the files to analyse
-     * @throws RatException exception wile process
      */
-    private void processNonDirectories(final RatReport report, final File[] files) throws RatException {
+    private void processNonDirectories(final File[] files) {
         for (final File file : files) {
 
             if (this.needCheck(file) && this.notFilteredFile(file) && !file.isDirectory()) {
-                this.report(report, file);
+                this.report(file);
             }
         }
     }
@@ -218,15 +225,13 @@ public class OatDirectoryWalker extends Walker {
     /**
      * Process all directories
      *
-     * @param report Rat report to analyse files
      * @param files the directories to analyse
-     * @throws RatException exception wile process
      */
-    private void processDirectories(final RatReport report, final File[] files) throws RatException {
+    private void processDirectories(final File[] files) {
         for (final File file : files) {
             if (this.needCheck(file) && this.notFilteredFile(file) && file.isDirectory()) {
                 if (!this.isRestricted(file)) {
-                    this.process(report, file);
+                    this.process(file);
                 }
             }
         }
@@ -235,11 +240,9 @@ public class OatDirectoryWalker extends Walker {
     /**
      * Report on the given file.
      *
-     * @param ratReport Rat ratReport to process the file with
      * @param file the file to be reported on
-     * @throws RatException exception wile process
      */
-    private void report(final RatReport ratReport, final File file) throws RatException {
+    private void report(final File file) {
         if (file == null) {
             return;
         }
@@ -258,7 +261,7 @@ public class OatDirectoryWalker extends Walker {
                 this.collectLicenseFileNames(file, document);
             }
         }
-        ratReport.report(document);
+        this.taskProcessor.addFileDocument(document);
     }
 
     private void collectLicenseFileNames(final File file, final OatFileDocument document) {

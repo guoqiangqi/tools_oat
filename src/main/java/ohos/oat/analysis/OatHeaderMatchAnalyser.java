@@ -27,6 +27,7 @@ import org.apache.commons.io.IOUtils;
 import org.apache.rat.analysis.RatHeaderAnalysisException;
 import org.apache.rat.api.MetaData;
 
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
 
@@ -53,7 +54,7 @@ public class OatHeaderMatchAnalyser extends AbstraceOatAnalyser {
 
                 Reader reader = null;
                 try {
-                    reader = this.oatFileDocument.reader();
+                    reader = new FileReader(this.oatFileDocument.getFile());
                     final OatFileAnalyser worker = new OatFileAnalyser(reader, this.oatFileDocument, this.oatConfig);
                     worker.read();
                 } catch (final IOException e) {

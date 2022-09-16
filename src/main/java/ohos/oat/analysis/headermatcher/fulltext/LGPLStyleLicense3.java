@@ -20,8 +20,8 @@ import static org.apache.rat.api.MetaData.RAT_URL_LICENSE_FAMILY_CATEGORY;
 import static org.apache.rat.api.MetaData.RAT_URL_LICENSE_FAMILY_NAME;
 
 import ohos.oat.analysis.headermatcher.OatMatchUtils;
+import ohos.oat.document.IOatDocument;
 
-import org.apache.rat.api.Document;
 import org.apache.rat.api.MetaData;
 
 /**
@@ -39,7 +39,7 @@ public class LGPLStyleLicense3 extends OatDefaultFullTextLicenseMatcher {
     }
 
     @Override
-    protected void reportLicense(final Document subject) {
+    protected void reportLicense(final IOatDocument subject) {
         OatMatchUtils.reportGPL(subject, this.getLicenseFamilyName());
     }
 }

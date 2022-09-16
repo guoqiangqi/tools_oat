@@ -19,9 +19,9 @@
 
 package ohos.oat.analysis.headermatcher;
 
+import ohos.oat.document.IOatDocument;
 import ohos.oat.utils.OatLogUtil;
 
-import org.apache.rat.api.Document;
 import org.apache.rat.api.MetaData;
 
 import java.util.regex.Pattern;
@@ -92,7 +92,7 @@ public class OatMatchUtils {
         return false;
     }
 
-    public static void reportGPL(final Document subject, final String licenseFamilyName) {
+    public static void reportGPL(final IOatDocument subject, final String licenseFamilyName) {
         final MetaData metaData = subject.getMetaData();
         final String licenseName = metaData.value(MetaData.RAT_URL_LICENSE_FAMILY_NAME);
         final String newName;

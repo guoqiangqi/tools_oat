@@ -29,8 +29,9 @@ import com.alibaba.fastjson.JSONException;
 import com.alibaba.fastjson.JSONObject;
 
 import ohos.oat.analysis.headermatcher.OatLicense;
+import ohos.oat.document.IOatDocument;
 
-import org.apache.rat.api.Document;
+import org.apache.commons.io.IOUtils;
 import org.apache.rat.document.impl.guesser.BinaryGuesser;
 import org.apache.rat.document.impl.guesser.GuessUtils;
 
@@ -75,7 +76,7 @@ public class OatFileUtils {
     };
 
     private static final String[] PREBUILD_FILE_EXTENSION = new String[] {
-            "scr", "elf", "bin", "ocx", "cpl", "drv", "sys", "vxd"
+        "scr", "elf", "bin", "ocx", "cpl", "drv", "sys", "vxd"
     };
 
     /**
@@ -84,7 +85,7 @@ public class OatFileUtils {
      * @param document file to identify
      * @return files which donot need copyright headers
      */
-    public static boolean isNote(final Document document) {
+    public static boolean isNote(final IOatDocument document) {
         return OatFileUtils.isNote(document.getName());
     }
 
@@ -109,7 +110,7 @@ public class OatFileUtils {
         return false;
     }
 
-    public static boolean isArchiveFile(final Document document) {
+    public static boolean isArchiveFile(final IOatDocument document) {
         return OatFileUtils.isArchiveFile(document.getName());
     }
 
@@ -141,20 +142,37 @@ public class OatFileUtils {
         return false;
     }
 
-    public static boolean isBinaryFile(final Document document) {
+    public static boolean isBinaryFile(final IOatDocument document) {
         final String fileName = GuessUtils.normalise(document.getName());
         final boolean isNotBinary = BinaryGuesser.isNonBinary(fileName);
         if (isNotBinary) {
             return false;
         }
-        return BinaryGuesser.isBinary(document) || isPreBuildFile(fileName);
+        return BinaryGuesser.isBinary(document.getName()) || OatFileUtils.isBinaryDocument(document)
+            || OatFileUtils.isPreBuildFile(fileName);
+    }
+
+    private static boolean isBinaryDocument(final IOatDocument document) {
+        boolean result = false;
+        InputStream stream = null;
+
+        try {
+            stream = document.inputStream();
+            result = BinaryGuesser.isBinary(stream);
+        } catch (final IOException var7) {
+            result = false;
+        } finally {
+            IOUtils.closeQuietly(stream);
+        }
+
+        return result;
     }
 
     public static void saveJson2File(final String jsonString, final String filePath) {
         final File file = new File(filePath);
         if (!file.exists()) {
             try {
-                boolean success = file.createNewFile();
+                final boolean success = file.createNewFile();
                 if (!success) {
                     OatLogUtil.traceException(new Exception("create file error"));
                 }
@@ -172,7 +190,7 @@ public class OatFileUtils {
     }
 
     public static <T> List<T> readJsonFromFile(final String filePath, final Class<OatLicense> t) {
-//        final File file = new File(filePath);
+        //        final File file = new File(filePath);
         // if (!file.exists()) {
         //     return null;
         // }
@@ -186,7 +204,7 @@ public class OatFileUtils {
             final InputStreamReader inputStreamReader = new InputStreamReader(fileInputStream, "UTF-8");
             final BufferedReader reader = new BufferedReader(inputStreamReader);) {
             String tempString = null;
-            StringBuffer buffer = new StringBuffer();
+            final StringBuffer buffer = new StringBuffer();
             buffer.append(readJson);
             while ((tempString = reader.readLine()) != null) {
                 buffer.append(tempString);

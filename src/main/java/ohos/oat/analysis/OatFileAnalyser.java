@@ -99,6 +99,7 @@ import ohos.oat.analysis.headermatcher.simplepattern.W3CLicense;
 import ohos.oat.analysis.headermatcher.simplepattern.XConsortiumLicense;
 import ohos.oat.analysis.headermatcher.simplepattern.ZlibLibpngLicense2;
 import ohos.oat.config.OatConfig;
+import ohos.oat.document.IOatDocument;
 import ohos.oat.document.OatFileDocument;
 import ohos.oat.utils.OatCfgUtil;
 import ohos.oat.utils.OatLicenseTextUtil;
@@ -106,7 +107,6 @@ import ohos.oat.utils.OatLogUtil;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.rat.analysis.RatHeaderAnalysisException;
-import org.apache.rat.api.Document;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -182,7 +182,7 @@ public class OatFileAnalyser {
      * @param fileReader File reader of the fileDocument, not null
      * @param fileDocument FileDocument of the file to be checked, not null
      */
-    public OatFileAnalyser(final Reader fileReader, final Document fileDocument, final OatConfig oatConfig) {
+    public OatFileAnalyser(final Reader fileReader, final IOatDocument fileDocument, final OatConfig oatConfig) {
         this.fileReader = new BufferedReader(fileReader);
         if (fileDocument instanceof OatFileDocument) {
             this.fileDocument = (OatFileDocument) fileDocument;

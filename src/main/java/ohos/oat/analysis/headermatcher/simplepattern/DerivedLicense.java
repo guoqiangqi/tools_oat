@@ -19,8 +19,8 @@ package ohos.oat.analysis.headermatcher.simplepattern;
 import static org.apache.rat.api.MetaData.RAT_URL_LICENSE_FAMILY_CATEGORY;
 import static org.apache.rat.api.MetaData.RAT_URL_LICENSE_FAMILY_NAME;
 
-import org.apache.rat.analysis.RatHeaderAnalysisException;
-import org.apache.rat.api.Document;
+import ohos.oat.document.IOatDocument;
+
 import org.apache.rat.api.MetaData;
 
 /**
@@ -38,7 +38,7 @@ public class DerivedLicense extends OatDefaultSimplePatternLicenseMatcher {
     }
 
     @Override
-    public boolean match(final Document pSubject, final String pLine) throws RatHeaderAnalysisException {
+    public boolean match(final IOatDocument pSubject, final String pLine) {
         final String value = pSubject.getMetaData().value(MetaData.RAT_URL_LICENSE_FAMILY_CATEGORY);
         if (value != null && value.trim().length() > 0 && (!value.equals("InvalidLicense"))) {
             // final String licenseName = value + "DerivedLicense";

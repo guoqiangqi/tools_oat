@@ -19,8 +19,8 @@
 
 package ohos.oat.analysis.headermatcher;
 
-import org.apache.rat.analysis.RatHeaderAnalysisException;
-import org.apache.rat.api.Document;
+import ohos.oat.document.IOatDocument;
+
 import org.apache.rat.api.MetaData;
 
 /**
@@ -33,7 +33,7 @@ public class OatImportMatcher implements IOatHeaderMatcher {
     private int line;
 
     @Override
-    public boolean match(final Document subject, final String licensHeaderText) throws RatHeaderAnalysisException {
+    public boolean match(final IOatDocument subject, final String licensHeaderText) {
         this.line++;
         if (this.line > 80) {
             return true;

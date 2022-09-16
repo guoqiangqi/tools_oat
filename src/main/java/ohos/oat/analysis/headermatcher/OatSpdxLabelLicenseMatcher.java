@@ -19,11 +19,11 @@
 
 package ohos.oat.analysis.headermatcher;
 
+import ohos.oat.document.IOatDocument;
 import ohos.oat.utils.OatLogUtil;
 
-import org.apache.rat.analysis.RatHeaderAnalysisException;
 import org.apache.rat.analysis.license.BaseLicense;
-import org.apache.rat.api.Document;
+import org.apache.rat.api.MetaData;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -43,7 +43,7 @@ public class OatSpdxLabelLicenseMatcher extends BaseLicense implements IOatHeade
     }
 
     @Override
-    public boolean match(final Document pSubject, final String licenseTxt) throws RatHeaderAnalysisException {
+    public boolean match(final IOatDocument pSubject, final String licenseTxt) {
         this.line++;
         if (this.line > 50) {
             return true;
@@ -68,7 +68,7 @@ public class OatSpdxLabelLicenseMatcher extends BaseLicense implements IOatHeade
         final Matcher matcher = this.pattern.matcher(licensHeaderText);
         if (matcher.find()) {
             if (matcher.groupCount() >= 2) {
-                String cp = matcher.group(2).trim();
+                final String cp = matcher.group(2).trim();
                 final String familyCategory = this.getLicenseFamilyCategory();
                 final String familyName = this.getLicenseFamilyName();
                 this.setLicenseFamilyCategory((familyCategory == null ? "" : familyCategory) + " SPDX:" + cp);
@@ -81,6 +81,16 @@ public class OatSpdxLabelLicenseMatcher extends BaseLicense implements IOatHeade
         } else {
             return false;
         }
+    }
+
+    public final void reportOnLicense(final IOatDocument subject) {
+        final MetaData metaData = subject.getMetaData();
+        metaData.set(new MetaData.Datum("http://org/apache/rat/meta-data#HeaderSample", this.getNotes()));
+        final String licFamilyCategory = this.getLicenseFamilyCategory();
+        metaData.set(new MetaData.Datum("http://org/apache/rat/meta-data#HeaderCategory", licFamilyCategory));
+        metaData.set(new MetaData.Datum("http://org/apache/rat/meta-data#LicenseFamilyCategory", licFamilyCategory));
+        metaData.set(
+            new MetaData.Datum("http://org/apache/rat/meta-data#LicenseFamilyName", this.getLicenseFamilyName()));
     }
 
     @Override

@@ -21,8 +21,8 @@
 
 package ohos.oat.analysis.headermatcher;
 
-import org.apache.rat.analysis.RatHeaderAnalysisException;
-import org.apache.rat.api.Document;
+import ohos.oat.document.IOatDocument;
+
 import org.apache.rat.api.MetaData;
 
 import java.util.ArrayList;
@@ -45,7 +45,7 @@ public class OatSpdxTextLicenseMatcher extends OatFullTextLicenseMatcher {
     }
 
     @Override
-    public boolean match(final Document subject, final String line) throws RatHeaderAnalysisException {
+    public boolean match(final IOatDocument subject, final String line) {
         final String licenseName = subject.getMetaData().value(MetaData.RAT_URL_LICENSE_FAMILY_NAME);
         // Don't match again if doc is matched,because the longest license is matched first.
         if (OatMatchUtils.needMatchAgain(licenseName, this.getLicenseFamilyName())) {

@@ -30,9 +30,11 @@ package ohos.oat.document;
 import ohos.oat.config.OatProject;
 
 import org.apache.rat.api.MetaData;
-import org.apache.rat.document.impl.FileDocument;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -45,11 +47,15 @@ import java.util.concurrent.ConcurrentHashMap;
  * @author chenyaxun
  * @since 1.0
  */
-public class OatFileDocument extends FileDocument {
+public class OatFileDocument implements IOatDocument {
 
     private OatProject oatProject;
 
+    private final String name;
+
     private final File file;
+
+    private final MetaData metaData = new MetaData();
 
     private boolean isProjectRoot = false;
 
@@ -61,44 +67,63 @@ public class OatFileDocument extends FileDocument {
     private final Map<String, List<String>> listData = new ConcurrentHashMap<>();
 
     public OatFileDocument(final File file) {
-        super(file);
         this.file = file;
+        this.name = file.getPath().replace('\\', '/');
     }
 
+    @Override
+    public String getName() {
+        return this.name;
+    }
+
+    @Override
+    public MetaData getMetaData() {
+        return this.metaData;
+    }
+
+    @Override
     public File getFile() {
         return this.file;
     }
 
+    @Override
     public boolean isProjectRoot() {
         return this.isProjectRoot;
     }
 
+    @Override
     public void setProjectRoot(final boolean projectRoot) {
         this.isProjectRoot = projectRoot;
     }
 
+    @Override
     public boolean isDirectory() {
         return this.isDirectory;
     }
 
+    @Override
     public void setDirectory(final boolean directory) {
         this.isDirectory = directory;
     }
 
+    @Override
     public OatProject getOatProject() {
         return this.oatProject;
     }
 
+    @Override
     public void setOatProject(final OatProject oatProject) {
         this.oatProject = oatProject;
         this.getMetaData().set(new MetaData.Datum("ProjectName", oatProject.getName()));
     }
 
+    @Override
     public String getData(final String key) {
         final String tmp = this.data.get(key);
         return tmp == null ? "" : tmp;
     }
 
+    @Override
     public String getFileName() {
         final String name = this.getName();
         final int index = name.lastIndexOf("/");
@@ -109,15 +134,18 @@ public class OatFileDocument extends FileDocument {
         }
     }
 
+    @Override
     public void putData(final String key, final String value) {
         this.data.put(key, value);
     }
 
+    @Override
     public List<String> getListData(final String key) {
         final List<String> tmpList = this.listData.get(key);
         return tmpList == null ? new ArrayList<>() : tmpList;
     }
 
+    @Override
     public void addListData(final String key, final String value) {
         List<String> tmpList = this.listData.get(key);
         if (tmpList == null) {
@@ -127,11 +155,17 @@ public class OatFileDocument extends FileDocument {
         tmpList.add(value);
     }
 
+    @Override
     public void copyData(final OatFileDocument fileDocument) {
         if (fileDocument == null) {
             return;
         }
         this.listData.putAll(fileDocument.listData);
         this.data.putAll(fileDocument.data);
+    }
+
+    @Override
+    public InputStream inputStream() throws IOException {
+        return new FileInputStream(this.file);
     }
 }

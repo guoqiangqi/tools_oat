@@ -17,15 +17,9 @@ package ohos.oat.file;
 
 import ohos.oat.config.OatConfig;
 import ohos.oat.config.OatProject;
-import ohos.oat.document.OatFileDocument;
 import ohos.oat.file.filter.IOatFileFilter;
 import ohos.oat.file.filter.OatDefaultFileFilter;
 import ohos.oat.utils.OatLogUtil;
-
-import org.apache.rat.api.Document;
-import org.apache.rat.api.RatException;
-import org.apache.rat.report.IReportable;
-import org.apache.rat.report.RatReport;
 
 import java.io.File;
 
@@ -46,36 +40,17 @@ public class OatProjectWalker extends AbstractOatFileWalker {
     public void walkProject(final OatProject oatProject) {
 
         final long startTime = System.currentTimeMillis();
-        final IReportable directoryWalker = OatProjectWalker.getDirectoryWalker(this.oatConfig, oatProject);
-        final RatReport report = new RatReport() {
-            @Override
-            public void startReport() throws RatException {
+        final OatDirectoryWalker directoryWalker = this.getDirectoryWalker(this.oatConfig, oatProject);
 
-            }
-
-            @Override
-            public void report(final Document document) throws RatException {
-                OatProjectWalker.this.taskProcessor.addFileDocument((OatFileDocument) document);
-            }
-
-            @Override
-            public void endReport() throws RatException {
-
-            }
-        };
         if (directoryWalker != null) {
-            try {
-                directoryWalker.run(report);
-            } catch (final RatException e) {
-                throw new RuntimeException(e);
-            }
+            directoryWalker.walkProjectFiles();
         }
         final long costTime = (System.currentTimeMillis() - startTime) / 1000;
         OatLogUtil.warn(this.getClass().getSimpleName(),
             oatProject.getPath() + "\tWalker project costTime\t" + costTime);
     }
 
-    private static IReportable getDirectoryWalker(final OatConfig oatConfig, final OatProject oatProject) {
+    private OatDirectoryWalker getDirectoryWalker(final OatConfig oatConfig, final OatProject oatProject) {
         final String prjDirectory = OatProjectWalker.getPrjDirectory(oatConfig, oatProject);
         final File base = new File(prjDirectory);
         if (!base.exists()) {
@@ -84,7 +59,7 @@ public class OatProjectWalker extends AbstractOatFileWalker {
 
         if (base.isDirectory()) {
             final IOatFileFilter oatFileFilter = new OatDefaultFileFilter().init(oatProject);
-            return new OatDirectoryWalker(oatConfig, oatProject, base, oatFileFilter.getFilter());
+            return new OatDirectoryWalker(oatConfig, oatProject, base, oatFileFilter.getFilter(), this.taskProcessor);
         }
         return null;
     }

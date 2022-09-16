@@ -37,12 +37,12 @@ import ohos.oat.config.OatMetaData;
 import ohos.oat.config.OatPolicy;
 import ohos.oat.config.OatPolicyItem;
 import ohos.oat.config.OatProject;
+import ohos.oat.document.IOatDocument;
 import ohos.oat.document.OatFileDocument;
 import ohos.oat.utils.OatCfgUtil;
 import ohos.oat.utils.OatFileUtils;
 import ohos.oat.utils.OatLogUtil;
 
-import org.apache.rat.api.Document;
 import org.apache.rat.api.MetaData;
 
 import java.io.File;
@@ -199,7 +199,7 @@ public class OatPolicyVerifyAnalyser extends AbstraceOatAnalyser {
         }
     }
 
-    private ValidResult isValid(final Document subject, final String name, final OatPolicyItem policyItem) {
+    private ValidResult isValid(final IOatDocument subject, final String name, final OatPolicyItem policyItem) {
         final int tmp = 0; // 0:init,1:true,2:false
         String piName = policyItem.getName();
         final ValidResult validResult = new ValidResult(policyItem);

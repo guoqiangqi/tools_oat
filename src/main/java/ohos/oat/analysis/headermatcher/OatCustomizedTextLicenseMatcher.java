@@ -22,8 +22,8 @@ package ohos.oat.analysis.headermatcher;
 import static org.apache.rat.api.MetaData.RAT_URL_LICENSE_FAMILY_CATEGORY;
 import static org.apache.rat.api.MetaData.RAT_URL_LICENSE_FAMILY_NAME;
 
-import org.apache.rat.analysis.RatHeaderAnalysisException;
-import org.apache.rat.api.Document;
+import ohos.oat.document.IOatDocument;
+
 import org.apache.rat.api.MetaData;
 
 /**
@@ -40,7 +40,7 @@ public class OatCustomizedTextLicenseMatcher extends OatFullTextLicenseMatcher {
     }
 
     @Override
-    public boolean match(final Document subject, final String line) throws RatHeaderAnalysisException {
+    public boolean match(final IOatDocument subject, final String line) {
         final String licenseName = subject.getMetaData().value(MetaData.RAT_URL_LICENSE_FAMILY_NAME);
         if (licenseName == null || licenseName.equals("InvalidLicense")) {
             return super.match(subject, line);
