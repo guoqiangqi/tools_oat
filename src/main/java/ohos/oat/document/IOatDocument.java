@@ -17,12 +17,11 @@ package ohos.oat.document;
 
 import ohos.oat.config.OatProject;
 
-import org.apache.rat.api.MetaData;
-
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Document, used to represent the file to be scanned
@@ -34,7 +33,7 @@ public interface IOatDocument {
 
     String getName();
 
-    MetaData getMetaData();
+    // MetaData getMetaData();
 
     File getFile();
 
@@ -50,9 +49,9 @@ public interface IOatDocument {
 
     void setOatProject(OatProject oatProject);
 
-    String getData(String key);
-
     String getFileName();
+
+    String getData(String key);
 
     void putData(String key, String value);
 
@@ -60,7 +59,23 @@ public interface IOatDocument {
 
     void addListData(String key, String value);
 
-    void copyData(OatFileDocument fileDocument);
+    void copyData(IOatDocument fileDocument);
 
     InputStream inputStream() throws IOException;
+
+    boolean isArchive();
+
+    void setArchive(boolean archive);
+
+    boolean isBinary();
+
+    void setBinary(boolean binary);
+
+    boolean isReadable();
+
+    void setReadable(boolean binary);
+
+    Map<String, ? extends List<String>> getListData();
+
+    Map<String, String> getData();
 }

@@ -19,20 +19,15 @@
 
 package ohos.oat.analysis;
 
-import static org.apache.rat.api.MetaData.RAT_URL_DOCUMENT_CATEGORY;
-
-import ohos.oat.utils.OatFileUtils;
-
 import org.apache.commons.io.IOUtils;
 import org.apache.rat.analysis.RatHeaderAnalysisException;
-import org.apache.rat.api.MetaData;
 
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
 
 /**
- * Main analyser of oat
+ * Header match analyser, all source file content will be analysed and stored the result in document data structure.
  *
  * @author chenyaxun
  * @since 1.0
@@ -42,30 +37,20 @@ public class OatHeaderMatchAnalyser extends AbstraceOatAnalyser {
     @Override
     public void analyse() {
 
-        final MetaData.Datum documentCategory;
-
-        if (OatFileUtils.isArchiveFile(this.oatFileDocument) || OatFileUtils.isBinaryFile(this.oatFileDocument)) {
-            return;
-        } else {
-            if (this.oatFileDocument.isDirectory()) {
-                documentCategory = new MetaData.Datum(RAT_URL_DOCUMENT_CATEGORY, "Directory");
-            } else {
-                documentCategory = MetaData.RAT_DOCUMENT_CATEGORY_DATUM_STANDARD;
-
-                Reader reader = null;
-                try {
-                    reader = new FileReader(this.oatFileDocument.getFile());
-                    final OatFileAnalyser worker = new OatFileAnalyser(reader, this.oatFileDocument, this.oatConfig);
-                    worker.read();
-                } catch (final IOException e) {
-                    e.printStackTrace();
-                } catch (final RatHeaderAnalysisException e) {
-                    e.printStackTrace();
-                } finally {
-                    IOUtils.closeQuietly(reader);
-                }
+        if (this.oatFileDocument.isReadable()) {
+            Reader reader = null;
+            try {
+                reader = new FileReader(this.oatFileDocument.getFile());
+                final OatFileAnalyser worker = new OatFileAnalyser(reader, this.oatFileDocument, this.oatConfig);
+                worker.read();
+            } catch (final IOException e) {
+                e.printStackTrace();
+            } catch (final RatHeaderAnalysisException e) {
+                e.printStackTrace();
+            } finally {
+                IOUtils.closeQuietly(reader);
             }
         }
-        this.oatFileDocument.getMetaData().set(documentCategory);
+
     }
 }

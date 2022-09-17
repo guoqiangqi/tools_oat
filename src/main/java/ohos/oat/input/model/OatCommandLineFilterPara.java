@@ -31,7 +31,7 @@ public class OatCommandLineFilterPara {
      * @return OatPolicy
      */
     public static OatFileFilter getOatFileFilter(final String para) {
-        
+
         final String tmpPara = para.trim();
         final OatFileFilter oatFileFilter = new OatFileFilter();
         oatFileFilter.setDesc("Command line filter str: " + tmpPara);

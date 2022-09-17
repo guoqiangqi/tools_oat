@@ -22,7 +22,7 @@ package ohos.oat.reporter;
 
 import ohos.oat.config.OatConfig;
 import ohos.oat.config.OatTask;
-import ohos.oat.document.OatFileDocument;
+import ohos.oat.document.IOatDocument;
 
 /**
  * IOatReporter, used to generate a report from the analysis results
@@ -45,7 +45,7 @@ public interface IOatReporter {
      *
      * @param oatFileDocument OatFileDocument
      */
-    void report(OatFileDocument oatFileDocument);
+    void report(IOatDocument oatFileDocument);
 
     /**
      * Write report to file

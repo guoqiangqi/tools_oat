@@ -26,6 +26,7 @@
 
 package ohos.oat.config;
 
+import ohos.oat.document.IOatDocument;
 import ohos.oat.document.OatFileDocument;
 
 import java.io.File;
@@ -63,7 +64,7 @@ public class OatProject {
 
     private String policy;
 
-    private OatFileDocument projectFileDocument;
+    private IOatDocument projectFileDocument;
 
     private boolean isUpstreamPrj;
 
@@ -82,7 +83,7 @@ public class OatProject {
         this.setFileFilter(fileFilter);
     }
 
-    public OatFileDocument getProjectFileDocument() {
+    public IOatDocument getProjectFileDocument() {
         if (this.projectFileDocument == null) {
             // Because the sub directory files are processed before the project file,this is tmp object
             this.projectFileDocument = new OatFileDocument(new File("temp.txt"));
@@ -90,7 +91,7 @@ public class OatProject {
         return this.projectFileDocument;
     }
 
-    public void setProjectFileDocument(final OatFileDocument projectFileDocument) {
+    public void setProjectFileDocument(final IOatDocument projectFileDocument) {
         if (this.projectFileDocument != null) {
             projectFileDocument.copyData(this.projectFileDocument);
         }

@@ -16,7 +16,7 @@
 package ohos.oat.analysis;
 
 import ohos.oat.config.OatConfig;
-import ohos.oat.document.OatFileDocument;
+import ohos.oat.document.IOatDocument;
 
 /**
  * IOatAnalyser, used to analyse a file, one file corresponds to one IOatAnalyser instance
@@ -25,14 +25,14 @@ import ohos.oat.document.OatFileDocument;
  * @since 2.0
  */
 public interface IOatAnalyser {
- 
+
     /**
      * Init instance
      *
      * @param oatConfig OAT configuration data structure
      * @param oatFileDocument FileDocument to analyse
      */
-    IOatAnalyser init(OatConfig oatConfig, OatFileDocument oatFileDocument);
+    IOatAnalyser init(OatConfig oatConfig, IOatDocument oatFileDocument);
 
     /**
      * Analyse document

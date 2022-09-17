@@ -26,81 +26,77 @@
 
 package ohos.oat.analysis;
 
-import static org.apache.rat.api.MetaData.RAT_URL_LICENSE_FAMILY_NAME;
-
-import ohos.oat.analysis.headermatcher.IOatHeaderMatcher;
-import ohos.oat.analysis.headermatcher.OatCopyrightMatcher;
-import ohos.oat.analysis.headermatcher.OatCustomizedTextLicenseMatcher;
-import ohos.oat.analysis.headermatcher.OatImportMatcher;
-import ohos.oat.analysis.headermatcher.OatLicense;
-import ohos.oat.analysis.headermatcher.OatMatchUtils;
-import ohos.oat.analysis.headermatcher.OatSpdxLabelLicenseMatcher;
-import ohos.oat.analysis.headermatcher.OatSpdxTextLicenseExceptionMatcher;
-import ohos.oat.analysis.headermatcher.OatSpdxTextLicenseMatcher;
-import ohos.oat.analysis.headermatcher.fulltext.Apache2License;
-import ohos.oat.analysis.headermatcher.fulltext.BSD0ClauseLicense;
-import ohos.oat.analysis.headermatcher.fulltext.BSD1ClauseLicense;
-import ohos.oat.analysis.headermatcher.fulltext.BSD1ClauseLicense2;
-import ohos.oat.analysis.headermatcher.fulltext.BSD2ClauseLicense;
-import ohos.oat.analysis.headermatcher.fulltext.BSD2ClauseLicense2;
-import ohos.oat.analysis.headermatcher.fulltext.BSD3ClauseLicense;
-import ohos.oat.analysis.headermatcher.fulltext.BSD3ClauseLicense2;
-import ohos.oat.analysis.headermatcher.fulltext.BSD3ClauseLicense3;
-import ohos.oat.analysis.headermatcher.fulltext.BSD3ClauseLicense4;
-import ohos.oat.analysis.headermatcher.fulltext.BSD3ClauseLicense5;
-import ohos.oat.analysis.headermatcher.fulltext.BSD3ClauseLicense6;
-import ohos.oat.analysis.headermatcher.fulltext.BSD4ClauseLicense;
-import ohos.oat.analysis.headermatcher.fulltext.BSDStyleLicense;
-import ohos.oat.analysis.headermatcher.fulltext.CDDL1License;
-import ohos.oat.analysis.headermatcher.fulltext.CDDL1License2;
-import ohos.oat.analysis.headermatcher.fulltext.FreeBSDLicense;
-import ohos.oat.analysis.headermatcher.fulltext.GPL1License;
-import ohos.oat.analysis.headermatcher.fulltext.GPL2License;
-import ohos.oat.analysis.headermatcher.fulltext.GPL2WithClassPathExceptionLicense;
-import ohos.oat.analysis.headermatcher.fulltext.GPL3License;
-import ohos.oat.analysis.headermatcher.fulltext.GPLStyleLicense2;
-import ohos.oat.analysis.headermatcher.fulltext.LGPLLicense;
-import ohos.oat.analysis.headermatcher.fulltext.LGPLStyleLicense2;
-import ohos.oat.analysis.headermatcher.fulltext.LGPLStyleLicense3;
-import ohos.oat.analysis.headermatcher.fulltext.LibertyLicense2;
-import ohos.oat.analysis.headermatcher.fulltext.MITLicense;
-import ohos.oat.analysis.headermatcher.fulltext.MITLicense2;
-import ohos.oat.analysis.headermatcher.fulltext.MITLicense3;
-import ohos.oat.analysis.headermatcher.fulltext.MITLicense5;
-import ohos.oat.analysis.headermatcher.fulltext.NuttXBSDLicense;
-import ohos.oat.analysis.headermatcher.fulltext.OpenSSLLicense;
-import ohos.oat.analysis.headermatcher.fulltext.OriginalBSDLicense;
-import ohos.oat.analysis.headermatcher.fulltext.ZlibLicense;
-import ohos.oat.analysis.headermatcher.fulltext.ZopePublicLicense;
-import ohos.oat.analysis.headermatcher.simplepattern.Apache2License2;
-import ohos.oat.analysis.headermatcher.simplepattern.ApacheStyleLicense;
-import ohos.oat.analysis.headermatcher.simplepattern.ApplePublicSourceLicense;
-import ohos.oat.analysis.headermatcher.simplepattern.BSDStyleLicense2;
-import ohos.oat.analysis.headermatcher.simplepattern.BSLLicense;
-import ohos.oat.analysis.headermatcher.simplepattern.CreativeCommonsAttribution4InternationalPublicLicense;
-import ohos.oat.analysis.headermatcher.simplepattern.CurlLicense;
-import ohos.oat.analysis.headermatcher.simplepattern.DerivedLicense;
-import ohos.oat.analysis.headermatcher.simplepattern.DojoLicense;
-import ohos.oat.analysis.headermatcher.simplepattern.EndUserLicenseAgreement;
-import ohos.oat.analysis.headermatcher.simplepattern.FreeTypeProjectLicense;
-import ohos.oat.analysis.headermatcher.simplepattern.GPL2License2;
-import ohos.oat.analysis.headermatcher.simplepattern.GPLStyleLicense;
-import ohos.oat.analysis.headermatcher.simplepattern.InvalidLicense;
-import ohos.oat.analysis.headermatcher.simplepattern.LGPLStyleLicense;
-import ohos.oat.analysis.headermatcher.simplepattern.LibpngLicense;
-import ohos.oat.analysis.headermatcher.simplepattern.MITLicense1;
-import ohos.oat.analysis.headermatcher.simplepattern.MulanLicense;
-import ohos.oat.analysis.headermatcher.simplepattern.OpenSSLLicense2;
-import ohos.oat.analysis.headermatcher.simplepattern.PublicDomainLicense;
-import ohos.oat.analysis.headermatcher.simplepattern.TMF854License;
-import ohos.oat.analysis.headermatcher.simplepattern.ThirdPartyNotice;
-import ohos.oat.analysis.headermatcher.simplepattern.W3CDocLicense;
-import ohos.oat.analysis.headermatcher.simplepattern.W3CLicense;
-import ohos.oat.analysis.headermatcher.simplepattern.XConsortiumLicense;
-import ohos.oat.analysis.headermatcher.simplepattern.ZlibLibpngLicense2;
+import ohos.oat.analysis.matcher.IOatMatcher;
+import ohos.oat.analysis.matcher.copyright.OatCopyrightMatcher;
+import ohos.oat.analysis.matcher.dependency.OatImportMatcher;
+import ohos.oat.analysis.matcher.license.custom.OatCustomizedTextLicenseMatcher;
+import ohos.oat.analysis.matcher.license.full.Apache2License;
+import ohos.oat.analysis.matcher.license.full.BSD0ClauseLicense;
+import ohos.oat.analysis.matcher.license.full.BSD1ClauseLicense;
+import ohos.oat.analysis.matcher.license.full.BSD1ClauseLicense2;
+import ohos.oat.analysis.matcher.license.full.BSD2ClauseLicense;
+import ohos.oat.analysis.matcher.license.full.BSD2ClauseLicense2;
+import ohos.oat.analysis.matcher.license.full.BSD3ClauseLicense;
+import ohos.oat.analysis.matcher.license.full.BSD3ClauseLicense2;
+import ohos.oat.analysis.matcher.license.full.BSD3ClauseLicense3;
+import ohos.oat.analysis.matcher.license.full.BSD3ClauseLicense4;
+import ohos.oat.analysis.matcher.license.full.BSD3ClauseLicense5;
+import ohos.oat.analysis.matcher.license.full.BSD3ClauseLicense6;
+import ohos.oat.analysis.matcher.license.full.BSD4ClauseLicense;
+import ohos.oat.analysis.matcher.license.full.BSDStyleLicense;
+import ohos.oat.analysis.matcher.license.full.CDDL1License;
+import ohos.oat.analysis.matcher.license.full.CDDL1License2;
+import ohos.oat.analysis.matcher.license.full.FreeBSDLicense;
+import ohos.oat.analysis.matcher.license.full.GPL1License;
+import ohos.oat.analysis.matcher.license.full.GPL2License;
+import ohos.oat.analysis.matcher.license.full.GPL2WithClassPathExceptionLicense;
+import ohos.oat.analysis.matcher.license.full.GPL3License;
+import ohos.oat.analysis.matcher.license.full.GPLStyleLicense2;
+import ohos.oat.analysis.matcher.license.full.LGPLLicense;
+import ohos.oat.analysis.matcher.license.full.LGPLStyleLicense2;
+import ohos.oat.analysis.matcher.license.full.LGPLStyleLicense3;
+import ohos.oat.analysis.matcher.license.full.LibertyLicense2;
+import ohos.oat.analysis.matcher.license.full.MITLicense;
+import ohos.oat.analysis.matcher.license.full.MITLicense2;
+import ohos.oat.analysis.matcher.license.full.MITLicense3;
+import ohos.oat.analysis.matcher.license.full.MITLicense5;
+import ohos.oat.analysis.matcher.license.full.NuttXBSDLicense;
+import ohos.oat.analysis.matcher.license.full.OpenSSLLicense;
+import ohos.oat.analysis.matcher.license.full.OriginalBSDLicense;
+import ohos.oat.analysis.matcher.license.full.ZlibLicense;
+import ohos.oat.analysis.matcher.license.full.ZopePublicLicense;
+import ohos.oat.analysis.matcher.license.simple.Apache2License2;
+import ohos.oat.analysis.matcher.license.simple.ApacheStyleLicense;
+import ohos.oat.analysis.matcher.license.simple.ApplePublicSourceLicense;
+import ohos.oat.analysis.matcher.license.simple.BSDStyleLicense2;
+import ohos.oat.analysis.matcher.license.simple.BSLLicense;
+import ohos.oat.analysis.matcher.license.simple.CreativeCommonsAttribution4InternationalPublicLicense;
+import ohos.oat.analysis.matcher.license.simple.CurlLicense;
+import ohos.oat.analysis.matcher.license.simple.DerivedLicense;
+import ohos.oat.analysis.matcher.license.simple.DojoLicense;
+import ohos.oat.analysis.matcher.license.simple.EndUserLicenseAgreement;
+import ohos.oat.analysis.matcher.license.simple.FreeTypeProjectLicense;
+import ohos.oat.analysis.matcher.license.simple.GPL2License2;
+import ohos.oat.analysis.matcher.license.simple.GPLStyleLicense;
+import ohos.oat.analysis.matcher.license.simple.InvalidLicense;
+import ohos.oat.analysis.matcher.license.simple.LGPLStyleLicense;
+import ohos.oat.analysis.matcher.license.simple.LibpngLicense;
+import ohos.oat.analysis.matcher.license.simple.MITLicense1;
+import ohos.oat.analysis.matcher.license.simple.MulanLicense;
+import ohos.oat.analysis.matcher.license.simple.OpenSSLLicense2;
+import ohos.oat.analysis.matcher.license.simple.PublicDomainLicense;
+import ohos.oat.analysis.matcher.license.simple.TMF854License;
+import ohos.oat.analysis.matcher.license.simple.ThirdPartyNotice;
+import ohos.oat.analysis.matcher.license.simple.W3CDocLicense;
+import ohos.oat.analysis.matcher.license.simple.W3CLicense;
+import ohos.oat.analysis.matcher.license.simple.XConsortiumLicense;
+import ohos.oat.analysis.matcher.license.simple.ZlibLibpngLicense2;
+import ohos.oat.analysis.matcher.license.spdx.OatLicense;
+import ohos.oat.analysis.matcher.license.spdx.OatSpdxLabelLicenseMatcher;
+import ohos.oat.analysis.matcher.license.spdx.OatSpdxTextLicenseExceptionMatcher;
+import ohos.oat.analysis.matcher.license.spdx.OatSpdxTextLicenseMatcher;
 import ohos.oat.config.OatConfig;
 import ohos.oat.document.IOatDocument;
-import ohos.oat.document.OatFileDocument;
 import ohos.oat.utils.OatCfgUtil;
 import ohos.oat.utils.OatLicenseTextUtil;
 import ohos.oat.utils.OatLogUtil;
@@ -150,25 +146,25 @@ public class OatFileAnalyser {
 
     private final StringBuffer cleanHeaderText = new StringBuffer();
 
-    private final List<IOatHeaderMatcher> defaultHeaderMatchersOri = new ArrayList<>();
+    private final List<IOatMatcher> defaultHeaderMatchersOri = new ArrayList<>();
 
-    private final List<IOatHeaderMatcher> defaultHeaderMatchersClean = new ArrayList<>();
+    private final List<IOatMatcher> defaultHeaderMatchersClean = new ArrayList<>();
 
-    private final List<IOatHeaderMatcher> defaultHeaderMatchersExceptionClean = new ArrayList<>();
+    private final List<IOatMatcher> defaultHeaderMatchersExceptionClean = new ArrayList<>();
 
-    private final List<IOatHeaderMatcher> definedHeaderMatchersOri = new ArrayList<>();
+    private final List<IOatMatcher> definedHeaderMatchersOri = new ArrayList<>();
 
-    private final List<IOatHeaderMatcher> definedHeaderMatchersClean = new ArrayList<>();
+    private final List<IOatMatcher> definedHeaderMatchersClean = new ArrayList<>();
 
-    private final List<IOatHeaderMatcher> definedHeaderMatchersCleanGpl = new ArrayList<>();
+    private final List<IOatMatcher> definedHeaderMatchersCleanGpl = new ArrayList<>();
 
-    private final List<IOatHeaderMatcher> customizedHeaderMatchersClean = new ArrayList<>();
+    private final List<IOatMatcher> customizedHeaderMatchersClean = new ArrayList<>();
 
     private final BufferedReader fileReader;
 
     private final OatConfig oatConfig;
 
-    private OatFileDocument fileDocument;
+    private final IOatDocument fileDocument;
 
     private int headerLinesToRead;
 
@@ -184,11 +180,8 @@ public class OatFileAnalyser {
      */
     public OatFileAnalyser(final Reader fileReader, final IOatDocument fileDocument, final OatConfig oatConfig) {
         this.fileReader = new BufferedReader(fileReader);
-        if (fileDocument instanceof OatFileDocument) {
-            this.fileDocument = (OatFileDocument) fileDocument;
-        } else {
-            OatLogUtil.error(this.getClass().getSimpleName(), "Document invalid: " + fileDocument.getClass().getName());
-        }
+        this.fileDocument = fileDocument;
+
         this.oatConfig = oatConfig;
         if (this.fileDocument != null) {
             this.repoDisplayName = this.fileDocument.getOatProject().getPath();
@@ -339,7 +332,7 @@ public class OatFileAnalyser {
             this.fileDocument.putData("isSkipedFile", "true");
         }
         final String tmp = this.fileDocument.getData("isSkipedFile");
-        if (null != tmp && tmp.equals("true")) {
+        if (tmp.equals("true")) {
             return;
         }
 
@@ -348,68 +341,70 @@ public class OatFileAnalyser {
     }
 
     private void match() throws RatHeaderAnalysisException {
-        for (final IOatHeaderMatcher iOatHeaderMatcher : this.defaultHeaderMatchersOri) {
+        for (final IOatMatcher iOatMatcher : this.defaultHeaderMatchersOri) {
             for (final String line : this.oriHeaderTextList) {
-                if (this.matchLine(line, iOatHeaderMatcher)) {
+                if (this.matchLine(line, iOatMatcher)) {
                     break;
                 }
             }
         }
-        String licenseName = this.fileDocument.getMetaData().value(RAT_URL_LICENSE_FAMILY_NAME);
-        if (OatMatchUtils.stopWhileMatchedSpdx(licenseName)) {
+        // final String licenseName = this.fileDocument.getMetaData().value(RAT_URL_LICENSE_FAMILY_NAME);
+        String licenseName = this.fileDocument.getData("LicenseName");
+        if (IOatMatcher.stopWhileMatchedSpdx(licenseName)) {
             return;
         }
-        for (final IOatHeaderMatcher iOatHeaderMatcher : this.defaultHeaderMatchersClean) {
+        for (final IOatMatcher iOatMatcher : this.defaultHeaderMatchersClean) {
             for (final String line : this.cleanHeaderTextList) {
-                if (this.matchLine(line, iOatHeaderMatcher)) {
+                if (this.matchLine(line, iOatMatcher)) {
                     break;
                 }
             }
         }
-        for (final IOatHeaderMatcher iOatHeaderMatcher : this.definedHeaderMatchersClean) {
+        for (final IOatMatcher iOatMatcher : this.definedHeaderMatchersClean) {
             for (final String line : this.cleanHeaderTextList) {
-                if (this.matchLine(line, iOatHeaderMatcher)) {
+                if (this.matchLine(line, iOatMatcher)) {
                     break;
                 }
             }
         }
-        for (final IOatHeaderMatcher iOatHeaderMatcher : this.definedHeaderMatchersOri) {
+        for (final IOatMatcher iOatMatcher : this.definedHeaderMatchersOri) {
             for (final String line : this.oriHeaderTextList) {
-                if (this.matchLine(line, iOatHeaderMatcher)) {
+                if (this.matchLine(line, iOatMatcher)) {
                     break;
                 }
             }
         }
-        for (final IOatHeaderMatcher iOatHeaderMatcher : this.definedHeaderMatchersCleanGpl) {
+        for (final IOatMatcher iOatMatcher : this.definedHeaderMatchersCleanGpl) {
             for (final String line : this.cleanHeaderTextList) {
-                if (this.matchLine(line, iOatHeaderMatcher)) {
+                if (this.matchLine(line, iOatMatcher)) {
                     break;
                 }
             }
         }
 
-        for (final IOatHeaderMatcher iOatHeaderMatcher : this.customizedHeaderMatchersClean) {
+        for (final IOatMatcher iOatMatcher : this.customizedHeaderMatchersClean) {
             for (final String line : this.cleanHeaderTextList) {
-                if (this.matchLine(line, iOatHeaderMatcher)) {
+                if (this.matchLine(line, iOatMatcher)) {
                     break;
                 }
             }
         }
-        for (final IOatHeaderMatcher iOatHeaderMatcher : this.defaultHeaderMatchersExceptionClean) {
+        for (final IOatMatcher iOatMatcher : this.defaultHeaderMatchersExceptionClean) {
             for (final String line : this.cleanHeaderTextList) {
-                if (this.matchLine(line, iOatHeaderMatcher)) {
+                if (this.matchLine(line, iOatMatcher)) {
                     break;
                 }
             }
         }
 
-        licenseName = this.fileDocument.getMetaData().value(RAT_URL_LICENSE_FAMILY_NAME);
-        if (licenseName == null || (licenseName.equals("InvalidLicense"))) {
+        // licenseName = this.fileDocument.getMetaData().value(RAT_URL_LICENSE_FAMILY_NAME);
+        licenseName = this.fileDocument.getData("LicenseName");
+        if (licenseName.length() <= 0 || (licenseName.equals("InvalidLicense"))) {
             this.fileDocument.putData("LicenseHeaderText", this.oriHeaderText.toString().replace("\n", " "));
         }
     }
 
-    private boolean matchLine(final String line, final IOatHeaderMatcher matcher) throws RatHeaderAnalysisException {
+    private boolean matchLine(final String line, final IOatMatcher matcher) throws RatHeaderAnalysisException {
         final boolean result = matcher.match(this.fileDocument, line);
         return result;
     }

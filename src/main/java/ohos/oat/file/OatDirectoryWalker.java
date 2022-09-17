@@ -26,9 +26,10 @@
 
 package ohos.oat.file;
 
-import ohos.oat.analysis.headermatcher.OatMatchUtils;
+import ohos.oat.analysis.matcher.IOatMatcher;
 import ohos.oat.config.OatConfig;
 import ohos.oat.config.OatProject;
+import ohos.oat.document.IOatDocument;
 import ohos.oat.document.OatFileDocument;
 import ohos.oat.task.IOatTaskProcessor;
 import ohos.oat.utils.OatCfgUtil;
@@ -152,11 +153,11 @@ public class OatDirectoryWalker extends Walker {
                 }
                 return false;
             }
-            final Pattern pattern = OatMatchUtils.compilePattern(piPath);
+            final Pattern pattern = IOatMatcher.compilePattern(piPath);
             if (pattern == null) {
                 return true;
             }
-            final boolean needFilter = OatMatchUtils.matchPattern(shortPath, pattern);
+            final boolean needFilter = IOatMatcher.matchPattern(shortPath, pattern);
             if (needFilter) {
                 if (this.oatConfig.getData("TraceSkippedAndIgnoredFiles").equals("true")) {
                     OatLogUtil.warn(this.getClass().getSimpleName(),
@@ -246,7 +247,7 @@ public class OatDirectoryWalker extends Walker {
         if (file == null) {
             return;
         }
-        final OatFileDocument document = new OatFileDocument(file);
+        final IOatDocument document = new OatFileDocument(file);
         document.setOatProject(this.oatProject);
         if (this.file.getPath().equals(file.getPath())) {
             document.setProjectRoot(true);
@@ -264,7 +265,7 @@ public class OatDirectoryWalker extends Walker {
         this.taskProcessor.addFileDocument(document);
     }
 
-    private void collectLicenseFileNames(final File file, final OatFileDocument document) {
+    private void collectLicenseFileNames(final File file, final IOatDocument document) {
         if (!document.isProjectRoot()) {
             return;
         }
@@ -284,7 +285,7 @@ public class OatDirectoryWalker extends Walker {
         }
     }
 
-    private void collectFileNames(final File file, final OatFileDocument document, final File[] files) {
+    private void collectFileNames(final File file, final IOatDocument document, final File[] files) {
         for (final File file1 : files) {
             if ((!file1.isDirectory()) && this.needCheck(file) && this.notFilteredFile(file)) {
                 final String fileName = file1.getName();

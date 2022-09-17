@@ -28,7 +28,7 @@ package ohos.oat.utils;
 import com.alibaba.fastjson.JSONException;
 import com.alibaba.fastjson.JSONObject;
 
-import ohos.oat.analysis.headermatcher.OatLicense;
+import ohos.oat.analysis.matcher.license.spdx.OatLicense;
 import ohos.oat.document.IOatDocument;
 
 import org.apache.commons.io.IOUtils;
@@ -44,6 +44,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
@@ -181,7 +182,7 @@ public class OatFileUtils {
             }
         }
         try (final BufferedWriter writer = new BufferedWriter(
-            new OutputStreamWriter(new FileOutputStream(file, false), "UTF-8"));) {
+            new OutputStreamWriter(new FileOutputStream(file, false), StandardCharsets.UTF_8))) {
             writer.write("");
             writer.write(jsonString);
         } catch (final IOException e) {
@@ -201,8 +202,8 @@ public class OatFileUtils {
 
         String readJson = "";
         try (final InputStream fileInputStream = OatFileUtils.class.getResourceAsStream(filePath);
-            final InputStreamReader inputStreamReader = new InputStreamReader(fileInputStream, "UTF-8");
-            final BufferedReader reader = new BufferedReader(inputStreamReader);) {
+            final InputStreamReader inputStreamReader = new InputStreamReader(fileInputStream, StandardCharsets.UTF_8);
+            final BufferedReader reader = new BufferedReader(inputStreamReader)) {
             String tempString = null;
             final StringBuffer buffer = new StringBuffer();
             buffer.append(readJson);

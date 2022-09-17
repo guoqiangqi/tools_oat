@@ -28,8 +28,7 @@
 package ohos.oat.document;
 
 import ohos.oat.config.OatProject;
-
-import org.apache.rat.api.MetaData;
+import ohos.oat.utils.OatCfgUtil;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -55,20 +54,26 @@ public class OatFileDocument implements IOatDocument {
 
     private final File file;
 
-    private final MetaData metaData = new MetaData();
+    // private final MetaData metaData = new MetaData();
 
     private boolean isProjectRoot = false;
 
     private boolean isDirectory = false;
+
+    private boolean isArchive = false;
+
+    private boolean isBinary = false;
 
     private final Map<String, String> data = new HashMap<>();
 
     // This will be used in concurrent threads
     private final Map<String, List<String>> listData = new ConcurrentHashMap<>();
 
+    private boolean isReadable;
+
     public OatFileDocument(final File file) {
         this.file = file;
-        this.name = file.getPath().replace('\\', '/');
+        this.name = OatCfgUtil.formatPath(file.getPath());
     }
 
     @Override
@@ -76,10 +81,10 @@ public class OatFileDocument implements IOatDocument {
         return this.name;
     }
 
-    @Override
-    public MetaData getMetaData() {
-        return this.metaData;
-    }
+    // @Override
+    // public MetaData getMetaData() {
+    //     return this.metaData;
+    // }
 
     @Override
     public File getFile() {
@@ -107,6 +112,46 @@ public class OatFileDocument implements IOatDocument {
     }
 
     @Override
+    public boolean isArchive() {
+        return this.isArchive;
+    }
+
+    @Override
+    public boolean isBinary() {
+        return this.isBinary;
+    }
+
+    @Override
+    public void setArchive(final boolean archive) {
+        this.isArchive = archive;
+    }
+
+    @Override
+    public void setBinary(final boolean binary) {
+        this.isBinary = binary;
+    }
+
+    @Override
+    public boolean isReadable() {
+        return this.isReadable;
+    }
+
+    @Override
+    public void setReadable(final boolean isReadble) {
+        this.isReadable = isReadble;
+    }
+
+    @Override
+    public Map<String, ? extends List<String>> getListData() {
+        return this.listData;
+    }
+
+    @Override
+    public Map<String, String> getData() {
+        return this.data;
+    }
+
+    @Override
     public OatProject getOatProject() {
         return this.oatProject;
     }
@@ -114,7 +159,7 @@ public class OatFileDocument implements IOatDocument {
     @Override
     public void setOatProject(final OatProject oatProject) {
         this.oatProject = oatProject;
-        this.getMetaData().set(new MetaData.Datum("ProjectName", oatProject.getName()));
+        // this.getMetaData().set(new MetaData.Datum("ProjectName", oatProject.getName()));
     }
 
     @Override
@@ -156,12 +201,12 @@ public class OatFileDocument implements IOatDocument {
     }
 
     @Override
-    public void copyData(final OatFileDocument fileDocument) {
+    public void copyData(final IOatDocument fileDocument) {
         if (fileDocument == null) {
             return;
         }
-        this.listData.putAll(fileDocument.listData);
-        this.data.putAll(fileDocument.data);
+        this.listData.putAll(fileDocument.getListData());
+        this.data.putAll(fileDocument.getData());
     }
 
     @Override
