@@ -71,9 +71,14 @@ public interface IOatDocument {
 
     boolean isReadable();
 
-    void setReadable(boolean binary);
+    void setReadable(boolean readable);
+
+    boolean isLicenseNotes();
+
+    void setLicenseNotes(boolean licenseNotes);
 
     Map<String, ? extends List<String>> getListData();
 
     Map<String, String> getData();
+
 }

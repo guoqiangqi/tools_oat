@@ -35,7 +35,6 @@ import ohos.oat.config.OatPolicyItem;
 import ohos.oat.config.OatProject;
 import ohos.oat.document.IOatDocument;
 import ohos.oat.utils.OatCfgUtil;
-import ohos.oat.utils.OatFileUtils;
 import ohos.oat.utils.OatLogUtil;
 
 import java.io.File;
@@ -138,7 +137,7 @@ public class OatPolicyVerifyAnalyser extends AbstraceOatAnalyser {
 
         this.verifyLicenseHeader(this.oatFileDocument, oatPolicy, shortFileUnderProject);
         this.verifyCompatibility(this.oatFileDocument, oatPolicy, shortFileUnderProject);
-        if (!OatFileUtils.isNote(this.oatFileDocument)) {
+        if (!this.oatFileDocument.isLicenseNotes()) {
             this.verifyImport(this.oatFileDocument, oatPolicy, shortFileUnderProject);
             this.verifyCopyright(this.oatFileDocument, oatPolicy, shortFileUnderProject);
         }

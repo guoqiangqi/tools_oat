@@ -43,6 +43,9 @@ public class OatFileTypeAnalyser extends AbstraceOatAnalyser {
         } else {
             this.oatFileDocument.setReadable(true);
             this.oatFileDocument.putData("FileType", "readable");
+            if (OatFileUtils.isNote(this.oatFileDocument)) {
+                this.oatFileDocument.setLicenseNotes(true);
+            }
         }
     }
 }

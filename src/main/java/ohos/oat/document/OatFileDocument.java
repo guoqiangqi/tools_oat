@@ -69,6 +69,8 @@ public class OatFileDocument implements IOatDocument {
 
     private boolean isReadable;
 
+    private boolean isLicenseNotes;
+
     public OatFileDocument(final File file) {
         this.file = file;
         this.name = OatCfgUtil.formatPath(file.getPath());
@@ -132,6 +134,22 @@ public class OatFileDocument implements IOatDocument {
     @Override
     public void setReadable(final boolean isReadble) {
         this.isReadable = isReadble;
+    }
+
+    /**
+     * @return
+     */
+    @Override
+    public boolean isLicenseNotes() {
+        return this.isLicenseNotes;
+    }
+
+    /**
+     * @param licenseNotes
+     */
+    @Override
+    public void setLicenseNotes(final boolean licenseNotes) {
+        this.isLicenseNotes = licenseNotes;
     }
 
     @Override
