@@ -37,8 +37,6 @@ public class OatImportMatcher implements IOatMatcher {
         if (this.line > 80) {
             return true;
         }
-        // final MetaData metaData = subject.getMetaData();
-        // String tmp = metaData.value("ImportName");
         String tmp = subject.getData("ImportName");
         if (tmp == null || tmp.trim().length() == 0) {
             tmp = "NULL";
@@ -51,7 +49,6 @@ public class OatImportMatcher implements IOatMatcher {
             }
         }
 
-        // metaData.set(new MetaData.Datum("ImportName", tmp));
         subject.putData("ImportName", tmp);
 
         return false;

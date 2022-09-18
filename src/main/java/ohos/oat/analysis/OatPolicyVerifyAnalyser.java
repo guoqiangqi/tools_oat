@@ -28,9 +28,6 @@
 
 package ohos.oat.analysis;
 
-// import static org.apache.rat.api.MetaData.RAT_URL_DOCUMENT_CATEGORY;
-// import static org.apache.rat.api.MetaData.RAT_URL_LICENSE_FAMILY_NAME;
-
 import ohos.oat.analysis.matcher.IOatMatcher;
 import ohos.oat.config.OatFileFilter;
 import ohos.oat.config.OatPolicy;
@@ -76,7 +73,6 @@ public class OatPolicyVerifyAnalyser extends AbstraceOatAnalyser {
         }
 
         final String[] defLicenseFiles = oatProject.getLicenseFiles();
-        // final String name = this.oatFileDocument.getMetaData().value(RAT_URL_LICENSE_FAMILY_NAME);
         final String name = this.oatFileDocument.getData("LicenseName");
         final String LicenseHeaderText = this.oatFileDocument.getData("LicenseHeaderText");
         if (LicenseHeaderText.length() > 0 && name.length() > 0 && name.equals("InvalidLicense")) {
@@ -131,16 +127,6 @@ public class OatPolicyVerifyAnalyser extends AbstraceOatAnalyser {
             }
             return;
         }
-        // final MetaData metaData = this.oatFileDocument.getMetaData();
-        // final String docType = metaData.value(RAT_URL_DOCUMENT_CATEGORY);
-        // MetaData.Datum documentCategory = null;
-        // if (OatFileUtils.isArchiveFile(this.oatFileDocument)) {
-        //     documentCategory = MetaData.RAT_DOCUMENT_CATEGORY_DATUM_ARCHIVE;
-        //     this.oatFileDocument.getMetaData().set(documentCategory);
-        // } else if (OatFileUtils.isBinaryFile(this.oatFileDocument)) {
-        //     documentCategory = MetaData.RAT_DOCUMENT_CATEGORY_DATUM_BINARY;
-        //     this.oatFileDocument.getMetaData().set(documentCategory);
-        // }
 
         if (this.oatFileDocument.isArchive() || this.oatFileDocument.isBinary()) {
             this.verifyFileType(this.oatFileDocument, oatPolicy, shortFileUnderProject);
@@ -165,12 +151,10 @@ public class OatPolicyVerifyAnalyser extends AbstraceOatAnalyser {
         }
         if (!oatProject.isUpstreamPrj()) {
             final List<String> licenseFiles = document.getListData("LICENSEFILE");
-            // OatMetaData.setMetaData(metaData, "LicenseFile", "false");
             document.putData("Result.LicenseFile", "false");
             for (final String licenseFile : licenseFiles) {
                 final String shortFileName = licenseFile.replace(prjPath, "");
                 if (shortFileName.equals("LICENSE")) {
-                    // OatMetaData.setMetaData(metaData, "LicenseFile", "true");
                     document.putData("Result.LicenseFile", "true");
                 }
             }
@@ -192,10 +176,8 @@ public class OatPolicyVerifyAnalyser extends AbstraceOatAnalyser {
             }
         }
         if (hasAllLicense) {
-            // OatMetaData.setMetaData(metaData, "LicenseFile", "true");
             document.putData("Result.LicenseFile", "true");
         } else {
-            // OatMetaData.setMetaData(metaData, "LicenseFile", "false");
             document.putData("Result.LicenseFile", "false");
         }
     }
@@ -504,12 +486,10 @@ public class OatPolicyVerifyAnalyser extends AbstraceOatAnalyser {
             name = "NULL";
         }
         final boolean isApproved = this.verify(subject, filePath, name, fileNamePolicyItems);
-        // subject.getMetaData().set(new MetaData.Datum(outputName, "" + isApproved));
         subject.putData(outputName, "" + isApproved);
     }
 
     private void verifyFileType(final IOatDocument subject, final OatPolicy oatPolicy, final String filePath) {
-        // final String name = subject.getMetaData().value(RAT_URL_DOCUMENT_CATEGORY);
         final String name = subject.getData("FileType");
         if (name.length() == 0) {
             return;
@@ -517,18 +497,14 @@ public class OatPolicyVerifyAnalyser extends AbstraceOatAnalyser {
         final List<OatPolicyItem> fileTypePolicyItems = oatPolicy.getPolicyItems("filetype");
         boolean isApproved = false;
         isApproved = this.verify(subject, filePath, name, fileTypePolicyItems);
-        // subject.getMetaData().set(new MetaData.Datum("fileType", "" + isApproved));
         subject.putData("Result.FileType", "" + isApproved);
     }
 
     private void verifyLicenseHeader(final IOatDocument subject, final OatPolicy oatPolicy, final String filePath) {
-        // String name = subject.getMetaData().value(RAT_URL_LICENSE_FAMILY_NAME);
         String name = subject.getData("LicenseName");
 
         if (name == null || name.length() == 0) {
             subject.putData("LicenseName", "NoLicenseHeader");
-            // subject.getMetaData().set(new MetaData.Datum(MetaData.RAT_URL_HEADER_CATEGORY, "NoLicenseHeader"));
-            // subject.getMetaData().set(new MetaData.Datum(RAT_URL_LICENSE_FAMILY_NAME, "NoLicenseHeader"));
             name = "NoLicenseHeader";
         }
         if (name.contains(" AND ")) {
@@ -537,13 +513,10 @@ public class OatPolicyVerifyAnalyser extends AbstraceOatAnalyser {
         final List<OatPolicyItem> licensePolicyItems = oatPolicy.getPolicyItems("license");
         boolean isApproved = false;
         isApproved = this.verify(subject, filePath, name, licensePolicyItems);
-        // subject.getMetaData()
-        //     .set(isApproved ? MetaData.RAT_APPROVED_LICENSE_DATIM_TRUE : MetaData.RAT_APPROVED_LICENSE_DATIM_FALSE);
         subject.putData("Result.License", "" + isApproved);
     }
 
     private void verifyCompatibility(final IOatDocument subject, final OatPolicy oatPolicy, final String filePath) {
-        // String name = subject.getMetaData().value(RAT_URL_LICENSE_FAMILY_NAME);
         String name = subject.getData("LicenseName");
 
         if (name.length() == 0 || name.contains("?") || name.equals("SameLicense") || name.equals("NoLicenseHeader")) {
@@ -555,12 +528,10 @@ public class OatPolicyVerifyAnalyser extends AbstraceOatAnalyser {
         final List<OatPolicyItem> compatibilityPolicyItems = oatPolicy.getPolicyItems("compatibility");
         boolean isApproved = false;
         isApproved = this.verify(subject, filePath, name, compatibilityPolicyItems);
-        // subject.getMetaData().set(new MetaData.Datum("compatibility", "" + isApproved));
         subject.putData("Result.Compatibility", "" + isApproved);
     }
 
     private void verifyImport(final IOatDocument subject, final OatPolicy oatPolicy, final String filePath) {
-        // final String name = subject.getMetaData().value("ImportName");
         final String name = subject.getData("ImportName");
         final List<OatPolicyItem> importPolicyItems = oatPolicy.getPolicyItems("import");
         boolean isApproved = false;
@@ -569,7 +540,6 @@ public class OatPolicyVerifyAnalyser extends AbstraceOatAnalyser {
         }
         isApproved = this.verify(subject, filePath, name, importPolicyItems);
         if (!isApproved) {
-            // final String importname = subject.getMetaData().value("ImportName");
             final String importname = subject.getData("ImportName");
             if (importname.length() > 0) {
                 final StringBuffer strbuilder = new StringBuffer();
@@ -579,8 +549,6 @@ public class OatPolicyVerifyAnalyser extends AbstraceOatAnalyser {
                 }
             }
         }
-        // subject.getMetaData().set(new MetaData.Datum("import-name-type", "import/include invalid"));
-        // subject.getMetaData().set(new MetaData.Datum("import-name-approval", "" + isApproved));
         subject.putData("Result.Import", "" + isApproved);
     }
 
@@ -590,7 +558,6 @@ public class OatPolicyVerifyAnalyser extends AbstraceOatAnalyser {
             for (final OatPolicyItem importPolicyItem : importPolicyItems) {
                 if (anImport.contains(importPolicyItem.getName().replace("!", ""))) {
                     strbuilder.append(anImport).append("|");
-                    // subject.getMetaData().set(new MetaData.Datum("ImportName", strbuilder.toString()));
                     subject.putData("ImportName", strbuilder.toString());
                 }
             }
@@ -598,18 +565,14 @@ public class OatPolicyVerifyAnalyser extends AbstraceOatAnalyser {
     }
 
     private void verifyCopyright(final IOatDocument subject, final OatPolicy oatPolicy, final String filePath) {
-        // String name = subject.getMetaData().value("CopyrightOwner");
         String name = subject.getData("CopyrightOwner");
         final List<OatPolicyItem> copyrightPolicyItems = oatPolicy.getPolicyItems("copyright");
         boolean isApproved = false;
         if (name.length() == 0) {
             name = "NULL";
-            // subject.getMetaData().set(new MetaData.Datum("CopyrightOwner", name));
             subject.putData("CopyrightOwner", name);
         }
         isApproved = this.verify(subject, filePath, name, copyrightPolicyItems);
-        // subject.getMetaData().set(new MetaData.Datum("copyright-owner-approval", "" + isApproved));
-        // subject.getMetaData().set(new MetaData.Datum("copyright-owner-type", "copyright invalid"));
         subject.putData("Result.Copyright", "" + isApproved);
     }
 

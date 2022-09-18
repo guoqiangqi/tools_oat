@@ -348,7 +348,6 @@ public class OatFileAnalyser {
                 }
             }
         }
-        // final String licenseName = this.fileDocument.getMetaData().value(RAT_URL_LICENSE_FAMILY_NAME);
         String licenseName = this.fileDocument.getData("LicenseName");
         if (IOatMatcher.stopWhileMatchedSpdx(licenseName)) {
             return;
@@ -397,7 +396,6 @@ public class OatFileAnalyser {
             }
         }
 
-        // licenseName = this.fileDocument.getMetaData().value(RAT_URL_LICENSE_FAMILY_NAME);
         licenseName = this.fileDocument.getData("LicenseName");
         if (licenseName.length() <= 0 || (licenseName.equals("InvalidLicense"))) {
             this.fileDocument.putData("LicenseHeaderText", this.oriHeaderText.toString().replace("\n", " "));

@@ -49,8 +49,6 @@ public class OatCopyrightMatcher implements IOatMatcher {
         //            // return true;
         //        }
         String tmpText = licensHeaderText;
-        // final MetaData metaData = subject.getMetaData();
-        // String owner = metaData.value("CopyrightOwner");
         String owner = subject.getData("CopyrightOwner");
         final int index = tmpText.indexOf("Copyright");
         if (index >= 0) {
@@ -89,7 +87,6 @@ public class OatCopyrightMatcher implements IOatMatcher {
         if (owner == null || owner.trim().length() == 0) {
             owner = "InvalidCopyright";
         }
-        // metaData.set(new MetaData.Datum("CopyrightOwner", owner));
         subject.putData("CopyrightOwner", owner);
         return false;
     }

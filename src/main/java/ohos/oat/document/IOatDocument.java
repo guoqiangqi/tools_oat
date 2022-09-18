@@ -33,8 +33,6 @@ public interface IOatDocument {
 
     String getName();
 
-    // MetaData getMetaData();
-
     File getFile();
 
     boolean isProjectRoot();

@@ -93,8 +93,6 @@ public interface IOatMatcher {
     }
 
     static void reportGPL(final IOatDocument subject, final String licenseFamilyName) {
-        // final MetaData metaData = subject.getMetaData();
-        // final String licenseName = metaData.value(MetaData.RAT_URL_LICENSE_FAMILY_NAME);
         final String licenseName = subject.getData("LicenseName");
         final String newName;
         if (licenseName.length() == 0 || licenseName.contains("InvalidLicense")) {
@@ -102,10 +100,6 @@ public interface IOatMatcher {
         } else {
             newName = licenseName + "|" + licenseFamilyName;
         }
-        // metaData.set(new MetaData.Datum(MetaData.RAT_URL_HEADER_SAMPLE, ""));
-        // metaData.set(new MetaData.Datum(MetaData.RAT_URL_HEADER_CATEGORY, newName));
-        // metaData.set(new MetaData.Datum(MetaData.RAT_URL_LICENSE_FAMILY_CATEGORY, newName));
-        // metaData.set(new MetaData.Datum(MetaData.RAT_URL_LICENSE_FAMILY_NAME, newName));
         subject.putData("LicenseHeaderText", "");
         subject.putData("LicenseCategory", newName);
         subject.putData("LicenseName", newName);

@@ -134,14 +134,11 @@ public class OatOutputReporter extends AbstractOatReporter {
      */
     @Override
     public void report(final IOatDocument oatFileDocument) {
-        // final MetaData metaData = oatFileDocument.getMetaData();
-        // String tmpString = metaData.value(MetaData.RAT_URL_APPROVED_LICENSE);
         String tmpString = oatFileDocument.getData("Result.License");
         if (tmpString != null && tmpString.equals("false")) {
             this.licenseHeaderList.add(
                 new ReportItem("License Header Invalid", oatFileDocument.getData("LicenseName"), 0, oatFileDocument));
         }
-        // tmpString = metaData.value("copyright-owner-approval");
         tmpString = oatFileDocument.getData("Result.Copyright");
         if (tmpString != null && tmpString.equals("false")) {
 
@@ -149,28 +146,23 @@ public class OatOutputReporter extends AbstractOatReporter {
                 new ReportItem("Copyright Header Invalid", oatFileDocument.getData("CopyrightOwner"), 0,
                     oatFileDocument));
         }
-        // tmpString = metaData.value("LicenseFile");
         tmpString = oatFileDocument.getData("Result.LicenseFile");
         if (tmpString != null && tmpString.equals("false")) {
             this.licenseFileList.add(new ReportItem("No License File", "", 0, oatFileDocument));
         }
-        // tmpString = metaData.value("ReadmeOpenSource");
         tmpString = oatFileDocument.getData("Result.ReadmeOpenSource");
         if (tmpString != null && tmpString.equals("false")) {
             this.readmeOpenSourceList.add(new ReportItem("No Readme.OpenSource", "", 0, oatFileDocument));
         }
-        // tmpString = metaData.value("compatibility");
         tmpString = oatFileDocument.getData("Result.Compatibility");
         if (tmpString != null && tmpString.equals("false")) {
             this.compatibilityList.add(
                 new ReportItem("License Not Compatible", oatFileDocument.getData("LicenseName"), 0, oatFileDocument));
         }
-        // tmpString = metaData.value("Readme");
         tmpString = oatFileDocument.getData("Result.Readme");
         if (tmpString != null && tmpString.equals("false")) {
             this.readmeList.add(new ReportItem("No Readme", "", 0, oatFileDocument));
         }
-        // tmpString = metaData.value("import-name-approval");
         tmpString = oatFileDocument.getData("Result.Import");
         if (tmpString != null && tmpString.equals("false")) {
             this.importList.add(
@@ -182,7 +174,6 @@ public class OatOutputReporter extends AbstractOatReporter {
         //         new ReportItem("Redundant License File", metaData.value("RedundantLicenseFile"), 0,
         //         oatFileDocument));
         // }
-        // tmpString = metaData.value("Result.FileType");
         tmpString = oatFileDocument.getData("Result.FileType");
         if (tmpString != null && tmpString.equals("false")) {
             this.archiveList.add(

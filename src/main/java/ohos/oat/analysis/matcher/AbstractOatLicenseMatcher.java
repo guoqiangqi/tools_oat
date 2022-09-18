@@ -70,17 +70,7 @@ public abstract class AbstractOatLicenseMatcher implements IOatMatcher {
         subject.putData("LicenseHeaderText", this.getNotes());
         subject.putData("LicenseCategory", this.getLicenseFamilyCategory());
         subject.putData("LicenseName", this.getLicenseFamilyName());
-        // final MetaData metaData = subject.getMetaData();
-        // metaData.set(new MetaData.Datum("http://org/apache/rat/meta-data#HeaderSample", this.getNotes()));
-        // final String licFamilyCategory = this.getLicenseFamilyCategory();
-        // metaData.set(new MetaData.Datum("http://org/apache/rat/meta-data#HeaderCategory", licFamilyCategory));
-        // metaData.set(new MetaData.Datum("http://org/apache/rat/meta-data#LicenseFamilyCategory", licFamilyCategory));
-        // metaData.set(
-        //     new MetaData.Datum("http://org/apache/rat/meta-data#LicenseFamilyName", this.getLicenseFamilyName()));
+
     }
 
-    // public static final String RAT_URL_LICENSE_FAMILY_NAME = "http://org/apache/rat/meta-data#LicenseFamilyName";
-    // public static final String RAT_URL_HEADER_CATEGORY = "http://org/apache/rat/meta-data#HeaderCategory";
-    // public static final String RAT_URL_LICENSE_FAMILY_CATEGORY = "http://org/apache/rat/meta-data#LicenseFamilyCategory";
-    // public static final String RAT_URL_HEADER_SAMPLE = "http://org/apache/rat/meta-data#HeaderSample";
 }

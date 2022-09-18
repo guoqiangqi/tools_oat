@@ -61,18 +61,12 @@ public class OatSpdxTextLicenseExceptionMatcher extends OatFullTextLicenseMatche
 
     @Override
     protected void reportLicense(final IOatDocument subject) {
-        // final MetaData metaData = subject.getMetaData();
-        // final String licenseName = metaData.value(MetaData.RAT_URL_LICENSE_FAMILY_NAME);
         final String licenseName = subject.getData("LicenseName");
         final String tmpStr = licenseName == null ? "" : licenseName;
         final String newName = tmpStr + "-with-" + this.getLicenseFamilyName();
         if (tmpStr.toLowerCase(Locale.ENGLISH).contains("with")) {
             return;
         }
-        // metaData.set(new MetaData.Datum(MetaData.RAT_URL_HEADER_SAMPLE, ""));
-        // metaData.set(new MetaData.Datum(MetaData.RAT_URL_HEADER_CATEGORY, newName));
-        // metaData.set(new MetaData.Datum(MetaData.RAT_URL_LICENSE_FAMILY_CATEGORY, newName));
-        // metaData.set(new MetaData.Datum(MetaData.RAT_URL_LICENSE_FAMILY_NAME, newName));
         subject.putData("LicenseHeaderText", "");
         subject.putData("LicenseCategory", newName);
         subject.putData("LicenseName", newName);

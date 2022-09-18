@@ -54,8 +54,6 @@ public class OatFileDocument implements IOatDocument {
 
     private final File file;
 
-    // private final MetaData metaData = new MetaData();
-
     private boolean isProjectRoot = false;
 
     private boolean isDirectory = false;
@@ -80,11 +78,6 @@ public class OatFileDocument implements IOatDocument {
     public String getName() {
         return this.name;
     }
-
-    // @Override
-    // public MetaData getMetaData() {
-    //     return this.metaData;
-    // }
 
     @Override
     public File getFile() {
@@ -159,7 +152,6 @@ public class OatFileDocument implements IOatDocument {
     @Override
     public void setOatProject(final OatProject oatProject) {
         this.oatProject = oatProject;
-        // this.getMetaData().set(new MetaData.Datum("ProjectName", oatProject.getName()));
     }
 
     @Override
