@@ -71,9 +71,12 @@ public class OatFileDocument implements IOatDocument {
 
     private boolean isLicenseNotes;
 
+    private Status status;
+
     public OatFileDocument(final File file) {
         this.file = file;
         this.name = OatCfgUtil.formatPath(file.getPath());
+        this.status = new Status();
     }
 
     @Override
@@ -152,14 +155,20 @@ public class OatFileDocument implements IOatDocument {
         this.isLicenseNotes = licenseNotes;
     }
 
+    /**
+     * @return
+     */
     @Override
-    public Map<String, ? extends List<String>> getListData() {
-        return this.listData;
+    public Status getStatus() {
+        return this.status;
     }
 
+    /**
+     * @param status
+     */
     @Override
-    public Map<String, String> getData() {
-        return this.data;
+    public void setStatus(final Status status) {
+        this.status = status;
     }
 
     @Override
@@ -215,8 +224,9 @@ public class OatFileDocument implements IOatDocument {
         if (fileDocument == null) {
             return;
         }
-        this.listData.putAll(fileDocument.getListData());
-        this.data.putAll(fileDocument.getData());
+        final OatFileDocument oatFileDocument = (OatFileDocument) fileDocument;
+        this.listData.putAll(oatFileDocument.listData);
+        this.data.putAll(oatFileDocument.data);
     }
 
     @Override

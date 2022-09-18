@@ -36,8 +36,9 @@ import java.util.List;
  * @since 2.0
  */
 public interface IOatCommandLine {
-    String PROMPT_MESSAGE_SEPARATOR = "--------------------------------------------------------------------------";
-    String PROMPT_MESSAGE_HEADER = "options:";
+    static final String PROMPT_MESSAGE_SEPARATOR
+        = "--------------------------------------------------------------------------";
+    static final String PROMPT_MESSAGE_HEADER = "options:";
 
     /**
      * Receive command line parameters and determine whether the command line corresponds to the operating mode

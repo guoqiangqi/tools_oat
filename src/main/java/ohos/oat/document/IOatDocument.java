@@ -21,7 +21,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Document, used to represent the file to be scanned
@@ -77,8 +76,32 @@ public interface IOatDocument {
 
     void setLicenseNotes(boolean licenseNotes);
 
-    Map<String, ? extends List<String>> getListData();
+    Status getStatus();
 
-    Map<String, String> getData();
+    void setStatus(Status status);
 
+    /**
+     * Document status data structure, used to store process details
+     *
+     * @author chenyaxun
+     * @since 2.0
+     */
+    static class Status {
+        public static final String STATUS_NORMAL = "Status.Normal";
+
+        public static final String STATUS_FILTERED = "Status.Filtered";
+
+        public static final String STATUS_SKIPPED = "Status.Skipped";
+
+        private String type = Status.STATUS_NORMAL;
+
+        public String getType() {
+            return this.type;
+        }
+
+        public void setType(final String type) {
+            this.type = type;
+        }
+
+    }
 }
