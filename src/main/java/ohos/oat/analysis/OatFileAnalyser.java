@@ -415,6 +415,7 @@ public class OatFileAnalyser {
                 tmpLicenseStr = tmpLicenseStr.replace(":", "");
                 tmpLicenseStr = tmpLicenseStr.replace("\"", "");
                 tmpLicenseStr = tmpLicenseStr.replace(",", "");
+                fileDocument.addListData("README.OpenSource.LicenseName", tmpLicenseStr);
                 OatLogUtil.logLicense(this.getClass().getSimpleName(),
                     this.repoDisplayName + "\t" + "README.OpenSource\t" + tmpLicenseStr.trim());
             }
