@@ -106,6 +106,11 @@ public class OatDirectoryWalker extends Walker {
         }
         boolean needprocess = false;
         for (final File prj1LevelFile : prj1LevelFiles) {
+            if (prj1LevelFile.getName().endsWith(".git") || prj1LevelFile.getName().endsWith(".repo")
+                || prj1LevelFile.getName().endsWith(".svn")) {
+                continue;
+            }
+
             final IOatDocument prj1LevelDocument = new OatFileDocument(prj1LevelFile);
             prj1LevelDocument.setOatProject(this.oatProject);
 
@@ -113,7 +118,7 @@ public class OatDirectoryWalker extends Walker {
             final boolean needCheck = this.notFilteredPath(prj1LevelDocument);
             final boolean isNotSubPrj = this.isNotSubPrj(prj1LevelDocument);
 
-            if (needCheck && notFilteredFile && isNotSubPrj && (!prj1LevelFile.getName().endsWith(".git"))) {
+            if (needCheck && notFilteredFile && isNotSubPrj) {
                 needprocess = true;
             }
         }

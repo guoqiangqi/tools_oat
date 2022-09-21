@@ -87,20 +87,30 @@ public interface IOatDocument {
      * @since 2.0
      */
     static class Status {
-        public static final String STATUS_NORMAL = "Status.Normal";
+        public static final String FILE_STATUS_NORMAL = "Normal";
 
-        public static final String STATUS_FILTERED = "Status.Filtered";
+        public static final String FILE_STATUS_FILTERED_COMMON = "FilteredByCommon";
 
-        public static final String STATUS_SKIPPED = "Status.Skipped";
+        public static final String FILE_STATUS_FILTERED_PROJECT = "FilteredByProject";
 
-        private String type = Status.STATUS_NORMAL;
+        public static final String FILE_STATUS_FILTERED_SKIPPED = "FilteredByFileHeader";
 
-        public String getType() {
-            return this.type;
+        public static final String POLICY_STATUS_PASSED_COMMON = "PolicyPassedByCommon";
+
+        public static final String POLICY_STATUS_PASSED_PROJECT = "PolicyPassedByProject";
+
+        public static final String POLICY_STATUS_PASSED_FILTER = "PolicyPassedByFilter";
+
+        private String fileStatus = Status.FILE_STATUS_NORMAL;
+
+        private final String reason = "";
+
+        public String getFileStatus() {
+            return this.fileStatus;
         }
 
-        public void setType(final String type) {
-            this.type = type;
+        public void setFileStatus(final String fileStatus) {
+            this.fileStatus = fileStatus;
         }
 
     }
