@@ -20,7 +20,9 @@ import ohos.oat.config.OatProject;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Document, used to represent the file to be scanned
@@ -89,19 +91,23 @@ public interface IOatDocument {
     static class Status {
         public static final String FILE_STATUS_NORMAL = "Normal";
 
-        public static final String FILE_STATUS_FILTERED_COMMON = "FilteredByCommon";
+        public static final String FILE_STATUS_FILTERED_BY_COMMON = "FileFilteredByCommon";
 
-        public static final String FILE_STATUS_FILTERED_PROJECT = "FilteredByProject";
+        public static final String FILE_STATUS_FILTERED_BY_PROJECT = "FileFilteredByProject";
 
-        public static final String FILE_STATUS_FILTERED_SKIPPED = "FilteredByFileHeader";
+        public static final String FILE_STATUS_FILTERED_BY_HEADER = "FileFilteredByFileHeader";
 
-        public static final String POLICY_STATUS_PASSED_COMMON = "PolicyPassedByCommon";
+        public static final String POLICY_STATUS_PASSED_BY_COMMON = "PolicyPassedByCommon";
 
-        public static final String POLICY_STATUS_PASSED_PROJECT = "PolicyPassedByProject";
+        public static final String POLICY_STATUS_PASSED_BY_PROJECT = "PolicyPassedByProject";
 
-        public static final String POLICY_STATUS_PASSED_FILTER = "PolicyPassedByFilter";
+        public static final String POLICY_STATUS_PASSED_BY_FILTER = "PolicyPassedByFilter";
+
+        public static final String POLICY_STATUS_NO_PASSED = "PolicyNoPassed";
 
         private String fileStatus = Status.FILE_STATUS_NORMAL;
+
+        private final Map<String, String> policyStatusMap = new HashMap<>();
 
         private final String reason = "";
 
@@ -111,6 +117,27 @@ public interface IOatDocument {
 
         public void setFileStatus(final String fileStatus) {
             this.fileStatus = fileStatus;
+        }
+
+        public String getPolicyStatus(final String policyId) {
+            final String status = this.policyStatusMap.get(policyId);
+            return status == null ? "" : status;
+        }
+
+        public void setPolicyStatusPassedByCommon(final String policyId) {
+            this.policyStatusMap.put(policyId, Status.POLICY_STATUS_PASSED_BY_COMMON);
+        }
+
+        public void setPolicyStatusPassedByProject(final String policyId) {
+            this.policyStatusMap.put(policyId, Status.POLICY_STATUS_PASSED_BY_PROJECT);
+        }
+
+        public void setPolicyStatusPassedByFilter(final String policyId) {
+            this.policyStatusMap.put(policyId, Status.POLICY_STATUS_PASSED_BY_FILTER);
+        }
+
+        public void setPolicyStatusNoPassed(final String policyId) {
+            this.policyStatusMap.put(policyId, Status.POLICY_STATUS_NO_PASSED);
         }
 
     }
