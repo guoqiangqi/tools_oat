@@ -115,10 +115,14 @@ public class OatDirectoryWalker extends Walker {
             prj1LevelDocument.setOatProject(this.oatProject);
 
             final boolean notFilteredFile = this.notFilteredFile(prj1LevelDocument);
-            final boolean needCheck = this.notFilteredPath(prj1LevelDocument);
+            if (!notFilteredFile) {
+                this.filteredFilePath2Document.put(prj1LevelDocument.getFile().getPath(), prj1LevelDocument);
+                prj1LevelDocument.getStatus().setFileStatusFilteredByCommon();
+            }
+            final boolean notFilteredPath = this.notFilteredPath(prj1LevelDocument);
             final boolean isNotSubPrj = this.isNotSubPrj(prj1LevelDocument);
 
-            if (needCheck && notFilteredFile && isNotSubPrj) {
+            if (notFilteredPath && notFilteredFile && isNotSubPrj) {
                 needprocess = true;
             }
         }

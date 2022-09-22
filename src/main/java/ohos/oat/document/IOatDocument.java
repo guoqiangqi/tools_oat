@@ -119,6 +119,22 @@ public interface IOatDocument {
             this.fileStatus = fileStatus;
         }
 
+        public void setFileStatusNormal() {
+            this.fileStatus = Status.FILE_STATUS_NORMAL;
+        }
+
+        public void setFileStatusFilteredByCommon() {
+            this.fileStatus = Status.FILE_STATUS_FILTERED_BY_COMMON;
+        }
+
+        public void setFileStatusFilteredByProject() {
+            this.fileStatus = Status.FILE_STATUS_FILTERED_BY_PROJECT;
+        }
+
+        public void setFileStatusFilteredByHeader() {
+            this.fileStatus = Status.FILE_STATUS_FILTERED_BY_HEADER;
+        }
+
         public String getPolicyStatus(final String policyId) {
             final String status = this.policyStatusMap.get(policyId);
             return status == null ? "" : status;
