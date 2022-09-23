@@ -91,6 +91,8 @@ public interface IOatDocument {
     static class Status {
         public static final String FILE_STATUS_NORMAL = "Normal";
 
+        public static final String FILE_STATUS_FILTERED = "FileFiltered";
+
         public static final String FILE_STATUS_FILTERED_BY_COMMON = "FileFilteredByCommon";
 
         public static final String FILE_STATUS_FILTERED_BY_PROJECT = "FileFilteredByProject";
@@ -107,32 +109,70 @@ public interface IOatDocument {
 
         private String fileStatus = Status.FILE_STATUS_NORMAL;
 
-        private final Map<String, String> policyStatusMap = new HashMap<>();
+        private String fileStatusRule = "";
 
-        private final String reason = "";
+        private String fileStatusDesc = "";
+
+        private final Map<String, String> policyStatusMap = new HashMap<>();
 
         public String getFileStatus() {
             return this.fileStatus;
-        }
-
-        public void setFileStatus(final String fileStatus) {
-            this.fileStatus = fileStatus;
         }
 
         public void setFileStatusNormal() {
             this.fileStatus = Status.FILE_STATUS_NORMAL;
         }
 
+        public boolean isFileStatusNormal() {
+            return Status.FILE_STATUS_NORMAL.equals(this.fileStatus);
+        }
+
+        public void setFileStatusFiltered() {
+            this.fileStatus = Status.FILE_STATUS_FILTERED;
+        }
+
+        public boolean isFileStatusFiltered() {
+            return Status.FILE_STATUS_FILTERED.equals(this.fileStatus);
+        }
+
         public void setFileStatusFilteredByCommon() {
             this.fileStatus = Status.FILE_STATUS_FILTERED_BY_COMMON;
+        }
+
+        public boolean isFileStatusFilteredByCommon() {
+            return Status.FILE_STATUS_FILTERED_BY_COMMON.equals(this.fileStatus);
         }
 
         public void setFileStatusFilteredByProject() {
             this.fileStatus = Status.FILE_STATUS_FILTERED_BY_PROJECT;
         }
 
+        public boolean isFileStatusFilteredByProject() {
+            return Status.FILE_STATUS_FILTERED_BY_PROJECT.equals(this.fileStatus);
+        }
+
         public void setFileStatusFilteredByHeader() {
             this.fileStatus = Status.FILE_STATUS_FILTERED_BY_HEADER;
+        }
+
+        public boolean isFileStatusFilteredByHeader() {
+            return Status.FILE_STATUS_FILTERED_BY_HEADER.equals(this.fileStatus);
+        }
+
+        public String getFileStatusRule() {
+            return this.fileStatusRule;
+        }
+
+        public void setFileStatusRule(final String fileStatusRule) {
+            this.fileStatusRule = fileStatusRule;
+        }
+
+        public String getFileStatusDesc() {
+            return this.fileStatusDesc;
+        }
+
+        public void setFileStatusDesc(final String fileStatusDesc) {
+            this.fileStatusDesc = fileStatusDesc;
         }
 
         public String getPolicyStatus(final String policyId) {

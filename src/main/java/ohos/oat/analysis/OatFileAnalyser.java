@@ -330,6 +330,8 @@ public class OatFileAnalyser {
         IOUtils.closeQuietly(this.fileReader);
         if (this.processLineCount - this.headerLinesToRead < 3) {
             this.fileDocument.putData("isSkipedFile", "true");
+            this.fileDocument.getStatus().setFileStatusFilteredByHeader();
+            this.fileDocument.getStatus().setFileStatusRule("The file lines < 3");
         }
         final String tmp = this.fileDocument.getData("isSkipedFile");
         if (tmp.equals("true")) {
@@ -415,7 +417,7 @@ public class OatFileAnalyser {
                 tmpLicenseStr = tmpLicenseStr.replace(":", "");
                 tmpLicenseStr = tmpLicenseStr.replace("\"", "");
                 tmpLicenseStr = tmpLicenseStr.replace(",", "");
-                fileDocument.addListData("README.OpenSource.LicenseName", tmpLicenseStr);
+                this.fileDocument.addListData("README.OpenSource.LicenseName", tmpLicenseStr);
                 OatLogUtil.logLicense(this.getClass().getSimpleName(),
                     this.repoDisplayName + "\t" + "README.OpenSource\t" + tmpLicenseStr.trim());
             }
@@ -438,6 +440,8 @@ public class OatFileAnalyser {
             for (final String skipString : OatFileAnalyser.SKIP_STRINGS) {
                 if (line.contains(skipString)) {
                     this.fileDocument.putData("isSkipedFile", "true");
+                    this.fileDocument.getStatus().setFileStatusFilteredByHeader();
+                    this.fileDocument.getStatus().setFileStatusRule("Skip words:" + skipString);
                     return false;
                 }
             }

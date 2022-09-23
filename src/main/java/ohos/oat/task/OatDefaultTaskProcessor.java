@@ -106,6 +106,9 @@ public class OatDefaultTaskProcessor extends AbstractOatTaskProcessor {
                 @Override
                 public void run() {
                     for (final IOatDocument oatFileDocument : oatFileDocuments) {
+                        if (!oatFileDocument.getStatus().isFileStatusNormal()) {
+                            continue;
+                        }
                         final List<IOatAnalyser> oatAnalysers = new ArrayList<>();
                         final IOatAnalyser oatFileTypeAnalyser = new OatFileTypeAnalyser();
                         oatFileTypeAnalyser.init(OatDefaultTaskProcessor.this.oatConfig, oatFileDocument);

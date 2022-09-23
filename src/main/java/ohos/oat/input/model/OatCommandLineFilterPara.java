@@ -50,12 +50,12 @@ public class OatCommandLineFilterPara {
             if (kstring.equals("filename")) {
                 final String[] valueparts = OatCfgUtil.getSplitStrings(vstring); // part split by |
                 for (final String valuepart : valueparts) {
-                    oatFileFilter.addFilterItem(valuepart);
+                    oatFileFilter.addFilterItem(valuepart, "");
                 }
             } else if (kstring.equals("filepath")) {
                 final String[] valueparts = OatCfgUtil.getSplitStrings(vstring); // part split by |
                 for (final String valuepart : valueparts) {
-                    oatFileFilter.addFilePathFilterItem(valuepart);
+                    oatFileFilter.addFilePathFilterItem(valuepart, "");
                 }
             } else {
                 return null;

@@ -118,14 +118,17 @@ public class OatPolicyVerifyAnalyser extends AbstraceOatAnalyser {
         // need readfile readme.opensource and check the software version future
         // SkipedFile is only for files
         final String isSkiped = this.oatFileDocument.getData("isSkipedFile");
-        if (isSkiped.equals("true")) {
-            if (this.oatConfig.getData("TraceSkippedAndIgnoredFiles").equals("true")) {
-                OatLogUtil.warn(this.getClass().getSimpleName(),
-                    oatProject.getPath() + "\tSkipedFile\t" + shortFileUnderProject);
-
-            }
+        if (!this.oatFileDocument.getStatus().isFileStatusNormal()) {
             return;
         }
+        // if (isSkiped.equals("true")) {
+        //     if (this.oatConfig.getData("TraceSkippedAndIgnoredFiles").equals("true")) {
+        //         OatLogUtil.warn(this.getClass().getSimpleName(),
+        //             oatProject.getPath() + "\tSkipedFile\t" + shortFileUnderProject);
+        //
+        //     }
+        //     return;
+        // }
 
         if (this.oatFileDocument.isArchive() || this.oatFileDocument.isBinary()) {
             this.verifyFileType(this.oatFileDocument, oatPolicy, shortFileUnderProject);
