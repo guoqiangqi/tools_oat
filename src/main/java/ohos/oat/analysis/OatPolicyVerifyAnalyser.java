@@ -117,7 +117,7 @@ public class OatPolicyVerifyAnalyser extends AbstraceOatAnalyser {
 
         // need readfile readme.opensource and check the software version future
         // SkipedFile is only for files
-        final String isSkiped = this.oatFileDocument.getData("isSkipedFile");
+        // final String isSkiped = this.oatFileDocument.getData("isSkipedFile");
         if (!this.oatFileDocument.getStatus().isFileStatusNormal()) {
             return;
         }
@@ -307,7 +307,7 @@ public class OatPolicyVerifyAnalyser extends AbstraceOatAnalyser {
         boolean endApproved = true;
 
         for (final String singleName : names) {
-            if (singleName == null || singleName.trim().length() <= 0) {
+            if (singleName == null || singleName.trim().length() == 0) {
                 continue;
             }
             final boolean mayIsApproved = this.isApproved(subject, filePath, singleName, mayList);
@@ -389,11 +389,17 @@ public class OatPolicyVerifyAnalyser extends AbstraceOatAnalyser {
             final String lastFilterResult = subject.getData("FilterResult:" + fileFilter.getName());
             if (null != lastFilterResult && lastFilterResult.length() > 0) {
                 if (lastFilterResult.equals("true")) {
+                    final String policyId = policyItem.getType() + policyItem.getName();
+                    subject.getStatus().setPolicyStatusPassedByFilter(policyId);
+                    subject.getStatus().setPolicyStatusData(policyId + "Filter", fileFilter.toString());
                     return false;
                 }
             } else {
                 if (OatPolicyVerifyAnalyser.isFiltered(fileFilter, fullPathFromBasedir, fileName, subject)) {
                     subject.putData("FilterResult:" + fileFilter.getName(), "true");
+                    final String policyId = policyItem.getType() + policyItem.getName();
+                    subject.getStatus().setPolicyStatusPassedByFilter(policyId);
+                    subject.getStatus().setPolicyStatusData(policyId + "Filter", fileFilter.toString());
                     return false;
                 } else {
                     subject.putData("FilterResult:" + fileFilter.getName(), "false");
@@ -467,19 +473,21 @@ public class OatPolicyVerifyAnalyser extends AbstraceOatAnalyser {
 
     private void checkFileInDir(final IOatDocument subject, final String filePath,
         final List<OatPolicyItem> fileNamePolicyItems, final String policyFileName, final String outputName) {
-        final List<String> list = subject.getOatProject().getProjectFileDocument().getListData(policyFileName);
-        final String thisDir = OatCfgUtil.getShortPath(this.oatConfig, subject.getName() + "/");
+        final List<String> correctFileShortPathList = subject.getOatProject()
+            .getProjectFileDocument()
+            .getListData(policyFileName);
+        final String thisFileShortPath = OatCfgUtil.getShortPath(this.oatConfig, subject.getName() + "/");
         String name = "";
-        if (list != null && list.size() > 0) {
+        if (correctFileShortPathList != null && correctFileShortPathList.size() > 0) {
             final StringBuffer buffer = new StringBuffer();
-            for (final String fileName : list) {
-                if (!fileName.contains(thisDir)) {
+            for (final String correctFileShortPath : correctFileShortPathList) {
+                if (!correctFileShortPath.contains(thisFileShortPath)) {
                     continue;
                 }
-                final String tmpStr = fileName.replace(thisDir, "");
+                final String tmpStr = correctFileShortPath.replace(thisFileShortPath, "");
                 if (!tmpStr.contains("/")) {
                     // only check files in this dir layer
-                    buffer.append(name).append(" ").append(fileName);
+                    buffer.append(name).append(" ").append(correctFileShortPath);
                 }
             }
             name = buffer.toString();

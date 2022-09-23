@@ -180,6 +180,10 @@ public interface IOatDocument {
             return status == null ? "" : status;
         }
 
+        public void setPolicyStatusData(final String policyIdDataKey, final String value) {
+            this.policyStatusMap.put(policyIdDataKey, value);
+        }
+
         public void setPolicyStatusPassedByCommon(final String policyId) {
             this.policyStatusMap.put(policyId, Status.POLICY_STATUS_PASSED_BY_COMMON);
         }
