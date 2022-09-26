@@ -246,38 +246,69 @@ public class OatPolicyVerifyAnalyser extends AbstraceOatAnalyser {
     private static boolean isFiltered(final OatFileFilter fileFilter, final String fullPathFromBasedir,
         final String fileName, final IOatDocument subject) {
         if (fileName != null && fileName.length() > 0) {
-            for (String fileFilterItem : fileFilter.getFileFilterItems()) {
+            for (final String fileFilterItem : fileFilter.getFileFilterItems()) {
                 // 用文件名匹配，如果匹配成功，则本策略要忽略此文件，故返回false
+
+                final String lastFilterResult = subject.getData(
+                    "FileFilterResult:" + fileFilter.getName() + ":" + fileFilterItem);
+                if (lastFilterResult.length() > 0) {
+                    if (lastFilterResult.equals("true")) {
+                        return true;
+                    } else {
+                        continue;
+                    }
+                }
+
                 Pattern pattern = null;
                 try {
-                    fileFilterItem = fileFilterItem.replace(subject.getOatProject().getPath(), "");
-                    fileFilterItem = fileFilterItem.replace("*", ".*");
-                    pattern = IOatMatcher.compilePattern(fileFilterItem);
+                    String tmpFilterItem = fileFilterItem.replace(subject.getOatProject().getPath(), "");
+                    tmpFilterItem = tmpFilterItem.replace("*", ".*");
+                    pattern = IOatMatcher.compilePattern(tmpFilterItem);
                 } catch (final Exception e) {
                     OatLogUtil.traceException(e);
+                    subject.putData("FileFilterResult:" + fileFilter.getName() + ":" + fileFilterItem, "false");
                     return false;
                 }
                 if (pattern == null) {
+                    subject.putData("FileFilterResult:" + fileFilter.getName() + ":" + fileFilterItem, "false");
                     return false;
                 }
                 final boolean needFilter = IOatMatcher.matchPattern(fileName, pattern);
                 if (needFilter) {
                     // need add reason desc to print all message in output file future
+                    subject.putData("FileFilterResult:" + fileFilter.getName() + ":" + fileFilterItem, "true");
                     return true;
+                } else {
+                    subject.putData("FileFilterResult:" + fileFilter.getName() + ":" + fileFilterItem, "false");
                 }
+
             }
         }
 
         for (final String filePathFilterItem : fileFilter.getOatFilePathFilterItems()) {
             // 用从根目录开始的路径匹配，如果匹配成功，则本策略要忽略此文件，故返回false
+            final String lastFilterResult = subject.getData(
+                "PathFilterResult:" + fileFilter.getName() + ":" + filePathFilterItem);
+            if (lastFilterResult.length() > 0) {
+                if (lastFilterResult.equals("true")) {
+                    return true;
+                } else {
+                    continue;
+                }
+            }
+
             final Pattern pattern = IOatMatcher.compilePattern(filePathFilterItem);
             if (pattern == null) {
+                subject.putData("PathFilterResult:" + fileFilter.getName() + ":" + filePathFilterItem, "false");
                 return false;
             }
             final boolean needFilter = IOatMatcher.matchPattern(fullPathFromBasedir, pattern);
             if (needFilter) {
                 // need add reason desc to print all message in output file future
+                subject.putData("PathFilterResult:" + fileFilter.getName() + ":" + filePathFilterItem, "true");
                 return true;
+            } else {
+                subject.putData("PathFilterResult:" + fileFilter.getName() + ":" + filePathFilterItem, "false");
             }
         }
         return false;
