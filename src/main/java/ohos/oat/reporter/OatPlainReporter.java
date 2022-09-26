@@ -37,12 +37,12 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Transform all the analysis result to output files
+ * Collect the analysis result to output files
  *
  * @author chenyaxun
  * @since 1.0
  */
-public class OatOutputReporter extends AbstractOatReporter {
+public class OatPlainReporter extends AbstractOatReporter {
     private final Map<String, List<ReportItem>> resultMap = new HashMap<>();
 
     private final String reportFileName = "PlainReport_";
@@ -254,7 +254,7 @@ public class OatOutputReporter extends AbstractOatReporter {
         @Override
         public String toString() {
             String string = "";
-            if (OatOutputReporter.this.oatConfig.isPluginMode()) {
+            if (OatPlainReporter.this.oatConfig.isPluginMode()) {
                 string = "Name:\t" + this.name + "\tContent:\t" + this.content + "\tLine:\t" + this.line
                     + "\tProject:\t" + this.project + "\tFile:\t" + this.file + "\n";
             } else {

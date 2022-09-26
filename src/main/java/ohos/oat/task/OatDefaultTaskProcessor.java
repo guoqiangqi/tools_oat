@@ -38,7 +38,8 @@ import ohos.oat.document.IOatDocument;
 import ohos.oat.file.IOatFileWalker;
 import ohos.oat.file.OatProjectWalker;
 import ohos.oat.reporter.IOatReporter;
-import ohos.oat.reporter.OatOutputReporter;
+import ohos.oat.reporter.OatDetailPlainReporter;
+import ohos.oat.reporter.OatPlainReporter;
 import ohos.oat.utils.OatLogUtil;
 
 import java.util.ArrayList;
@@ -72,9 +73,12 @@ public class OatDefaultTaskProcessor extends AbstractOatTaskProcessor {
     @Override
     public void process() {
         // init reporter first, ensure report file time is consistent
-        final IOatReporter oatReporter = new OatOutputReporter();
+        final IOatReporter oatReporter = new OatPlainReporter();
         oatReporter.init(this.oatConfig, this.oatTask);
+        final IOatReporter oatDetailReporter = new OatDetailPlainReporter();
+        oatDetailReporter.init(this.oatConfig, this.oatTask);
         this.oatReporters.add(oatReporter);
+        this.oatReporters.add(oatDetailReporter);
 
         final long startTime = System.currentTimeMillis();
 

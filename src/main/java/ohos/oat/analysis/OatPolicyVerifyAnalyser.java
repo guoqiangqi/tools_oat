@@ -243,8 +243,9 @@ public class OatPolicyVerifyAnalyser extends AbstraceOatAnalyser {
         return false;
     }
 
-    private static boolean isFiltered(final OatFileFilter fileFilter, final String fullPathFromBasedir,
-        final String fileName, final IOatDocument subject) {
+    private static boolean isFiltered(final OatPolicyItem oatPolicyItem, final String fullPathFromBasedir,
+        final String fileName, final IOatDocument subject) {//用MAP缓存过滤规则的结果
+        final OatFileFilter fileFilter = oatPolicyItem.getFileFilterObj();
         if (fileName != null && fileName.length() > 0) {
             for (final String fileFilterItem : fileFilter.getFileFilterItems()) {
                 // 用文件名匹配，如果匹配成功，则本策略要忽略此文件，故返回false
@@ -253,6 +254,12 @@ public class OatPolicyVerifyAnalyser extends AbstraceOatAnalyser {
                     "FileFilterResult:" + fileFilter.getName() + ":" + fileFilterItem);
                 if (lastFilterResult.length() > 0) {
                     if (lastFilterResult.equals("true")) {
+                        final String policyId = oatPolicyItem.getType() + ":" + oatPolicyItem.getName();
+                        subject.getStatus().setPolicyStatusPassedByFilter(policyId);
+                        subject.getStatus().setPolicyStatusData(policyId + "/Filter", fileFilterItem);
+                        subject.getStatus()
+                            .setPolicyStatusData(policyId + "/Filter/Desc",
+                                fileFilter.getFileFilterDesc(fileFilterItem));
                         return true;
                     } else {
                         continue;
@@ -417,25 +424,25 @@ public class OatPolicyVerifyAnalyser extends AbstraceOatAnalyser {
 
         // process filter operations
         if (fileFilter != null) {
-            final String lastFilterResult = subject.getData("FilterResult:" + fileFilter.getName());
-            if (null != lastFilterResult && lastFilterResult.length() > 0) {
-                if (lastFilterResult.equals("true")) {
-                    final String policyId = policyItem.getType() + policyItem.getName();
-                    subject.getStatus().setPolicyStatusPassedByFilter(policyId);
-                    subject.getStatus().setPolicyStatusData(policyId + "Filter", fileFilter.toString());
-                    return false;
-                }
+            // final String lastFilterResult = subject.getData("FilterResult:" + fileFilter.getName());
+            // if (null != lastFilterResult && lastFilterResult.length() > 0) {
+            //     if (lastFilterResult.equals("true")) {
+            //         final String policyId = policyItem.getType() + policyItem.getName();
+            //         subject.getStatus().setPolicyStatusPassedByFilter(policyId);
+            //         subject.getStatus().setPolicyStatusData(policyId + "Filter", fileFilter.toString());
+            //         return false;
+            //     }
+            // } else {
+            if (OatPolicyVerifyAnalyser.isFiltered(policyItem, fullPathFromBasedir, fileName, subject)) {
+                // subject.putData("FilterResult:" + fileFilter.getName(), "true");
+                // final String policyId = policyItem.getType() + policyItem.getName();
+                // subject.getStatus().setPolicyStatusPassedByFilter(policyId);
+                // subject.getStatus().setPolicyStatusData(policyId + "Filter", fileFilter.toString());
+                return false;
             } else {
-                if (OatPolicyVerifyAnalyser.isFiltered(fileFilter, fullPathFromBasedir, fileName, subject)) {
-                    subject.putData("FilterResult:" + fileFilter.getName(), "true");
-                    final String policyId = policyItem.getType() + policyItem.getName();
-                    subject.getStatus().setPolicyStatusPassedByFilter(policyId);
-                    subject.getStatus().setPolicyStatusData(policyId + "Filter", fileFilter.toString());
-                    return false;
-                } else {
-                    subject.putData("FilterResult:" + fileFilter.getName(), "false");
-                }
+                // subject.putData("FilterResult:" + fileFilter.getName(), "false");
             }
+            // }
         }
 
         boolean mached = false;
