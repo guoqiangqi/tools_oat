@@ -32,11 +32,7 @@ import static org.apache.rat.api.MetaData.RAT_URL_DOCUMENT_CATEGORY;
 import static org.apache.rat.api.MetaData.RAT_URL_LICENSE_FAMILY_NAME;
 
 import ohos.oat.analysis.headermatcher.OatMatchUtils;
-import ohos.oat.config.OatFileFilter;
-import ohos.oat.config.OatMetaData;
-import ohos.oat.config.OatPolicy;
-import ohos.oat.config.OatPolicyItem;
-import ohos.oat.config.OatProject;
+import ohos.oat.config.*;
 import ohos.oat.document.OatFileDocument;
 import ohos.oat.utils.OatCfgUtil;
 import ohos.oat.utils.OatFileUtils;
@@ -200,7 +196,7 @@ public class OatPolicyVerifyAnalyser extends AbstraceOatAnalyser {
     }
 
     private ValidResult isValid(final Document subject, final String name, final OatPolicyItem policyItem) {
-        final int tmp = 0; // 0:init,1:true,2:false
+        // 0:init,1:true,2:false
         String piName = policyItem.getName();
         final ValidResult validResult = new ValidResult(policyItem);
 
@@ -261,13 +257,13 @@ public class OatPolicyVerifyAnalyser extends AbstraceOatAnalyser {
     private static boolean isFiltered(final OatFileFilter fileFilter, final String fullPathFromBasedir,
         final String fileName, final OatFileDocument subject) {
         if (fileName != null && fileName.length() > 0) {
-            for (String fileFilterItem : fileFilter.getFileFilterItems()) {
+            for (OatFileFilterItem fileFilterItem : fileFilter.getFileFilterItems()) {
                 // 用文件名匹配，如果匹配成功，则本策略要忽略此文件，故返回false
                 Pattern pattern = null;
                 try {
-                    fileFilterItem = fileFilterItem.replace(subject.getOatProject().getPath(), "");
-                    fileFilterItem = fileFilterItem.replace("*", ".*");
-                    pattern = OatMatchUtils.compilePattern(fileFilterItem);
+                    String fileFilterNameItem = fileFilterItem.getName().replace(subject.getOatProject().getPath(), "");
+                    fileFilterNameItem = fileFilterItem.getName().replace("*", ".*");
+                    pattern = OatMatchUtils.compilePattern(fileFilterNameItem);
                 } catch (final Exception e) {
                     OatLogUtil.traceException(e);
                     return false;
@@ -277,20 +273,26 @@ public class OatPolicyVerifyAnalyser extends AbstraceOatAnalyser {
                 }
                 final boolean needFilter = OatMatchUtils.matchPattern(fileName, pattern);
                 if (needFilter) {
+                    if (fileFilter.IsRefInfoInvaildWhenBinaryFileFilter(fileFilterItem) ) {
+                        return false;
+                    }
                     // need add reason desc to print all message in output file future
                     return true;
                 }
             }
         }
 
-        for (final String filePathFilterItem : fileFilter.getOatFilePathFilterItems()) {
+        for (final OatFileFilterItem filePathFilterItem : fileFilter.getOatFilePathFilterItems()) {
             // 用从根目录开始的路径匹配，如果匹配成功，则本策略要忽略此文件，故返回false
-            final Pattern pattern = OatMatchUtils.compilePattern(filePathFilterItem);
+            final Pattern pattern = OatMatchUtils.compilePattern(filePathFilterItem.getName());
             if (pattern == null) {
                 return false;
             }
             final boolean needFilter = OatMatchUtils.matchPattern(fullPathFromBasedir, pattern);
             if (needFilter) {
+                if (fileFilter.IsRefInfoInvaildWhenBinaryFileFilter(filePathFilterItem) ) {
+                    return false;
+                }
                 // need add reason desc to print all message in output file future
                 return true;
             }

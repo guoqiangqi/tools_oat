@@ -23,7 +23,7 @@
 package ohos.oat.config;
 
 import ohos.oat.utils.OatLogUtil;
-
+import ohos.oat.config.OatFileFilterItem;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -35,9 +35,10 @@ import java.util.Objects;
  * @since 1.0
  */
 public class OatFileFilter {
-    private final List<String> oatFileFilterItems = new ArrayList<>();
+    private final List<OatFileFilterItem> oatFileFilterItems = new ArrayList<>();
 
-    private final List<String> oatFilePathFilterItems = new ArrayList<>();
+    private final List<OatFileFilterItem> oatFilePathFilterItems = new ArrayList<>();
+
 
     private String name;
 
@@ -46,7 +47,15 @@ public class OatFileFilter {
     public OatFileFilter() {
 
     }
+    private List<String> getOatFileFilterNameItems( List<OatFileFilterItem> oatFileFilterItems)
+    {
 
+        List<String> oatFileFilterNameItem = new ArrayList<>();
+        for (final OatFileFilterItem oatFilePathFilterItem : oatFileFilterItems) {
+            oatFileFilterNameItem.add(oatFilePathFilterItem.getName());
+        }
+        return oatFileFilterNameItem;
+    }
     public OatFileFilter(final String name, final String desc) {
         this.setName(name);
         this.setDesc(desc);
@@ -61,12 +70,12 @@ public class OatFileFilter {
         if (fileFilter == null) {
             return;
         }
-        for (final String oatFileFilterItem : fileFilter.oatFileFilterItems) {
+        for (final OatFileFilterItem oatFileFilterItem : fileFilter.oatFileFilterItems) {
             if (!this.oatFileFilterItems.contains(oatFileFilterItem)) {
                 this.oatFileFilterItems.add(oatFileFilterItem);
             }
         }
-        for (final String oatFilePathFilterItem : fileFilter.oatFilePathFilterItems) {
+        for (final OatFileFilterItem oatFilePathFilterItem : fileFilter.oatFilePathFilterItems) {
             if (!this.oatFilePathFilterItems.contains(oatFilePathFilterItem)) {
                 this.oatFilePathFilterItems.add(oatFilePathFilterItem);
             }
@@ -81,8 +90,11 @@ public class OatFileFilter {
         this.desc = desc;
     }
 
-    public List<String> getOatFilePathFilterItems() {
-        return this.oatFilePathFilterItems;
+    public List<String> getOatFilePathFilterNameItems() {
+        return  this.getOatFileFilterNameItems(this.oatFilePathFilterItems);
+    }
+    public List<OatFileFilterItem> getOatFilePathFilterItems() {
+        return  this.oatFilePathFilterItems;
     }
 
     public String getName() {
@@ -94,34 +106,40 @@ public class OatFileFilter {
     }
 
     public void addFilterItem(final String filterstr) {
-        this.addFilterItem("", filterstr);
+        this.addFilterItem("","",filterstr,"","");
     }
-
-    public void addFilterItem(final String projectPath, final String filterstr) {
-        if (!(filterstr != null && filterstr.trim().length() > 0)) {
+    public void addFilterItem(String type, String fileName, String desc, String ref) {
+        this.addFilterItem("",type,fileName,desc,ref);
+    }
+    public void addFilterItem(String projectPath, String type, String fileName, String desc, String ref) {
+        if (!(fileName != null && fileName.trim().length() > 0)) {
             return;
         }
         try {
-            final String[] filter = filterstr.split("\\|");
+            final String[] filter = fileName.split("\\|");
             for (final String filterTxt : filter) {
                 if (filterTxt != null && filterTxt.trim().length() > 0) {
-                    this.oatFileFilterItems.add(projectPath + filterTxt);
+                    String parsedName =  projectPath + filterTxt;
+                    this.oatFileFilterItems.add(new OatFileFilterItem(type, parsedName, desc, ref));
                 }
             }
         } catch (final Exception e) {
             OatLogUtil.traceException(e);
         }
-    }
 
+    }
     public void addFilePathFilterItem(final String filterstr) {
-        if (!(filterstr != null && filterstr.trim().length() > 0)) {
+        this.addFilePathFilterItem("",filterstr,"","");
+    }
+    public void addFilePathFilterItem(String type, String name, String descInfo, String ref) {
+        if (!(name != null && name.trim().length() > 0)) {
             return;
         }
         try {
-            final String[] filter = filterstr.split("\\|");
+            final String[] filter = name.split("\\|");
             for (final String filterTxt : filter) {
                 if (filterTxt != null && filterTxt.trim().length() > 0) {
-                    this.oatFilePathFilterItems.add(filterTxt);
+                    this.oatFilePathFilterItems.add(new OatFileFilterItem(type,filterTxt,descInfo,ref));
                 }
             }
         } catch (final Exception e) {
@@ -129,9 +147,22 @@ public class OatFileFilter {
         }
     }
 
-    public List<String> getFileFilterItems() {
+    public List<String> getFileFilterNameItems() {
+        return this.getOatFileFilterNameItems(this.oatFileFilterItems);
+    }
+    public List<OatFileFilterItem> getFileFilterItems() {
         return this.oatFileFilterItems;
     }
+
+    public boolean IsRefInfoInvaildWhenBinaryFileFilter(OatFileFilterItem fileFilterItem) {
+        if ( this.getName().equals("binaryFileTypePolicyFilter") ) {
+            if (fileFilterItem.getRef().equals("")) {
+                return true;
+            }
+        }
+        return false;
+    }
+
 
     @Override
     public String toString() {
