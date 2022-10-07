@@ -44,6 +44,7 @@ import org.jetbrains.annotations.NotNull;
 import java.io.File;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 
 /**
  * Stateless utility class for OAT config file
@@ -252,6 +253,7 @@ public final class OatCfgUtil {
             }
             final List<HierarchicalConfiguration<ImmutableNode>> fileFilterItemListCfg = fileFilterCfg.configurationsAt(
                 "filteritem");
+
             OatCfgUtil.initFilterItems(oatProject, oatFileFilter, fileFilterItemListCfg);
 
             // Init global OAT filter using command line para, this will work together with OAT.xml in project
@@ -304,35 +306,36 @@ public final class OatCfgUtil {
             final String type = OatCfgUtil.getElementAttrValue(fileFilterItemCfg, "type");
             String name = OatCfgUtil.getElementAttrValue(fileFilterItemCfg, "name");
             final String desc = OatCfgUtil.getElementAttrValue(fileFilterItemCfg, "desc");
+            final String ref = OatCfgUtil.getElementAttrValue(fileFilterItemCfg, "ref");
             if (!type.equals("filepath")) {
                 if (oatProject != null) {
-                    oatFileFilter.addFilterItem(oatProject.getPath(), name);
+                    oatFileFilter.addFilterItem(oatProject.getPath(),type,name,desc,ref);
                 } else {
-                    oatFileFilter.addFilterItem(name);
+                    oatFileFilter.addFilterItem(type,name,desc,ref);
                 }
                 if (oatProject != null && (!oatFileFilter.getName().contains("dir name underproject"))) {
-                    // Project OAT XML
-                    OatLogUtil.logOatConfig(OatCfgUtil.class.getSimpleName(),
-                        oatProject.getPath() + "\tFilter\t" + oatFileFilter.getName() + "\t\t" + "\tFileName\t" + name
-                            + "\tDesc\t" + desc);
-                }
-                continue;
-            }
-
-            if (oatProject != null) {
-                if (name.startsWith("!")) {
-                    name = "!" + oatProject.getPath() + name.substring(1);
-                } else {
-                    name = oatProject.getPath() + name;
-                }
-            }
-            oatFileFilter.addFilePathFilterItem(name);
-            if (oatProject != null) {
                 // Project OAT XML
                 OatLogUtil.logOatConfig(OatCfgUtil.class.getSimpleName(),
-                    oatProject.getPath() + "\tFilter\t" + oatFileFilter.getName() + "\t\t" + "\tFilePath\t" + name
+                    oatProject.getPath() + "\tFilter\t" + oatFileFilter.getName() + "\t\t" + "\tFileName\t" + name
                         + "\tDesc\t" + desc);
+                }
+            }else {
+                if (oatProject != null) {
+                    if (name.startsWith("!")) {
+                        name = "!" + oatProject.getPath() + name.substring(1);
+                    } else {
+                        name = oatProject.getPath() + name;
+                    }
+                }
+                oatFileFilter.addFilePathFilterItem(type,name,desc,ref);
+                if (oatProject != null) {
+                    // Project OAT XML
+                    OatLogUtil.logOatConfig(OatCfgUtil.class.getSimpleName(),
+                            oatProject.getPath() + "\tFilter\t" + oatFileFilter.getName() + "\t\t" + "\tFilePath\t" + name
+                                    + "\tDesc\t" + desc);
+                }
             }
+
         } // end of filter items
 
     }

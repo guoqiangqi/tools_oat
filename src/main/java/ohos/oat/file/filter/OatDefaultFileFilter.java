@@ -53,7 +53,7 @@ public class OatDefaultFileFilter implements IOatFileFilter {
      */
     @Override
     public FilenameFilter getFilter() {
-        final List<String> filterItems = oatProject.getFileFilterObj().getFileFilterItems();
+        final List<String> filterItems = oatProject.getFileFilterObj().getFileFilterNameItems();
         final List<String> excludes = new ArrayList<>();
         for (final String filterItem : filterItems) {
             excludes.add(filterItem.replace(oatProject.getPath(), ""));
