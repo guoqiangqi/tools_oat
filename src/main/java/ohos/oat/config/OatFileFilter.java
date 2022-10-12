@@ -49,7 +49,6 @@ public class OatFileFilter {
     }
     private List<String> getOatFileFilterNameItems( List<OatFileFilterItem> oatFileFilterItems)
     {
-
         List<String> oatFileFilterNameItem = new ArrayList<>();
         for (final OatFileFilterItem oatFilePathFilterItem : oatFileFilterItems) {
             oatFileFilterNameItem.add(oatFilePathFilterItem.getName());
