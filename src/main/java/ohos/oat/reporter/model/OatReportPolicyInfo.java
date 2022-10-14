@@ -19,23 +19,6 @@ package ohos.oat.reporter.model;
  * @author chenyaxun
  * @since 2.0
  */
-public class OatReportBasicInfo {
-    private final String ossProjectName = "";
-
-    private final String ossProjectUrl = "";
-
-    private final String ossProjectBranch = "";
-
-    private final String ossProjectTag = "";
-
-    private final String reportTool = "OAT";
-
-    private final String reportToolVersion = "";
-
-    private final String reportUser = "";
-
-    private final String reportTime = "";
-
-    private final String reportNotes = "Commemorate D";
+public class OatReportPolicyInfo {
 
 }

@@ -19,23 +19,16 @@ package ohos.oat.reporter.model;
  * @author chenyaxun
  * @since 2.0
  */
-public class OatReportBasicInfo {
-    private final String ossProjectName = "";
+public class OatReportFileInfo {
 
-    private final String ossProjectUrl = "";
+    private final long ossProjectFileCount = 0;
 
-    private final String ossProjectBranch = "";
+    private final long ossProjectNormalFileCount = 0;
 
-    private final String ossProjectTag = "";
+    private final long ossProjectFilteredFileCount = 0;
 
-    private final String reportTool = "OAT";
+    private final long ossProjectFilteredByHeaderFileCount = 0;
 
-    private final String reportToolVersion = "";
-
-    private final String reportUser = "";
-
-    private final String reportTime = "";
-
-    private final String reportNotes = "Commemorate D";
+    private final long ossProjectFileTypeCount = 0;
 
 }
