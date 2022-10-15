@@ -15,31 +15,14 @@
 
 package ohos.oat.reporter.model;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * @author chenyaxun
  * @since 2.0
  */
-public class OatReportLicenseInfo {
+public class OatReportConfigInfo {
 
-    private final int ossProjectLicenseTypeCount = 0;
+    private final String reportDefaultPolicy = "";
 
-    private final int ossProjectNormalLicenseTypeCount = 0;
-
-    private final int ossProjectAbnormalLicenseTypeCount = 0;
-
-    private final int ossProjectHasLicenseHeaderFileCount = 0;
-
-    private final int ossProjectMultiLicenseHeaderFileCount = 0;
-
-    private final int ossProjectNoLicenseHeaderFileCount = 0;
-
-    private final int ossProjectNormalLicenseTypeFileCount = 0;
-
-    private final int ossProjectAbnormalLicenseTypeFileCount = 0;
-
-    private final List<String> ossProjectLicenseTypeList = new ArrayList<>();
+    private final String reportProjectPolicy = "";
 
 }

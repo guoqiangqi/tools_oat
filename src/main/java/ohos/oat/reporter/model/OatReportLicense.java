@@ -19,23 +19,14 @@ package ohos.oat.reporter.model;
  * @author chenyaxun
  * @since 2.0
  */
-public class OatReportBasicInfo {
-    private final String ossProjectName = "";
+public class OatReportLicense {
 
-    private final String ossProjectUrl = "";
+    private final String licenseName = "";
 
-    private final String ossProjectBranch = "";
+    private final String licenseId = "";
 
-    private final String ossProjectTag = "";
+    private final String licenseText = "";
 
-    private final String reportTool = "OAT";
-
-    private final String reportToolVersion = "";
-
-    private final String reportUser = "";
-
-    private final String reportTime = "";
-
-    private final String reportNotes = "Commemorate D";
+    private final String licenseDesc = "";
 
 }

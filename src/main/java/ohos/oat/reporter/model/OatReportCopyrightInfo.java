@@ -21,16 +21,20 @@ package ohos.oat.reporter.model;
  */
 public class OatReportCopyrightInfo {
 
-    private final long ossProjectCopyrightCount = 0;
+    private final int ossProjectCopyrightHolderCount = 0;
 
-    private final long ossProjectNormalCopyrightCount = 0;
+    private final int ossProjectNormalCopyrightHolderCount = 0;
 
-    private final long ossProjectAbnormalCopyrightCount = 0;
+    private final int ossProjectAbnormalCopyrightCount = 0;
 
-    private final long ossProjectHasCopyrightHeaderFileCount = 0;
+    private final int ossProjectHasCopyrightHeaderFileCount = 0;
 
-    private final long ossProjectMultiCopyrightHeaderFileCount = 0;
+    private final int ossProjectMultiCopyrightHeaderFileCount = 0;
 
-    private final long ossProjectNoCopyrightHeaderFileCount = 0;
+    private final int ossProjectNoCopyrightHeaderFileCount = 0;
+
+    private final int ossProjectNormalCopyrightFileCount = 0;
+
+    private final int ossProjectAbnormalCopyrightFileCount = 0;
 
 }

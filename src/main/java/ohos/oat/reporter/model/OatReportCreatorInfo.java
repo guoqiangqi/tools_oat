@@ -15,31 +15,24 @@
 
 package ohos.oat.reporter.model;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * @author chenyaxun
  * @since 2.0
  */
-public class OatReportLicenseInfo {
+public class OatReportCreatorInfo {
 
-    private final int ossProjectLicenseTypeCount = 0;
+    private final String reportTool = "OAT";
 
-    private final int ossProjectNormalLicenseTypeCount = 0;
+    private final String reportInitCommand = "";
 
-    private final int ossProjectAbnormalLicenseTypeCount = 0;
+    private final String reportExecuteCommand = "";
 
-    private final int ossProjectHasLicenseHeaderFileCount = 0;
+    private final String reportToolVersion = "";
 
-    private final int ossProjectMultiLicenseHeaderFileCount = 0;
+    private final String reportUser = "";
 
-    private final int ossProjectNoLicenseHeaderFileCount = 0;
+    private final String reportTime = "";
 
-    private final int ossProjectNormalLicenseTypeFileCount = 0;
-
-    private final int ossProjectAbnormalLicenseTypeFileCount = 0;
-
-    private final List<String> ossProjectLicenseTypeList = new ArrayList<>();
+    private final String reportNotes = "Commemorate D";
 
 }

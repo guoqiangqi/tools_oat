@@ -15,20 +15,27 @@
 
 package ohos.oat.reporter.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * @author chenyaxun
  * @since 2.0
  */
 public class OatReportFileInfo {
 
-    private final long ossProjectFileCount = 0;
+    private final int ossProjectFileCount = 0;
 
-    private final long ossProjectNormalFileCount = 0;
+    private final int ossProjectNormalFileCount = 0;
 
-    private final long ossProjectFilteredFileCount = 0;
+    private final int ossProjectFilteredFileCount = 0;
 
-    private final long ossProjectFilteredByHeaderFileCount = 0;
+    private final int ossProjectFilteredByHeaderFileCount = 0;
 
-    private final long ossProjectFileTypeCount = 0;
+    private final List<OatReportFile> ossProjectNormalFileList = new ArrayList<>();
+
+    private final List<OatReportFile> ossProjectFilteredFileList = new ArrayList<>();
+
+    private final List<OatReportFile> ossProjectFilteredByHeaderFileList = new ArrayList<>();
 
 }

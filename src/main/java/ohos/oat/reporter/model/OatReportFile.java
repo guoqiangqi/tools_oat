@@ -19,6 +19,12 @@ package ohos.oat.reporter.model;
  * @author chenyaxun
  * @since 2.0
  */
-public class OatReportPolicyInfo {
+public class OatReportFile {
+
+    private final String fileName = "";
+
+    private final String filePath = "";
+
+    private final String fileType = "";
 
 }

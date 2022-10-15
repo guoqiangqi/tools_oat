@@ -15,31 +15,24 @@
 
 package ohos.oat.reporter.model;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
+ * OAT detail report data structure, one report corresponds to one OatReportInfo instance
+ *
  * @author chenyaxun
  * @since 2.0
  */
-public class OatReportLicenseInfo {
+public class OatReportInfo {
 
-    private final int ossProjectLicenseTypeCount = 0;
+    private OatReportCreatorInfo reportCreatorInfo;
 
-    private final int ossProjectNormalLicenseTypeCount = 0;
+    private OatReportConfigInfo reportConfigInfoInfo;
 
-    private final int ossProjectAbnormalLicenseTypeCount = 0;
+    private OatReportProjectInfo reportProjectInfo;
 
-    private final int ossProjectHasLicenseHeaderFileCount = 0;
+    private OatReportFileInfo reportFileInfo;
 
-    private final int ossProjectMultiLicenseHeaderFileCount = 0;
+    private OatReportLicenseInfo reportLicenseInfo;
 
-    private final int ossProjectNoLicenseHeaderFileCount = 0;
-
-    private final int ossProjectNormalLicenseTypeFileCount = 0;
-
-    private final int ossProjectAbnormalLicenseTypeFileCount = 0;
-
-    private final List<String> ossProjectLicenseTypeList = new ArrayList<>();
+    private OatReportCopyrightInfo reportCopyrightInfo;
 
 }
