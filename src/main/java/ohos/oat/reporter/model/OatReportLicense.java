@@ -15,6 +15,9 @@
 
 package ohos.oat.reporter.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * @author chenyaxun
  * @since 2.0
@@ -28,5 +31,13 @@ public class OatReportLicense {
     private final String licenseText = "";
 
     private final String licenseDesc = "";
+
+    private final List<OatReportLicensePermission> permissions = new ArrayList<>();
+
+    private final List<OatReportLicenseCondition> conditions = new ArrayList<>();
+
+    private final List<OatReportLicenseLimitation> limitations = new ArrayList<>();
+
+    private final List<OatReportLicenseApprovedType> approvedTypes = new ArrayList<>();
 
 }

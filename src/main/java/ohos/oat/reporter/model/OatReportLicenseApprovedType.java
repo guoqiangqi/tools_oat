@@ -11,9 +11,6 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *
- * Derived from choosealicense.com, the original license and notice text is at the end of the LICENSE file of this
- * project.
  */
 
 package ohos.oat.reporter.model;
@@ -22,14 +19,15 @@ package ohos.oat.reporter.model;
  * @author chenyaxun
  * @since 2.0
  */
-public enum OatReportLicensePermission {
-    COMMERCIAL_USE("commercial-use", "Commercial use",
-        "The licensed material and derivatives may be used for commercial purposes."),
-    MODIFICATION("modifications", "Modification", "The licensed material may be modified."),
-    DISTRIBUTION("distribution", "Distribution", "The licensed material may be distributed."),
-    PRIVATE_USE("private-use", "Private use", "The licensed material may be used and modified in private."),
-    PATENT_USE("patent-use", "Patent use",
-        "This license provides an express grant of patent rights from contributors.");
+public enum OatReportLicenseApprovedType {
+    OSI("osi approved", "OSI approved", "This license is approved by OSI."),
+    FSF("liability", "Liability", "This license is approved by FSF."),
+    OH_USER_SPACE("openharmony user space", "Openharmony user space",
+        "This license can be used in openharmony user space repo."),
+    OH_KERNEL_LITEOS("openharmony liteos kernel", "Openharmony liteos kernel",
+        "This license can be used in openharmony user space repo."),
+    OH_KERNEL_LINUX("openharmony linux kernel", "Openharmony linux kernel",
+        "This license can be used in openharmony user space repo.");
 
     private String tag;
 
@@ -37,7 +35,7 @@ public enum OatReportLicensePermission {
 
     private String description;
 
-    OatReportLicensePermission(final String tag, final String label, final String description) {
+    OatReportLicenseApprovedType(final String tag, final String label, final String description) {
         this.setTag(tag);
         this.setLabel(label);
         this.setDescription(description);
