@@ -17,6 +17,7 @@ package ohos.oat.reporter.model;
 
 /**
  * OAT detail report data structure, one report corresponds to one OatReportInfo instance
+ * summary
  *
  * @author chenyaxun
  * @since 2.0

@@ -15,26 +15,35 @@
 
 package ohos.oat.reporter.model;
 
+import ohos.oat.reporter.model.file.OatReportFile;
+
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * @author chenyaxun
  * @since 2.0
  */
 public class OatReportCopyrightInfo {
 
-    private final int ossProjectCopyrightHolderCount = 0;
+    private final int copyrightHolderCount = 0;
 
-    private final int ossProjectNormalCopyrightHolderCount = 0;
+    private final int normalCopyrightHolderCount = 0;
 
-    private final int ossProjectAbnormalCopyrightCount = 0;
+    private final int abnormalCopyrightCount = 0;
 
-    private final int ossProjectHasCopyrightHeaderFileCount = 0;
+    private final int hasCopyrightHeaderFileCount = 0;
 
-    private final int ossProjectMultiCopyrightHeaderFileCount = 0;
+    private final int multiCopyrightHeaderFileCount = 0;
 
-    private final int ossProjectNoCopyrightHeaderFileCount = 0;
+    private final int noCopyrightHeaderFileCount = 0;
 
-    private final int ossProjectNormalCopyrightFileCount = 0;
+    private final int normalCopyrightFileCount = 0;
 
-    private final int ossProjectAbnormalCopyrightFileCount = 0;
+    private final int abnormalCopyrightFileCount = 0;
+
+    private final List<OatReportFile> multiCopyrightHeaderFileList = new ArrayList<>();
+
+    private final List<OatReportFile> noCopyrightHeaderFileList = new ArrayList<>();
 
 }

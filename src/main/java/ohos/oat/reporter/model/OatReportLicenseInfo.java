@@ -15,6 +15,8 @@
 
 package ohos.oat.reporter.model;
 
+import ohos.oat.reporter.model.license.OatReportLicense;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,6 +42,6 @@ public class OatReportLicenseInfo {
 
     private final int ossProjectAbnormalLicenseTypeFileCount = 0;
 
-    private final List<String> ossProjectLicenseTypeList = new ArrayList<>();
+    private final List<OatReportLicense> ossProjectLicenseTypeList = new ArrayList<>();
 
 }

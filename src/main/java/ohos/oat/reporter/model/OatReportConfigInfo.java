@@ -21,8 +21,8 @@ package ohos.oat.reporter.model;
  */
 public class OatReportConfigInfo {
 
-    private final String reportDefaultPolicy = "";
+    private final String defaultPolicy = "";
 
-    private final String reportProjectPolicy = "";
+    private final String projectPolicy = "";
 
 }

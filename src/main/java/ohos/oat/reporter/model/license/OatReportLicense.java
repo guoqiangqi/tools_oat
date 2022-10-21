@@ -13,18 +13,31 @@
  * limitations under the License.
  */
 
-package ohos.oat.reporter.model;
+package ohos.oat.reporter.model.license;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author chenyaxun
  * @since 2.0
  */
-public class OatReportFile {
+public class OatReportLicense {
 
-    private final String fileName = "";
+    private final String licenseName = "";
 
-    private final String filePath = "";
+    private final String licenseId = "";
 
-    private final String fileType = "";
+    private final String licenseText = "";
+
+    private final String licenseDesc = "";
+
+    private final List<OatReportLicensePermission> permissions = new ArrayList<>();
+
+    private final List<OatReportLicenseCondition> conditions = new ArrayList<>();
+
+    private final List<OatReportLicenseLimitation> limitations = new ArrayList<>();
+
+    private final List<OatReportLicenseApprovedType> approvedTypes = new ArrayList<>();
 
 }

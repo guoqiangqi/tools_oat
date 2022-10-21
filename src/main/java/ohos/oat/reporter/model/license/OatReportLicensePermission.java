@@ -16,20 +16,20 @@
  * project.
  */
 
-package ohos.oat.reporter.model;
+package ohos.oat.reporter.model.license;
 
 /**
  * @author chenyaxun
  * @since 2.0
  */
-public enum OatReportLicenseLimitation {
-    TRADEMARK_USE("trademark-use", "Trademark use",
-        "This license explicitly states that it does NOT grant trademark rights, even though licenses without such a "
-            + "statement probably do not grant any implicit trademark rights."),
-    LIABILITY("liability", "Liability", "This license includes a limitation of liability."),
+public enum OatReportLicensePermission {
+    COMMERCIAL_USE("commercial-use", "Commercial use",
+        "The licensed material and derivatives may be used for commercial purposes."),
+    MODIFICATION("modifications", "Modification", "The licensed material may be modified."),
+    DISTRIBUTION("distribution", "Distribution", "The licensed material may be distributed."),
+    PRIVATE_USE("private-use", "Private use", "The licensed material may be used and modified in private."),
     PATENT_USE("patent-use", "Patent use",
-        "This license explicitly states that it does NOT grant any rights in the patents of contributors."),
-    WARRANTY("warranty", "Warranty", "This license explicitly states that it does NOT provide any warranty.");
+        "This license provides an express grant of patent rights from contributors.");
 
     private String tag;
 
@@ -37,7 +37,7 @@ public enum OatReportLicenseLimitation {
 
     private String description;
 
-    OatReportLicenseLimitation(final String tag, final String label, final String description) {
+    OatReportLicensePermission(final String tag, final String label, final String description) {
         this.setTag(tag);
         this.setLabel(label);
         this.setDescription(description);

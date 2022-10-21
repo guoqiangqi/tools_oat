@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-package ohos.oat.reporter.model;
+package ohos.oat.reporter.model.license;
 
 /**
  * @author chenyaxun

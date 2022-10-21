@@ -15,6 +15,8 @@
 
 package ohos.oat.reporter.model;
 
+import ohos.oat.reporter.model.file.OatReportFile;
+
 import java.util.ArrayList;
 import java.util.List;
 
