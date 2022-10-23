@@ -39,9 +39,13 @@ import org.apache.commons.configuration2.builder.fluent.Configurations;
 import org.apache.commons.configuration2.tree.DefaultExpressionEngine;
 import org.apache.commons.configuration2.tree.DefaultExpressionEngineSymbols;
 import org.apache.commons.configuration2.tree.ImmutableNode;
+import org.apache.commons.io.IOUtils;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
 
@@ -205,6 +209,19 @@ public final class OatCfgUtil {
         final File oatFile = new File(prjOatFile);
 
         if (oatFile.exists()) {
+            final StringBuilder stringBuilder = new StringBuilder();
+            try {
+                final BufferedReader fileReader = new BufferedReader(new FileReader(oatFile));
+                String line = "\n";
+                while ((line = fileReader.readLine()) != null) {
+                    stringBuilder.append("\n" + line);
+                }
+                oatProject.putData("ProjectOAT", stringBuilder.toString());
+                IOUtils.closeQuietly(fileReader);
+
+            } catch (final IOException e) {
+                throw new RuntimeException(e);
+            }
             final XMLConfiguration prjXmlconfig = OatCfgUtil.getXmlConfiguration(prjOatFile);
             final String licensefile = OatCfgUtil.getValue(prjXmlconfig, "licensefile");
             final String[] licenselist = OatCfgUtil.getSplitStrings(licensefile);

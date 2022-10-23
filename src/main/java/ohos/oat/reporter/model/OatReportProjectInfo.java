@@ -15,19 +15,94 @@
 
 package ohos.oat.reporter.model;
 
+import ohos.oat.reporter.model.relation.OatReportRelation;
+
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * @author chenyaxun
  * @since 2.0
  */
 public class OatReportProjectInfo {
-    private final String ossProjectName = "";
+    private final List<OatReportRelation> dependencyRelationList = new ArrayList<>();
 
-    private final String ossProjectHomePage = "";
+    private final List<OatReportRelation> consumerRelationList = new ArrayList<>();
 
-    private final String ossProjectVersion = "";
+    private String projectName = "";
 
-    private final String ossProjectBranch = "";
+    private String projectHomePage = "";
 
-    private final String ossProjectTag = "";
+    private String projectVersion = "";
+
+    private String projectBranch = "";
+
+    private String projectTag = "";
+
+    private String mainLicense = "";
+
+    public List<OatReportRelation> getDependencyRelationList() {
+        return this.dependencyRelationList;
+    }
+
+    public void addDependencyRelation(final OatReportRelation oatReportRelation) {
+        this.dependencyRelationList.add(oatReportRelation);
+    }
+
+    public List<OatReportRelation> getConsumerRelationList() {
+        return this.consumerRelationList;
+    }
+
+    public void addConsumerRelation(final OatReportRelation oatReportRelation) {
+        this.consumerRelationList.add(oatReportRelation);
+    }
+
+    public String getMainLicense() {
+        return this.mainLicense;
+    }
+
+    public void setMainLicense(final String mainLicense) {
+        this.mainLicense = mainLicense;
+    }
+
+    public String getProjectName() {
+        return this.projectName;
+    }
+
+    public void setProjectName(final String projectName) {
+        this.projectName = projectName;
+    }
+
+    public String getProjectHomePage() {
+        return this.projectHomePage;
+    }
+
+    public void setProjectHomePage(final String projectHomePage) {
+        this.projectHomePage = projectHomePage;
+    }
+
+    public String getProjectVersion() {
+        return this.projectVersion;
+    }
+
+    public void setProjectVersion(final String projectVersion) {
+        this.projectVersion = projectVersion;
+    }
+
+    public String getProjectBranch() {
+        return this.projectBranch;
+    }
+
+    public void setProjectBranch(final String projectBranch) {
+        this.projectBranch = projectBranch;
+    }
+
+    public String getProjectTag() {
+        return this.projectTag;
+    }
+
+    public void setProjectTag(final String projectTag) {
+        this.projectTag = projectTag;
+    }
 
 }

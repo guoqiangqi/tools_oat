@@ -13,31 +13,37 @@
  * limitations under the License.
  */
 
-package ohos.oat.reporter.model;
+package ohos.oat.reporter.model.relation;
 
 /**
  * @author chenyaxun
  * @since 2.0
  */
-public class OatReportConfigInfo {
+public class OatReportRelation {
 
-    private String defaultPolicy = "";
+    public static String TYPE_STATIC = "Static Link";
 
-    private String projectPolicy = "";
+    public static String TYPE_DYNAMIC = "Dynamic Link";
 
-    public String getDefaultPolicy() {
-        return this.defaultPolicy;
+    public static String TYPE_CROSS_PROCESS = "Cross Process";
+
+    private String relationType = "";
+
+    private String projectName = "";
+
+    public String getRelationType() {
+        return this.relationType;
     }
 
-    public void setDefaultPolicy(final String defaultPolicy) {
-        this.defaultPolicy = defaultPolicy;
+    public void setRelationType(final String relationType) {
+        this.relationType = relationType;
     }
 
-    public String getProjectPolicy() {
-        return this.projectPolicy;
+    public String getProjectName() {
+        return this.projectName;
     }
 
-    public void setProjectPolicy(final String projectPolicy) {
-        this.projectPolicy = projectPolicy;
+    public void setProjectName(final String projectName) {
+        this.projectName = projectName;
     }
 }

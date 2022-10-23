@@ -80,9 +80,16 @@ public class OatPolicyVerifyAnalyser extends AbstraceOatAnalyser {
                     + LicenseHeaderText);
         }
         boolean findIt = false;
+        String mainLicense = oatProject.getData("mainLicense");
         if (!this.oatFileDocument.isDirectory()) {
             if (shortFileUnderProject.equals("LICENSE")) {
                 findIt = true;
+                if (mainLicense.length() == 0) {
+                    mainLicense = name;
+                } else {
+                    mainLicense = mainLicense + "|" + name;
+                }
+                oatProject.putData("MainLicense", mainLicense);
                 OatLogUtil.logLicenseFile(this.getClass().getSimpleName(),
                     oatProject.getPath() + "\tLICENSEFILE\t" + shortFileUnderProject + "\t" + name + "\t"
                         + LicenseHeaderText);
@@ -90,11 +97,18 @@ public class OatPolicyVerifyAnalyser extends AbstraceOatAnalyser {
             for (final String defLicenseFile : defLicenseFiles) {
                 if (shortFileUnderProject.endsWith(defLicenseFile)) {
                     findIt = true;
+                    if (mainLicense.length() == 0) {
+                        mainLicense = name;
+                    } else {
+                        mainLicense = mainLicense + "|" + name;
+                    }
+                    oatProject.putData("MainLicense", mainLicense);
                     OatLogUtil.logLicenseFile(this.getClass().getSimpleName(),
                         oatProject.getPath() + "\tDEFLICENSEFILE\t" + shortFileUnderProject + "\t" + name + "\t"
                             + LicenseHeaderText);
                 }
             }
+
         }
 
         if (!findIt && !this.oatFileDocument.isDirectory()) {

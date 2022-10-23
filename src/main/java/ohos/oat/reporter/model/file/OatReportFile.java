@@ -21,10 +21,34 @@ package ohos.oat.reporter.model.file;
  */
 public class OatReportFile {
 
-    private final String fileName = "";
+    private String fileName = "";
 
-    private final String filePath = "";
+    private String filePath = "";
 
-    private final String fileType = "";
+    private String fileType = "";
+
+    public String getFileName() {
+        return this.fileName;
+    }
+
+    public void setFileName(final String fileName) {
+        this.fileName = fileName;
+    }
+
+    public String getFilePath() {
+        return this.filePath;
+    }
+
+    public void setFilePath(final String filePath) {
+        this.filePath = filePath;
+    }
+
+    public String getFileType() {
+        return this.fileType;
+    }
+
+    public void setFileType(final String fileType) {
+        this.fileType = fileType;
+    }
 
 }

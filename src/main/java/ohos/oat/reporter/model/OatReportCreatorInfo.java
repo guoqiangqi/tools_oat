@@ -21,18 +21,64 @@ package ohos.oat.reporter.model;
  */
 public class OatReportCreatorInfo {
 
-    private final String reportTool = "OAT";
+    private String reportTool = "OAT";
 
-    private final String reportInitCommand = "";
+    private String reportInitCommand = "";
 
-    private final String reportExecuteCommand = "";
+    private String reportToolVersion = "2.0.0-beta.1";
 
-    private final String reportToolVersion = "";
+    private String reportUser = "";
 
-    private final String reportUser = "";
+    private String reportTime = "";
 
-    private final String reportTime = "";
+    private String reportNotes = "Commemorate D";
 
-    private final String reportNotes = "Commemorate D";
+    public String getReportTool() {
+        return this.reportTool;
+    }
+
+    public void setReportTool(final String reportTool) {
+        this.reportTool = reportTool;
+    }
+
+    public String getReportInitCommand() {
+        return this.reportInitCommand;
+    }
+
+    public void setReportInitCommand(final String reportInitCommand) {
+        this.reportInitCommand = reportInitCommand;
+    }
+
+    public String getReportToolVersion() {
+        return this.reportToolVersion;
+    }
+
+    public void setReportToolVersion(final String reportToolVersion) {
+        this.reportToolVersion = reportToolVersion;
+    }
+
+    public String getReportUser() {
+        return this.reportUser;
+    }
+
+    public void setReportUser(final String reportUser) {
+        this.reportUser = reportUser;
+    }
+
+    public String getReportTime() {
+        return this.reportTime;
+    }
+
+    public void setReportTime(final String reportTime) {
+        this.reportTime = reportTime;
+    }
+
+    public String getReportNotes() {
+        return this.reportNotes;
+    }
+
+    public void setReportNotes(final String reportNotes) {
+        this.reportNotes = reportNotes;
+    }
 
 }

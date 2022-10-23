@@ -141,4 +141,13 @@ public interface IOatCommandLine {
         });
     }
 
+    static void storeCommand2Config(final String[] args, final OatConfig oatConfig) {
+        String tmpargs = "";
+        if (args != null) {
+            for (final String arg : args) {
+                tmpargs += " " + arg;
+            }
+        }
+        oatConfig.putData("initCommand", tmpargs);
+    }
 }

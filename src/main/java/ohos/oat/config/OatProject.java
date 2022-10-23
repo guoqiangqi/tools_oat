@@ -68,6 +68,8 @@ public class OatProject {
 
     private boolean isUpstreamPrj;
 
+    private final Map<String, String> data = new HashMap<>();
+
     public OatProject() {
 
     }
@@ -198,6 +200,15 @@ public class OatProject {
 
     public Map<String, List<String>> getPrjLicenseCompatibilityMap() {
         return this.prjLicenseCompatibilityMap;
+    }
+
+    public String getData(final String key) {
+        final String tmp = this.data.get(key);
+        return tmp == null ? "" : tmp;
+    }
+
+    public void putData(final String key, final String value) {
+        this.data.put(key, value);
     }
 
     @Override

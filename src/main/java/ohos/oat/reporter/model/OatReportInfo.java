@@ -16,7 +16,7 @@
 package ohos.oat.reporter.model;
 
 /**
- * OAT detail report data structure, one report corresponds to one OatReportInfo instance
+ * OAT detail report data structure, one project corresponds to one OatReportInfo instance
  * summary
  *
  * @author chenyaxun
@@ -24,16 +24,54 @@ package ohos.oat.reporter.model;
  */
 public class OatReportInfo {
 
-    private OatReportCreatorInfo reportCreatorInfo;
+    private OatReportConfigInfo reportConfigInfoInfo = new OatReportConfigInfo();
 
-    private OatReportConfigInfo reportConfigInfoInfo;
+    private OatReportProjectInfo reportProjectInfo = new OatReportProjectInfo();
 
-    private OatReportProjectInfo reportProjectInfo;
+    private OatReportFileInfo reportFileInfo = new OatReportFileInfo();
 
-    private OatReportFileInfo reportFileInfo;
+    private OatReportLicenseInfo reportLicenseInfo = new OatReportLicenseInfo();
 
-    private OatReportLicenseInfo reportLicenseInfo;
+    private OatReportCopyrightInfo reportCopyrightInfo = new OatReportCopyrightInfo();
 
-    private OatReportCopyrightInfo reportCopyrightInfo;
+    public OatReportConfigInfo getReportConfigInfoInfo() {
+        return this.reportConfigInfoInfo;
+    }
+
+    public void setReportConfigInfoInfo(final OatReportConfigInfo reportConfigInfoInfo) {
+        this.reportConfigInfoInfo = reportConfigInfoInfo;
+    }
+
+    public OatReportProjectInfo getReportProjectInfo() {
+        return this.reportProjectInfo;
+    }
+
+    public void setReportProjectInfo(final OatReportProjectInfo reportProjectInfo) {
+        this.reportProjectInfo = reportProjectInfo;
+    }
+
+    public OatReportFileInfo getReportFileInfo() {
+        return this.reportFileInfo;
+    }
+
+    public void setReportFileInfo(final OatReportFileInfo reportFileInfo) {
+        this.reportFileInfo = reportFileInfo;
+    }
+
+    public OatReportLicenseInfo getReportLicenseInfo() {
+        return this.reportLicenseInfo;
+    }
+
+    public void setReportLicenseInfo(final OatReportLicenseInfo reportLicenseInfo) {
+        this.reportLicenseInfo = reportLicenseInfo;
+    }
+
+    public OatReportCopyrightInfo getReportCopyrightInfo() {
+        return this.reportCopyrightInfo;
+    }
+
+    public void setReportCopyrightInfo(final OatReportCopyrightInfo reportCopyrightInfo) {
+        this.reportCopyrightInfo = reportCopyrightInfo;
+    }
 
 }

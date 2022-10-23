@@ -69,6 +69,7 @@ public class OatFolderModeCommandLine extends AbstractOatCommandLine {
     @Override
     public OatConfig parseArgs2Config(final String[] args) {
         final OatConfig oatConfig = new OatConfig();
+        IOatCommandLine.storeCommand2Config(args, oatConfig);
         final CommandLine commandLine = IOatCommandLine.parseOptions(args, this.options);
         final String optionValue_s = commandLine.getOptionValue("s");
         if (null == commandLine || null == optionValue_s || commandLine.hasOption("h")) {
