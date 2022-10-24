@@ -143,7 +143,7 @@ public class OatFileFilter {
 
     public String getFileFilterDesc(final String fileFilter) {
         if (fileFilter.length() == 0) {
-            return this.fileFilter2Desc.toString();
+            return "";
         }
         final String desc = this.fileFilter2Desc.get(fileFilter);
         return desc == null ? "" : desc;

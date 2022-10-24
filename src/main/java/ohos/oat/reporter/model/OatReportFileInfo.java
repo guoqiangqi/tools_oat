@@ -109,6 +109,7 @@ public class OatReportFileInfo {
     public void addProjectFilteredByHeaderFile(final OatReportFile file) {
         this.projectFilteredByHeaderFileList.add(file);
         this.projectFilteredByHeaderFileCount++;
+        this.projectFileCount++;
     }
 
     public int getProjectInvalidTypeFileCount() {

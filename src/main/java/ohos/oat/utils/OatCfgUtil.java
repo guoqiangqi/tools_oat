@@ -44,8 +44,9 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.List;
 import java.util.Locale;
 
@@ -211,7 +212,10 @@ public final class OatCfgUtil {
         if (oatFile.exists()) {
             final StringBuilder stringBuilder = new StringBuilder();
             try {
-                final BufferedReader fileReader = new BufferedReader(new FileReader(oatFile));
+                final FileInputStream fis = new FileInputStream(prjOatFile);
+                final InputStreamReader isr = new InputStreamReader(fis, "UTF-8");
+
+                final BufferedReader fileReader = new BufferedReader(isr);
                 String line = "\n";
                 while ((line = fileReader.readLine()) != null) {
                     stringBuilder.append("\n" + line);

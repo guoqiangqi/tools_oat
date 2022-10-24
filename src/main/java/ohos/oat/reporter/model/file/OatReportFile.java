@@ -15,11 +15,15 @@
 
 package ohos.oat.reporter.model.file;
 
+import ohos.oat.document.IOatDocument;
+
 /**
  * @author chenyaxun
  * @since 2.0
  */
 public class OatReportFile {
+
+    private IOatDocument oatDocument;
 
     private String fileName = "";
 
@@ -27,6 +31,14 @@ public class OatReportFile {
 
     private String fileType = "";
 
+    public IOatDocument getOatDocument() {
+        return oatDocument;
+    }
+
+    public void setOatDocument(IOatDocument oatDocument) {
+        this.oatDocument = oatDocument;
+    }
+    
     public String getFileName() {
         return this.fileName;
     }

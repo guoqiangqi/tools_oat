@@ -21,7 +21,9 @@ import static ohos.oat.utils.IOatCommonUtils.getTaskDefaultPrjName;
 import ohos.oat.config.OatConfig;
 import ohos.oat.config.OatTask;
 import ohos.oat.document.IOatDocument;
+import ohos.oat.reporter.model.OatReportFileInfo;
 import ohos.oat.reporter.model.OatReportInfo;
+import ohos.oat.reporter.model.OatReportProjectInfo;
 import ohos.oat.reporter.model.OatReportSummaryInfo;
 import ohos.oat.reporter.model.file.OatReportFile;
 import ohos.oat.reporter.model.license.OatReportLicense;
@@ -123,14 +125,14 @@ public class OatDetailPlainReporter extends AbstractOatReporter {
         final OatReportFile oatReportFile = new OatReportFile();
         oatReportFile.setFileName(oatFileDocument.getFileName());
         oatReportFile.setFilePath(oatFileDocument.getFile().getPath());
+        oatReportFile.setOatDocument(oatFileDocument);
 
         if (oatFileDocument.getStatus().isFileStatusNormal()) {
             oatReportInfo.getReportFileInfo().addProjectNormalFile(oatReportFile);
         } else if (oatFileDocument.getStatus().isFileStatusFiltered()) {
             oatReportInfo.getReportFileInfo().addProjectFilteredFile(oatReportFile);
-            if (oatFileDocument.getStatus().isFileStatusFilteredByHeader()) {
-                oatReportInfo.getReportFileInfo().addProjectFilteredByHeaderFile(oatReportFile);
-            }
+        } else if (oatFileDocument.getStatus().isFileStatusFilteredByHeader()) {
+            oatReportInfo.getReportFileInfo().addProjectFilteredByHeaderFile(oatReportFile);
         }
 
         if (oatFileDocument.getData("Result.LicenseFile").equals("false")) {
@@ -204,25 +206,66 @@ public class OatDetailPlainReporter extends AbstractOatReporter {
             this.writeLine("Report User: \t" + this.oatReportSummaryInfo.getReportCreatorInfo().getReportUser());
             this.writeLine("Report Time: \t" + this.oatReportSummaryInfo.getReportCreatorInfo().getReportTime());
             this.writeLine("Report Tool: \t" + this.oatReportSummaryInfo.getReportCreatorInfo().getReportTool());
-            this.writeLine(
-                "Report Tool Version: \t" + this.oatReportSummaryInfo.getReportCreatorInfo().getReportToolVersion());
-            this.writeLine(
-                "Report Command: \t" + this.oatReportSummaryInfo.getReportCreatorInfo().getReportInitCommand());
+            final String toolVersion = this.oatReportSummaryInfo.getReportCreatorInfo().getReportToolVersion();
+            this.writeLine("Report Tool Version: \t" + toolVersion);
+            this.writeLine("Report Command: \t" + "java -jar ohos_ossaudittool-" + toolVersion + ".jar "
+                + this.oatReportSummaryInfo.getReportCreatorInfo().getReportInitCommand());
 
             final List<OatReportInfo> oatReportInfoList = this.oatReportSummaryInfo.getOatReportInfoList();
             this.writeLine("Report Project Count: \t" + oatReportInfoList.size());
 
+            int index = 1;
             for (final OatReportInfo oatReportInfo : oatReportInfoList) {
-                this.writeLine("Report Project Name: \t" + oatReportInfo.getReportProjectInfo().getProjectName());
+                this.writeLine("");
+                this.writeLine("Project Begin " + index + "/" + oatReportInfoList.size() + ": \t");
+
+                final OatReportProjectInfo oatReportProjectInfo = oatReportInfo.getReportProjectInfo();
+                this.writeLine("Project Name: \t" + oatReportProjectInfo.getProjectName());
+                this.writeLine("Project Home Page: \t" + oatReportProjectInfo.getProjectHomePage());
+                this.writeLine("Project Branch: \t" + oatReportProjectInfo.getProjectBranch());
+                this.writeLine("Project Tag: \t" + oatReportProjectInfo.getProjectTag());
+                this.writeLine("Project Version: \t" + oatReportProjectInfo.getProjectVersion());
+                this.writeLine("Project Main License: \t" + oatReportProjectInfo.getMainLicense());
+
+                final OatReportFileInfo oatReportFileInfo = oatReportInfo.getReportFileInfo();
+                this.writeLine("");
+                this.writeLine("Project File Count: \t" + oatReportFileInfo.getProjectFileCount());
+                this.writeLine("Project Normal File Count: \t" + oatReportFileInfo.getProjectNormalFileCount());
+
+                this.writeLine("Project Filtered File Count: \t" + oatReportFileInfo.getProjectFilteredFileCount());
+                final List<OatReportFile> projectFilteredFileList = oatReportFileInfo.getProjectFilteredFileList();
+                for (final OatReportFile oatReportFile : projectFilteredFileList) {
+                    final String title = "Project Filtered File\t";
+                    final String file = oatReportFile.getFilePath() + "\t";
+                    final String rule = oatReportFile.getOatDocument().getStatus().getFileStatusRule() + "\t";
+                    final String desc = oatReportFile.getOatDocument().getStatus().getFileStatusDesc() + "\t";
+                    this.writeLine(title + file + rule + desc);
+                }
+                this.writeLine("");
+
+                this.writeLine("Project Filtered By Header File Count: \t"
+                    + oatReportFileInfo.getProjectFilteredByHeaderFileCount());
+                final List<OatReportFile> projectFilteredByHeaderFileList
+                    = oatReportFileInfo.getProjectFilteredByHeaderFileList();
+                for (final OatReportFile oatReportFile : projectFilteredByHeaderFileList) {
+                    final String title = "Project Filtered By Header File\t";
+                    final String file = oatReportFile.getFilePath() + "\t";
+                    final String rule = oatReportFile.getOatDocument().getStatus().getFileStatusRule() + "\t";
+                    final String desc = oatReportFile.getOatDocument().getStatus().getFileStatusDesc() + "\t";
+                    this.writeLine(title + file + rule + desc);
+                }
+                this.writeLine("");
+
                 this.writeLine(
-                    "Report Project Home Page: \t" + oatReportInfo.getReportProjectInfo().getProjectHomePage());
-                this.writeLine("Report Project Branch: \t" + oatReportInfo.getReportProjectInfo().getProjectBranch());
-                this.writeLine("Report Project Tag: \t" + oatReportInfo.getReportProjectInfo().getProjectTag());
-                this.writeLine("Report Project Version: \t" + oatReportInfo.getReportProjectInfo().getProjectVersion());
-                this.writeLine(
-                    "Report Project Main License: \t" + oatReportInfo.getReportProjectInfo().getMainLicense());
-                this.writeLine(
-                    "Report Project Config: \t" + oatReportInfo.getReportConfigInfoInfo().getProjectPolicy());
+                    "Project Invalid Type File Count: \t" + oatReportFileInfo.getProjectInvalidTypeFileCount());
+
+                this.writeLine("");
+                this.writeLine("Project Config: \t");
+                this.writeLine(oatReportInfo.getReportConfigInfoInfo().getProjectPolicy());
+
+                this.writeLine("");
+                this.writeLine("Project End " + index + "/" + oatReportInfoList.size() + ": \t");
+                index++;
             }
 
             this.writer.flush();

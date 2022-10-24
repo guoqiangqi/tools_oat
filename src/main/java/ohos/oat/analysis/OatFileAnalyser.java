@@ -328,10 +328,12 @@ public class OatFileAnalyser {
             throw new RatHeaderAnalysisException("Read file failed: " + this.fileDocument, e);
         }
         IOUtils.closeQuietly(this.fileReader);
-        if (this.processLineCount - this.headerLinesToRead < 3) {
+        if (!this.fileDocument.getStatus().isFileStatusFilteredByHeader()
+            && this.processLineCount - this.headerLinesToRead < 3) {
             this.fileDocument.putData("isSkipedFile", "true");
             this.fileDocument.getStatus().setFileStatusFilteredByHeader();
-            this.fileDocument.getStatus().setFileStatusRule("The file lines < 3");
+            this.fileDocument.getStatus().setFileStatusRule("FileHeaderFilter");
+            this.fileDocument.getStatus().setFileStatusDesc("The file lines < 3");
         }
         final String tmp = this.fileDocument.getData("isSkipedFile");
         if (tmp.equals("true")) {
@@ -441,7 +443,8 @@ public class OatFileAnalyser {
                 if (line.contains(skipString)) {
                     this.fileDocument.putData("isSkipedFile", "true");
                     this.fileDocument.getStatus().setFileStatusFilteredByHeader();
-                    this.fileDocument.getStatus().setFileStatusRule("Skip words:" + skipString);
+                    this.fileDocument.getStatus().setFileStatusRule("FileHeaderFilter");
+                    this.fileDocument.getStatus().setFileStatusDesc("Skip words:" + skipString);
                     return false;
                 }
             }
