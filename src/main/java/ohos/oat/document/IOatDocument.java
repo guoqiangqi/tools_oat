@@ -93,19 +93,7 @@ public interface IOatDocument {
 
         public static final String FILE_STATUS_FILTERED = "FileFiltered";
 
-        public static final String FILE_STATUS_FILTERED_BY_COMMON = "FileFilteredByCommon";
-
-        public static final String FILE_STATUS_FILTERED_BY_PROJECT = "FileFilteredByProject";
-
         public static final String FILE_STATUS_FILTERED_BY_HEADER = "FileFilteredByFileHeader";
-
-        public static final String POLICY_STATUS_PASSED_BY_COMMON = "PolicyPassedByCommon";
-
-        public static final String POLICY_STATUS_PASSED_BY_PROJECT = "PolicyPassedByProject";
-
-        public static final String POLICY_STATUS_PASSED_BY_FILTER = "PolicyPassedByFilter";
-
-        public static final String POLICY_STATUS_NO_PASSED = "PolicyNoPassed";
 
         private String fileStatus = Status.FILE_STATUS_NORMAL;
 
@@ -113,15 +101,7 @@ public interface IOatDocument {
 
         private String fileStatusDesc = "";
 
-        private final Map<String, String> policyStatusMap = new HashMap<>();
-
-        public String getFileStatus() {
-            return this.fileStatus;
-        }
-
-        public void setFileStatusNormal() {
-            this.fileStatus = Status.FILE_STATUS_NORMAL;
-        }
+        private final Map<String, Rule> policyStatusFilteredMap = new HashMap<>();
 
         public boolean isFileStatusNormal() {
             return Status.FILE_STATUS_NORMAL.equals(this.fileStatus);
@@ -133,22 +113,6 @@ public interface IOatDocument {
 
         public boolean isFileStatusFiltered() {
             return Status.FILE_STATUS_FILTERED.equals(this.fileStatus);
-        }
-
-        public void setFileStatusFilteredByCommon() {
-            this.fileStatus = Status.FILE_STATUS_FILTERED_BY_COMMON;
-        }
-
-        public boolean isFileStatusFilteredByCommon() {
-            return Status.FILE_STATUS_FILTERED_BY_COMMON.equals(this.fileStatus);
-        }
-
-        public void setFileStatusFilteredByProject() {
-            this.fileStatus = Status.FILE_STATUS_FILTERED_BY_PROJECT;
-        }
-
-        public boolean isFileStatusFilteredByProject() {
-            return Status.FILE_STATUS_FILTERED_BY_PROJECT.equals(this.fileStatus);
         }
 
         public void setFileStatusFilteredByHeader() {
@@ -175,30 +139,36 @@ public interface IOatDocument {
             this.fileStatusDesc = fileStatusDesc;
         }
 
-        public String getPolicyStatus(final String policyId) {
-            final String status = this.policyStatusMap.get(policyId);
-            return status == null ? "" : status;
+        public Map<String, Rule> getPolicyStatusFilteredMap() {
+            return this.policyStatusFilteredMap;
         }
 
-        public void setPolicyStatusData(final String policyIdDataKey, final String value) {
-            this.policyStatusMap.put(policyIdDataKey, value);
+        public void setPolicyStatusFilteredRule(final String policyId, final Rule rule) {
+            this.policyStatusFilteredMap.put(policyId, rule);
+        }
+        
+    }
+
+    static class Rule {
+        public String getRule() {
+            return this.rule;
         }
 
-        public void setPolicyStatusPassedByCommon(final String policyId) {
-            this.policyStatusMap.put(policyId, Status.POLICY_STATUS_PASSED_BY_COMMON);
+        public void setRule(final String rule) {
+            this.rule = rule;
         }
 
-        public void setPolicyStatusPassedByProject(final String policyId) {
-            this.policyStatusMap.put(policyId, Status.POLICY_STATUS_PASSED_BY_PROJECT);
+        public String getDesc() {
+            return this.desc;
         }
 
-        public void setPolicyStatusPassedByFilter(final String policyId) {
-            this.policyStatusMap.put(policyId, Status.POLICY_STATUS_PASSED_BY_FILTER);
+        public void setDesc(final String desc) {
+            this.desc = desc;
         }
 
-        public void setPolicyStatusNoPassed(final String policyId) {
-            this.policyStatusMap.put(policyId, Status.POLICY_STATUS_NO_PASSED);
-        }
+        private String rule = "";
+
+        private String desc = "";
 
     }
 }

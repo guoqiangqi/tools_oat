@@ -258,6 +258,16 @@ public class OatDetailPlainReporter extends AbstractOatReporter {
 
                 this.writeLine(
                     "Project Invalid Type File Count: \t" + oatReportFileInfo.getProjectInvalidTypeFileCount());
+                final List<OatReportFile> projectInvalidTypeFileList
+                    = oatReportFileInfo.getProjectInvalidTypeFileList();
+                for (final OatReportFile oatReportFile : projectInvalidTypeFileList) {
+                    final String title = "Project Invalid Type File\t";
+                    final String file = oatReportFile.getFilePath() + "\t";
+                    final String rule = oatReportFile.getOatDocument().getStatus().getFileStatusRule() + "\t";
+                    final String desc = oatReportFile.getOatDocument().getStatus().getFileStatusDesc() + "\t";
+                    this.writeLine(title + file + rule + desc);
+                }
+                this.writeLine("");
 
                 this.writeLine("");
                 this.writeLine("Project Config: \t");

@@ -217,8 +217,14 @@ public final class OatCfgUtil {
 
                 final BufferedReader fileReader = new BufferedReader(isr);
                 String line = "\n";
+                boolean start = false;
                 while ((line = fileReader.readLine()) != null) {
-                    stringBuilder.append("\n" + line);
+                    if (!start && line.trim().equals("<configuration>")) {
+                        start = true;
+                    }
+                    if (start) {
+                        stringBuilder.append("\n" + line);
+                    }
                 }
                 oatProject.putData("ProjectOAT", stringBuilder.toString());
                 IOUtils.closeQuietly(fileReader);

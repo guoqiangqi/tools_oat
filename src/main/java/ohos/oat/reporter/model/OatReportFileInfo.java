@@ -116,6 +116,10 @@ public class OatReportFileInfo {
         return this.projectInvalidTypeFileCount;
     }
 
+    public List<OatReportFile> getProjectInvalidTypeFileList() {
+        return this.projectInvalidTypeFileList;
+    }
+
     public void addProjectInvalidTypeFile(final OatReportFile file) {
         this.projectInvalidTypeFileList.add(file);
         this.projectInvalidTypeFileCount++;
