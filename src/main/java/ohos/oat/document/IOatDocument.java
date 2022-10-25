@@ -101,7 +101,7 @@ public interface IOatDocument {
 
         private String fileStatusDesc = "";
 
-        private final Map<String, Rule> policyStatusFilteredMap = new HashMap<>();
+        private final Map<String, FilteredRule> policyStatusFilteredMap = new HashMap<>();
 
         public boolean isFileStatusNormal() {
             return Status.FILE_STATUS_NORMAL.equals(this.fileStatus);
@@ -139,23 +139,48 @@ public interface IOatDocument {
             this.fileStatusDesc = fileStatusDesc;
         }
 
-        public Map<String, Rule> getPolicyStatusFilteredMap() {
+        public Map<String, FilteredRule> getPolicyStatusFilteredMap() {
             return this.policyStatusFilteredMap;
         }
 
-        public void setPolicyStatusFilteredRule(final String policyId, final Rule rule) {
-            this.policyStatusFilteredMap.put(policyId, rule);
+        public void addPolicyStatusFilteredRule(final String policyId, final FilteredRule filteredRule) {
+            this.policyStatusFilteredMap.put(policyId, filteredRule);
         }
-        
+
     }
 
-    static class Rule {
-        public String getRule() {
-            return this.rule;
+    static class FilteredRule {
+
+        public String getFilePath() {
+            return this.filePath;
         }
 
-        public void setRule(final String rule) {
-            this.rule = rule;
+        public void setFilePath(final String filePath) {
+            this.filePath = filePath;
+        }
+
+        public String getPolicyType() {
+            return this.policyType;
+        }
+
+        public void setPolicyType(final String policyType) {
+            this.policyType = policyType;
+        }
+
+        public String getFilterName() {
+            return this.filterName;
+        }
+
+        public void setFilterName(final String filterName) {
+            this.filterName = filterName;
+        }
+
+        public String getFilterItem() {
+            return this.filterItem;
+        }
+
+        public void setFilterItem(final String filterItem) {
+            this.filterItem = filterItem;
         }
 
         public String getDesc() {
@@ -166,7 +191,13 @@ public interface IOatDocument {
             this.desc = desc;
         }
 
-        private String rule = "";
+        private String filePath = "";
+
+        private String policyType = "";
+
+        private String filterName = "";
+
+        private String filterItem = "";
 
         private String desc = "";
 

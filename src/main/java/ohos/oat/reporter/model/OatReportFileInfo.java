@@ -32,8 +32,6 @@ public class OatReportFileInfo {
 
     private final List<OatReportFile> projectFilteredByHeaderFileList = new ArrayList<>();
 
-    private final List<OatReportFile> projectInvalidTypeFileList = new ArrayList<>();
-
     private int projectFileCount = 0;
 
     private int projectNormalFileCount = 0;
@@ -42,44 +40,20 @@ public class OatReportFileInfo {
 
     private int projectFilteredByHeaderFileCount = 0;
 
-    private int projectInvalidTypeFileCount = 0;
-
-    private boolean hasLicenseFile;
-
-    private boolean hasReadmeFile;
-
-    private boolean hasReadmeOpenSourceFile;
-
     public int getProjectFileCount() {
         return this.projectFileCount;
-    }
-
-    public void setProjectFileCount(final int projectFileCount) {
-        this.projectFileCount = projectFileCount;
     }
 
     public int getProjectNormalFileCount() {
         return this.projectNormalFileCount;
     }
 
-    public void setProjectNormalFileCount(final int projectNormalFileCount) {
-        this.projectNormalFileCount = projectNormalFileCount;
-    }
-
     public int getProjectFilteredFileCount() {
         return this.projectFilteredFileCount;
     }
 
-    public void setProjectFilteredFileCount(final int projectFilteredFileCount) {
-        this.projectFilteredFileCount = projectFilteredFileCount;
-    }
-
     public int getProjectFilteredByHeaderFileCount() {
         return this.projectFilteredByHeaderFileCount;
-    }
-
-    public void setProjectFilteredByHeaderFileCount(final int projectFilteredByHeaderFileCount) {
-        this.projectFilteredByHeaderFileCount = projectFilteredByHeaderFileCount;
     }
 
     public List<OatReportFile> getProjectNormalFileList() {
@@ -112,40 +86,4 @@ public class OatReportFileInfo {
         this.projectFileCount++;
     }
 
-    public int getProjectInvalidTypeFileCount() {
-        return this.projectInvalidTypeFileCount;
-    }
-
-    public List<OatReportFile> getProjectInvalidTypeFileList() {
-        return this.projectInvalidTypeFileList;
-    }
-
-    public void addProjectInvalidTypeFile(final OatReportFile file) {
-        this.projectInvalidTypeFileList.add(file);
-        this.projectInvalidTypeFileCount++;
-    }
-
-    public boolean isHasLicenseFile() {
-        return this.hasLicenseFile;
-    }
-
-    public void setHasLicenseFile(final boolean hasLicenseFile) {
-        this.hasLicenseFile = hasLicenseFile;
-    }
-
-    public boolean isHasReadmeFile() {
-        return this.hasReadmeFile;
-    }
-
-    public void setHasReadmeFile(final boolean hasReadmeFile) {
-        this.hasReadmeFile = hasReadmeFile;
-    }
-
-    public boolean isHasReadmeOpenSourceFile() {
-        return this.hasReadmeOpenSourceFile;
-    }
-
-    public void setHasReadmeOpenSourceFile(final boolean hasReadmeOpenSourceFile) {
-        this.hasReadmeOpenSourceFile = hasReadmeOpenSourceFile;
-    }
 }

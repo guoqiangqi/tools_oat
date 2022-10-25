@@ -27,7 +27,7 @@ import java.util.List;
 public class OatReportSummaryInfo {
     public List<OatReportInfo> oatReportInfoList = new ArrayList<>();
 
-    private OatReportCreatorInfo reportCreatorInfo = new OatReportCreatorInfo();
+    private final OatReportCreatorInfo reportCreatorInfo = new OatReportCreatorInfo();
 
     public List<OatReportInfo> getOatReportInfoList() {
         return this.oatReportInfoList;
@@ -41,7 +41,4 @@ public class OatReportSummaryInfo {
         return this.reportCreatorInfo;
     }
 
-    public void setReportCreatorInfo(final OatReportCreatorInfo reportCreatorInfo) {
-        this.reportCreatorInfo = reportCreatorInfo;
-    }
 }

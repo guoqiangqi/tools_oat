@@ -15,6 +15,7 @@
 
 package ohos.oat.reporter.model;
 
+import ohos.oat.document.IOatDocument;
 import ohos.oat.reporter.model.file.OatReportFile;
 
 import java.util.ArrayList;
@@ -28,6 +29,8 @@ import java.util.Map;
  */
 public class OatReportCopyrightInfo {
 
+    private final List<IOatDocument.FilteredRule> filteredRules = new ArrayList<>();
+
     private final List<String> copyrightList = new ArrayList<>();
 
     private final List<String> normalCopyrightList = new ArrayList<>();
@@ -39,6 +42,8 @@ public class OatReportCopyrightInfo {
     private final List<OatReportFile> noCopyrightHeaderFileList = new ArrayList<>();
 
     private final List<OatReportFile> abnormalCopyrightHeaderFileList = new ArrayList<>();
+
+    private int filteredRuleCount = 0;
 
     private int copyrightCount = 0;
 
@@ -53,6 +58,21 @@ public class OatReportCopyrightInfo {
     private int normalCopyrightHeaderFileCount = 0;
 
     private int abnormalCopyrightHeaderFileCount = 0;
+
+    public int getFilteredRuleCount() {
+        return this.filteredRuleCount;
+    }
+
+    public List<IOatDocument.FilteredRule> getFilteredRules() {
+        return this.filteredRules;
+    }
+
+    public void addFilteredRule(final IOatDocument.FilteredRule filteredRule) {
+        if (filteredRule.getPolicyType().equals("copyright")) {
+            this.filteredRules.add(filteredRule);
+            this.filteredRuleCount++;
+        }
+    }
 
     public int getCopyrightCount() {
         return this.copyrightCount;

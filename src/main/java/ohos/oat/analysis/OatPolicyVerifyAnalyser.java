@@ -269,9 +269,11 @@ public class OatPolicyVerifyAnalyser extends AbstraceOatAnalyser {
                 if (lastFilterResult.length() > 0) {
                     if (lastFilterResult.equals("true")) {
                         final String policyId = oatPolicyItem.getType() + ":" + oatPolicyItem.getFileFilter();
-                        final IOatDocument.Rule rule = new IOatDocument.Rule();
-                        rule.setRule(fileFilterItem);
-                        subject.getStatus().setPolicyStatusFilteredRule(policyId, rule);
+                        final IOatDocument.FilteredRule filteredRule = new IOatDocument.FilteredRule();
+                        filteredRule.setFilterItem(fileFilterItem);
+                        filteredRule.setPolicyType(oatPolicyItem.getType());
+                        filteredRule.setFilterName(oatPolicyItem.getFileFilter());
+                        subject.getStatus().addPolicyStatusFilteredRule(policyId, filteredRule);
                         return true;
                     } else {
                         continue;
@@ -297,9 +299,11 @@ public class OatPolicyVerifyAnalyser extends AbstraceOatAnalyser {
                     // need add reason desc to print all message in output file future
                     subject.putData("FileFilterResult:" + fileFilter.getName() + ":" + fileFilterItem, "true");
                     final String policyId = oatPolicyItem.getType() + ":" + oatPolicyItem.getFileFilter();
-                    final IOatDocument.Rule rule = new IOatDocument.Rule();
-                    rule.setRule(fileFilterItem);
-                    subject.getStatus().setPolicyStatusFilteredRule(policyId, rule);
+                    final IOatDocument.FilteredRule filteredRule = new IOatDocument.FilteredRule();
+                    filteredRule.setFilterItem(fileFilterItem);
+                    filteredRule.setPolicyType(oatPolicyItem.getType());
+                    filteredRule.setFilterName(oatPolicyItem.getFileFilter());
+                    subject.getStatus().addPolicyStatusFilteredRule(policyId, filteredRule);
                     return true;
                 } else {
                     subject.putData("FileFilterResult:" + fileFilter.getName() + ":" + fileFilterItem, "false");
@@ -315,9 +319,11 @@ public class OatPolicyVerifyAnalyser extends AbstraceOatAnalyser {
             if (lastFilterResult.length() > 0) {
                 if (lastFilterResult.equals("true")) {
                     final String policyId = oatPolicyItem.getType() + ":" + oatPolicyItem.getFileFilter();
-                    final IOatDocument.Rule rule = new IOatDocument.Rule();
-                    rule.setRule(filePathFilterItem);
-                    subject.getStatus().setPolicyStatusFilteredRule(policyId, rule);
+                    final IOatDocument.FilteredRule filteredRule = new IOatDocument.FilteredRule();
+                    filteredRule.setFilterItem(filePathFilterItem);
+                    filteredRule.setPolicyType(oatPolicyItem.getType());
+                    filteredRule.setFilterName(oatPolicyItem.getFileFilter());
+                    subject.getStatus().addPolicyStatusFilteredRule(policyId, filteredRule);
                     return true;
                 } else {
                     continue;
@@ -334,9 +340,11 @@ public class OatPolicyVerifyAnalyser extends AbstraceOatAnalyser {
                 // need add reason desc to print all message in output file future
                 subject.putData("PathFilterResult:" + fileFilter.getName() + ":" + filePathFilterItem, "true");
                 final String policyId = oatPolicyItem.getType() + ":" + oatPolicyItem.getFileFilter();
-                final IOatDocument.Rule rule = new IOatDocument.Rule();
-                rule.setRule(filePathFilterItem);
-                subject.getStatus().setPolicyStatusFilteredRule(policyId, rule);
+                final IOatDocument.FilteredRule filteredRule = new IOatDocument.FilteredRule();
+                filteredRule.setFilterItem(filePathFilterItem);
+                filteredRule.setPolicyType(oatPolicyItem.getType());
+                filteredRule.setFilterName(oatPolicyItem.getFileFilter());
+                subject.getStatus().addPolicyStatusFilteredRule(policyId, filteredRule);
                 return true;
             } else {
                 subject.putData("PathFilterResult:" + fileFilter.getName() + ":" + filePathFilterItem, "false");

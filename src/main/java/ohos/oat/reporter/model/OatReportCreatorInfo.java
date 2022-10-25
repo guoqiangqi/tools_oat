@@ -21,11 +21,11 @@ package ohos.oat.reporter.model;
  */
 public class OatReportCreatorInfo {
 
-    private String reportTool = "OAT";
+    private final String reportTool = "OAT";
 
     private String reportInitCommand = "";
 
-    private String reportToolVersion = "2.0.0-beta.1";
+    private final String reportToolVersion = "2.0.0-beta.1";
 
     private String reportUser = "";
 
@@ -35,10 +35,6 @@ public class OatReportCreatorInfo {
 
     public String getReportTool() {
         return this.reportTool;
-    }
-
-    public void setReportTool(final String reportTool) {
-        this.reportTool = reportTool;
     }
 
     public String getReportInitCommand() {
@@ -51,10 +47,6 @@ public class OatReportCreatorInfo {
 
     public String getReportToolVersion() {
         return this.reportToolVersion;
-    }
-
-    public void setReportToolVersion(final String reportToolVersion) {
-        this.reportToolVersion = reportToolVersion;
     }
 
     public String getReportUser() {

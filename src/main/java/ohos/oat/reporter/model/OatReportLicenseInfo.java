@@ -15,6 +15,7 @@
 
 package ohos.oat.reporter.model;
 
+import ohos.oat.document.IOatDocument;
 import ohos.oat.reporter.model.file.OatReportFile;
 import ohos.oat.reporter.model.license.OatReportLicense;
 
@@ -29,6 +30,10 @@ import java.util.Map;
  */
 public class OatReportLicenseInfo {
 
+    private final List<IOatDocument.FilteredRule> licenseFilteredRules = new ArrayList<>();
+
+    private final List<IOatDocument.FilteredRule> compatibleFilteredRules = new ArrayList<>();
+
     private final List<OatReportLicense> licenseTypeList = new ArrayList<>();
 
     private final List<OatReportLicense> normalLicenseTypeList = new ArrayList<>();
@@ -39,13 +44,15 @@ public class OatReportLicenseInfo {
 
     private final Map<String, List<OatReportFile>> licenseId2FileList = new HashMap<>();
 
-    // private final List<OatReportFile> multiLicenseHeaderFileList = new ArrayList<>();
-
     private final List<OatReportFile> noLicenseHeaderFileList = new ArrayList<>();
 
     private final List<OatReportFile> abnormalLicenseHeaderFileList = new ArrayList<>();
 
     private final List<OatReportFile> notCompatibleLicenseTypeFileList = new ArrayList<>();
+
+    private int licenseFilteredRuleCount = 0;
+
+    private int compatibleFilteredRuleCount = 0;
 
     private int licenseTypeCount = 0;
 
@@ -64,6 +71,36 @@ public class OatReportLicenseInfo {
     private int abnormalLicenseHeaderFileCount = 0;
 
     private int notCompatibleLicenseTypeFileCount = 0;
+
+    public int getLicenseFilteredRuleCount() {
+        return this.licenseFilteredRuleCount;
+    }
+
+    public List<IOatDocument.FilteredRule> getLicenseFilteredRules() {
+        return this.licenseFilteredRules;
+    }
+
+    public void addLicenseFilteredRule(final IOatDocument.FilteredRule licenseFilteredRule) {
+        if (licenseFilteredRule.getPolicyType().equals("license")) {
+            this.licenseFilteredRules.add(licenseFilteredRule);
+            this.licenseFilteredRuleCount++;
+        }
+    }
+
+    public int getCompatibleFilteredRuleCount() {
+        return this.compatibleFilteredRuleCount;
+    }
+
+    public List<IOatDocument.FilteredRule> getCompatibleFilteredRules() {
+        return this.compatibleFilteredRules;
+    }
+
+    public void addCompatibleFilteredRule(final IOatDocument.FilteredRule compatibleFilteredRule) {
+        if (compatibleFilteredRule.getPolicyType().equals("compatibility")) {
+            this.compatibleFilteredRules.add(compatibleFilteredRule);
+            this.compatibleFilteredRuleCount++;
+        }
+    }
 
     public List<OatReportLicense> getNotCompatibleLicenseTypeList() {
         return this.notCompatibleLicenseTypeList;
@@ -197,15 +234,6 @@ public class OatReportLicenseInfo {
         }
         filelist.add(file);
     }
-
-    // public List<OatReportFile> getMultiLicenseHeaderFileList() {
-    //     return this.multiLicenseHeaderFileList;
-    // }
-    //
-    // public void addMultiLicenseHeaderFile(final OatReportFile file) {
-    //     this.multiLicenseHeaderFileList.add(file);
-    //     this.multiLicenseHeaderFileCount++;
-    // }
 
     public List<OatReportFile> getNoLicenseHeaderFileList() {
         return this.noLicenseHeaderFileList;

@@ -24,54 +24,46 @@ package ohos.oat.reporter.model;
  */
 public class OatReportInfo {
 
-    private OatReportConfigInfo reportConfigInfoInfo = new OatReportConfigInfo();
+    private final OatReportFileTypeInfo reportFileTypeInfo = new OatReportFileTypeInfo();
 
-    private OatReportProjectInfo reportProjectInfo = new OatReportProjectInfo();
+    private final OatReportFileNameInfo reportFileNameInfo = new OatReportFileNameInfo();
 
-    private OatReportFileInfo reportFileInfo = new OatReportFileInfo();
+    private final OatReportConfigInfo reportConfigInfoInfo = new OatReportConfigInfo();
 
-    private OatReportLicenseInfo reportLicenseInfo = new OatReportLicenseInfo();
+    private final OatReportProjectInfo reportProjectInfo = new OatReportProjectInfo();
 
-    private OatReportCopyrightInfo reportCopyrightInfo = new OatReportCopyrightInfo();
+    private final OatReportFileInfo reportFileInfo = new OatReportFileInfo();
+
+    private final OatReportLicenseInfo reportLicenseInfo = new OatReportLicenseInfo();
+
+    private final OatReportCopyrightInfo reportCopyrightInfo = new OatReportCopyrightInfo();
+
+    public OatReportFileTypeInfo getReportFileTypeInfo() {
+        return this.reportFileTypeInfo;
+    }
+
+    public OatReportFileNameInfo getReportFileNameInfo() {
+        return this.reportFileNameInfo;
+    }
 
     public OatReportConfigInfo getReportConfigInfoInfo() {
         return this.reportConfigInfoInfo;
-    }
-
-    public void setReportConfigInfoInfo(final OatReportConfigInfo reportConfigInfoInfo) {
-        this.reportConfigInfoInfo = reportConfigInfoInfo;
     }
 
     public OatReportProjectInfo getReportProjectInfo() {
         return this.reportProjectInfo;
     }
 
-    public void setReportProjectInfo(final OatReportProjectInfo reportProjectInfo) {
-        this.reportProjectInfo = reportProjectInfo;
-    }
-
     public OatReportFileInfo getReportFileInfo() {
         return this.reportFileInfo;
-    }
-
-    public void setReportFileInfo(final OatReportFileInfo reportFileInfo) {
-        this.reportFileInfo = reportFileInfo;
     }
 
     public OatReportLicenseInfo getReportLicenseInfo() {
         return this.reportLicenseInfo;
     }
 
-    public void setReportLicenseInfo(final OatReportLicenseInfo reportLicenseInfo) {
-        this.reportLicenseInfo = reportLicenseInfo;
-    }
-
     public OatReportCopyrightInfo getReportCopyrightInfo() {
         return this.reportCopyrightInfo;
-    }
-
-    public void setReportCopyrightInfo(final OatReportCopyrightInfo reportCopyrightInfo) {
-        this.reportCopyrightInfo = reportCopyrightInfo;
     }
 
 }
