@@ -272,6 +272,7 @@ public class OatPolicyVerifyAnalyser extends AbstraceOatAnalyser {
                         final IOatDocument.FilteredRule filteredRule = new IOatDocument.FilteredRule();
                         filteredRule.setFilterItem(fileFilterItem);
                         filteredRule.setPolicyType(oatPolicyItem.getType());
+                        filteredRule.setPolicyName(oatPolicyItem.getName());
                         filteredRule.setFilterName(oatPolicyItem.getFileFilter());
                         subject.getStatus().addPolicyStatusFilteredRule(policyId, filteredRule);
                         return true;
@@ -302,6 +303,7 @@ public class OatPolicyVerifyAnalyser extends AbstraceOatAnalyser {
                     final IOatDocument.FilteredRule filteredRule = new IOatDocument.FilteredRule();
                     filteredRule.setFilterItem(fileFilterItem);
                     filteredRule.setPolicyType(oatPolicyItem.getType());
+                    filteredRule.setPolicyName(oatPolicyItem.getName());
                     filteredRule.setFilterName(oatPolicyItem.getFileFilter());
                     subject.getStatus().addPolicyStatusFilteredRule(policyId, filteredRule);
                     return true;
@@ -322,6 +324,7 @@ public class OatPolicyVerifyAnalyser extends AbstraceOatAnalyser {
                     final IOatDocument.FilteredRule filteredRule = new IOatDocument.FilteredRule();
                     filteredRule.setFilterItem(filePathFilterItem);
                     filteredRule.setPolicyType(oatPolicyItem.getType());
+                    filteredRule.setPolicyName(oatPolicyItem.getName());
                     filteredRule.setFilterName(oatPolicyItem.getFileFilter());
                     subject.getStatus().addPolicyStatusFilteredRule(policyId, filteredRule);
                     return true;
@@ -343,6 +346,7 @@ public class OatPolicyVerifyAnalyser extends AbstraceOatAnalyser {
                 final IOatDocument.FilteredRule filteredRule = new IOatDocument.FilteredRule();
                 filteredRule.setFilterItem(filePathFilterItem);
                 filteredRule.setPolicyType(oatPolicyItem.getType());
+                filteredRule.setPolicyName(oatPolicyItem.getName());
                 filteredRule.setFilterName(oatPolicyItem.getFileFilter());
                 subject.getStatus().addPolicyStatusFilteredRule(policyId, filteredRule);
                 return true;

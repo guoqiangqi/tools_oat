@@ -133,7 +133,7 @@ public class OatDetailPlainReporter extends AbstractOatReporter {
         oatReportFile.setOatDocument(oatFileDocument);
 
         if (oatFileDocument.getStatus().isFileStatusNormal()) {
-            // oatReportInfo.getReportFileInfo().addProjectNormalFile(oatReportFile);
+            oatReportInfo.getReportFileInfo().addProjectNormalFile(oatReportFile);
         } else if (oatFileDocument.getStatus().isFileStatusFiltered()) {
             oatReportInfo.getReportFileInfo().addProjectFilteredFile(oatReportFile);
         } else if (oatFileDocument.getStatus().isFileStatusFilteredByHeader()) {
@@ -284,7 +284,57 @@ public class OatDetailPlainReporter extends AbstractOatReporter {
                     this.writeLine(title + file + rule + desc);
                 }
                 this.writeLine("");
-                
+
+                final List<IOatDocument.FilteredRule> filteredRuleList = oatReportInfo.getReportFileNameInfo()
+                    .getFilteredRules();
+                this.writeLine("Policy Filtered Count-FileName: \t" + oatReportInfo.getReportFileNameInfo()
+                    .getFilteredRuleCount());
+                for (final IOatDocument.FilteredRule filteredRule : filteredRuleList) {
+                    this.writeLine("Policy Filtered-" + filteredRule.getPolicyName(), filteredRule.getFilePath(),
+                        filteredRule.getFilterItem(), filteredRule.getDesc());
+                }
+                this.writeLine("");
+
+                final List<IOatDocument.FilteredRule> fileTypeFilteredRuleList = oatReportInfo.getReportFileTypeInfo()
+                    .getFilteredRules();
+                this.writeLine("Policy Filtered Count-FileType: \t" + oatReportInfo.getReportFileTypeInfo()
+                    .getFilteredRuleCount());
+                for (final IOatDocument.FilteredRule filteredRule : fileTypeFilteredRuleList) {
+                    this.writeLine("Policy Filtered-" + filteredRule.getPolicyName(), filteredRule.getFilePath(),
+                        filteredRule.getFilterItem(), filteredRule.getDesc());
+                }
+                this.writeLine("");
+
+                final List<IOatDocument.FilteredRule> licenseFilteredRuleList = oatReportInfo.getReportLicenseInfo()
+                    .getLicenseFilteredRules();
+                this.writeLine("Policy Filtered Count-License: \t" + oatReportInfo.getReportLicenseInfo()
+                    .getLicenseFilteredRuleCount());
+                for (final IOatDocument.FilteredRule filteredRule : licenseFilteredRuleList) {
+                    this.writeLine("Policy Filtered-License", filteredRule.getFilePath(), filteredRule.getFilterItem(),
+                        filteredRule.getDesc());
+                }
+                this.writeLine("");
+
+                final List<IOatDocument.FilteredRule> compatibleFilteredRuleList = oatReportInfo.getReportLicenseInfo()
+                    .getCompatibleFilteredRules();
+                this.writeLine("Policy Filtered Count-Compatibility: \t" + oatReportInfo.getReportLicenseInfo()
+                    .getCompatibleFilteredRuleCount());
+                for (final IOatDocument.FilteredRule filteredRule : compatibleFilteredRuleList) {
+                    this.writeLine("Policy Filtered-Compatibility", filteredRule.getFilePath(),
+                        filteredRule.getFilterItem(), filteredRule.getDesc());
+                }
+                this.writeLine("");
+
+                final List<IOatDocument.FilteredRule> copyrightFilteredRuleList = oatReportInfo.getReportCopyrightInfo()
+                    .getFilteredRules();
+                this.writeLine("Policy Filtered Count-Copyright: \t" + oatReportInfo.getReportCopyrightInfo()
+                    .getFilteredRuleCount());
+                for (final IOatDocument.FilteredRule filteredRule : copyrightFilteredRuleList) {
+                    this.writeLine("Policy Filtered-Compatibility", filteredRule.getFilePath(),
+                        filteredRule.getFilterItem(), filteredRule.getDesc());
+                }
+                this.writeLine("");
+
                 // this.writeLine(
                 //     "Project Invalid Type File Count: \t" + oatReportFileInfo.getProjectInvalidTypeFileCount());
                 // final List<OatReportFile> projectInvalidTypeFileList
@@ -317,6 +367,14 @@ public class OatDetailPlainReporter extends AbstractOatReporter {
 
     private void writeLine(final String desc) throws IOException {
         this.writer.write(desc + "\n");
+    }
+
+    private void writeLine(final String... desc) throws IOException {
+        String tmp = "";
+        for (final String s : desc) {
+            tmp = tmp + s + "\t";
+        }
+        this.writer.write(tmp + "\n");
     }
 
 }

@@ -61,7 +61,7 @@ public class OatReportFileInfo {
     }
 
     public void addProjectNormalFile(final OatReportFile file) {
-        this.projectNormalFileList.add(file);
+        // this.projectNormalFileList.add(file);
         this.projectNormalFileCount++;
         this.projectFileCount++;
     }

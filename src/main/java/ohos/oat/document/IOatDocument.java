@@ -167,6 +167,14 @@ public interface IOatDocument {
             this.policyType = policyType;
         }
 
+        public String getPolicyName() {
+            return this.policyName;
+        }
+
+        public void setPolicyName(final String policyName) {
+            this.policyName = policyName;
+        }
+
         public String getFilterName() {
             return this.filterName;
         }
@@ -194,6 +202,8 @@ public interface IOatDocument {
         private String filePath = "";
 
         private String policyType = "";
+
+        private String policyName = "";
 
         private String filterName = "";
 
