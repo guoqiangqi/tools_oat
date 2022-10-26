@@ -25,26 +25,35 @@ public class OatReportFile {
 
     private IOatDocument oatDocument;
 
-    private String fileName = "";
+    private String title = "";
+
+    private String content = "";
 
     private String filePath = "";
 
-    private String fileType = "";
+    private String rule = "";
 
-    public IOatDocument getOatDocument() {
-        return oatDocument;
-    }
+    private String desc = "";
 
-    public void setOatDocument(IOatDocument oatDocument) {
+    public OatReportFile(final IOatDocument oatDocument) {
         this.oatDocument = oatDocument;
-    }
-    
-    public String getFileName() {
-        return this.fileName;
+        this.setFilePath(oatDocument.getName());
     }
 
-    public void setFileName(final String fileName) {
-        this.fileName = fileName;
+    public String getTitle() {
+        return this.title;
+    }
+
+    public void setTitle(final String title) {
+        this.title = title;
+    }
+
+    public String getContent() {
+        return this.content;
+    }
+
+    public void setContent(final String content) {
+        this.content = content;
     }
 
     public String getFilePath() {
@@ -55,12 +64,45 @@ public class OatReportFile {
         this.filePath = filePath;
     }
 
-    public String getFileType() {
-        return this.fileType;
+    public String getRule() {
+        return this.rule;
     }
 
-    public void setFileType(final String fileType) {
-        this.fileType = fileType;
+    public void setRule(final String rule) {
+        this.rule = rule;
+    }
+
+    public String getDesc() {
+        return this.desc;
+    }
+
+    public void setDesc(final String desc) {
+        this.desc = desc;
+    }
+
+    public OatReportFile copy(final String title) {
+        return this.copy(title, "");
+    }
+
+    public OatReportFile copy(final String title, final String content) {
+        return this.copy(title, content, this.rule, this.desc);
+    }
+
+    public OatReportFile copy(final String title, final String content, final String rule, final String desc) {
+        final OatReportFile oatReportFile = new OatReportFile(this.oatDocument);
+        oatReportFile.title = title;
+        oatReportFile.content = content;
+        oatReportFile.rule = rule;
+        oatReportFile.desc = desc;
+        return oatReportFile;
+    }
+
+    public IOatDocument getOatDocument() {
+        return this.oatDocument;
+    }
+
+    public void setOatDocument(final IOatDocument oatDocument) {
+        this.oatDocument = oatDocument;
     }
 
 }

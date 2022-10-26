@@ -274,6 +274,7 @@ public class OatPolicyVerifyAnalyser extends AbstraceOatAnalyser {
                         filteredRule.setPolicyType(oatPolicyItem.getType());
                         filteredRule.setPolicyName(oatPolicyItem.getName());
                         filteredRule.setFilterName(oatPolicyItem.getFileFilter());
+                        filteredRule.setOatDocument(subject);
                         subject.getStatus().addPolicyStatusFilteredRule(policyId, filteredRule);
                         return true;
                     } else {
@@ -305,6 +306,7 @@ public class OatPolicyVerifyAnalyser extends AbstraceOatAnalyser {
                     filteredRule.setPolicyType(oatPolicyItem.getType());
                     filteredRule.setPolicyName(oatPolicyItem.getName());
                     filteredRule.setFilterName(oatPolicyItem.getFileFilter());
+                    filteredRule.setOatDocument(subject);
                     subject.getStatus().addPolicyStatusFilteredRule(policyId, filteredRule);
                     return true;
                 } else {
@@ -326,6 +328,7 @@ public class OatPolicyVerifyAnalyser extends AbstraceOatAnalyser {
                     filteredRule.setPolicyType(oatPolicyItem.getType());
                     filteredRule.setPolicyName(oatPolicyItem.getName());
                     filteredRule.setFilterName(oatPolicyItem.getFileFilter());
+                    filteredRule.setOatDocument(subject);
                     subject.getStatus().addPolicyStatusFilteredRule(policyId, filteredRule);
                     return true;
                 } else {
@@ -348,6 +351,7 @@ public class OatPolicyVerifyAnalyser extends AbstraceOatAnalyser {
                 filteredRule.setPolicyType(oatPolicyItem.getType());
                 filteredRule.setPolicyName(oatPolicyItem.getName());
                 filteredRule.setFilterName(oatPolicyItem.getFileFilter());
+                filteredRule.setOatDocument(subject);
                 subject.getStatus().addPolicyStatusFilteredRule(policyId, filteredRule);
                 return true;
             } else {

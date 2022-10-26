@@ -88,20 +88,20 @@ public interface IOatDocument {
      * @author chenyaxun
      * @since 2.0
      */
-    static class Status {
+    class Status {
         public static final String FILE_STATUS_NORMAL = "Normal";
 
         public static final String FILE_STATUS_FILTERED = "FileFiltered";
 
         public static final String FILE_STATUS_FILTERED_BY_HEADER = "FileFilteredByFileHeader";
 
+        private final Map<String, FilteredRule> policyStatusFilteredMap = new HashMap<>();
+
         private String fileStatus = Status.FILE_STATUS_NORMAL;
 
         private String fileStatusRule = "";
 
         private String fileStatusDesc = "";
-
-        private final Map<String, FilteredRule> policyStatusFilteredMap = new HashMap<>();
 
         public boolean isFileStatusNormal() {
             return Status.FILE_STATUS_NORMAL.equals(this.fileStatus);
@@ -149,7 +149,21 @@ public interface IOatDocument {
 
     }
 
-    static class FilteredRule {
+    class FilteredRule {
+
+        private IOatDocument oatDocument;
+
+        private String filePath = "";
+
+        private String policyType = "";
+
+        private String policyName = "";
+
+        private String filterName = "";
+
+        private String filterItem = "";
+
+        private String desc = "";
 
         public String getFilePath() {
             return this.filePath;
@@ -175,6 +189,14 @@ public interface IOatDocument {
             this.policyName = policyName;
         }
 
+        public IOatDocument getOatDocument() {
+            return this.oatDocument;
+        }
+
+        public void setOatDocument(final IOatDocument oatDocument) {
+            this.oatDocument = oatDocument;
+        }
+
         public String getFilterName() {
             return this.filterName;
         }
@@ -198,18 +220,6 @@ public interface IOatDocument {
         public void setDesc(final String desc) {
             this.desc = desc;
         }
-
-        private String filePath = "";
-
-        private String policyType = "";
-
-        private String policyName = "";
-
-        private String filterName = "";
-
-        private String filterItem = "";
-
-        private String desc = "";
 
     }
 }
