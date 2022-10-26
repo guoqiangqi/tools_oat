@@ -37,7 +37,7 @@ public class OatReportProjectInfo {
 
     private String projectBranch = "";
 
-    private String projectTag = "";
+    private String projectCommitId = "";
 
     private String mainLicense = "";
 
@@ -97,12 +97,12 @@ public class OatReportProjectInfo {
         this.projectBranch = projectBranch;
     }
 
-    public String getProjectTag() {
-        return this.projectTag;
+    public String getProjectCommitId() {
+        return this.projectCommitId;
     }
 
-    public void setProjectTag(final String projectTag) {
-        this.projectTag = projectTag;
+    public void setProjectCommitId(final String projectCommitId) {
+        this.projectCommitId = projectCommitId;
     }
 
 }
