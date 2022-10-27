@@ -51,7 +51,7 @@ import java.util.Map;
  */
 public class OatDetailPlainReporter extends AbstractOatReporter {
 
-    private final String reportFileName = "DetailPlainReport_";
+    private final String reportFileName = "PlainReport_";
 
     private final OatReportSummaryInfo oatReportSummaryInfo = new OatReportSummaryInfo();
 
@@ -87,7 +87,7 @@ public class OatDetailPlainReporter extends AbstractOatReporter {
         if (filePrefix.length() > 1 && filePrefix.endsWith("_")) {
             filePrefix = filePrefix.substring(0, filePrefix.length() - 1);
         }
-        this.resultFile = new File(reportFolder + "/" + this.reportFileName + filePrefix + ".txt");
+        this.resultFile = new File(reportFolder + "/" + this.reportFileName + filePrefix + "_Detail.txt");
 
         FileWriter fileWriter = null;
         try {
@@ -181,7 +181,7 @@ public class OatDetailPlainReporter extends AbstractOatReporter {
                 .addProjectInvalidTypeFile(oatReportFile.copy("Policy Not Passed-FileType"));
         }
 
-        final String copyrightOwner = oatFileDocument.getData("CopyrightOwner");
+        final String copyrightOwner = oatFileDocument.getData("CopyrightOwner").replace("\t", "");
 
         if (oatFileDocument.getData("Result.Copyright").equals("true")) {
             oatReportInfo.getReportCopyrightInfo().addNormalCopyright(copyrightOwner);
