@@ -186,7 +186,7 @@ public class OatDetailPlainReporter extends AbstractOatReporter {
         if (oatFileDocument.getData("Result.Copyright").equals("true")) {
             oatReportInfo.getReportCopyrightInfo().addNormalCopyright(copyrightOwner);
             oatReportInfo.getReportCopyrightInfo().addNormalCopyrightHeaderFile(oatReportFile);
-        } else {
+        } else if (oatFileDocument.getData("Result.Copyright").equals("false")) {
             if ("NULL".equals(copyrightOwner)) {
                 oatReportInfo.getReportCopyrightInfo()
                     .addNoCopyrightHeaderFile(oatReportFile.copy("Policy Not Passed-NoCopyright", copyrightOwner));
@@ -204,7 +204,7 @@ public class OatDetailPlainReporter extends AbstractOatReporter {
         oatReportlicense.setLicenseId(licenseName);
         if (oatFileDocument.getData("Result.License").equals("true")) {
             oatReportInfo.getReportLicenseInfo().addNormalLicenseType(oatReportlicense);
-        } else {
+        } else if (oatFileDocument.getData("Result.License").equals("false")) {
             if ("NULL".equals(licenseName)) {
                 oatReportInfo.getReportLicenseInfo()
                     .addNoLicenseHeaderFile(oatReportFile.copy("Policy Not Passed-NoLicenseHeader", licenseName));
@@ -374,19 +374,6 @@ public class OatDetailPlainReporter extends AbstractOatReporter {
                 this.writeFileList(noCopyrightFileList);
 
                 this.writeLine("XXXXXXXXX Policy Not Passed End   XXXXXXXXX");
-
-                // this.writeLine(
-                //     "Project Invalid Type File Count: \t" + oatReportFileInfo.getProjectInvalidTypeFileCount());
-                // final List<OatReportFile> projectInvalidTypeFileList
-                //     = oatReportFileInfo.getProjectInvalidTypeFileList();
-                // for (final OatReportFile oatReportFile : projectInvalidTypeFileList) {
-                //     final String title = "Project Invalid Type File\t";
-                //     final String file = oatReportFile.getFilePath() + "\t";
-                //     final String rule = oatReportFile.getOatDocument().getStatus().getFileStatusRule() + "\t";
-                //     final String desc = oatReportFile.getOatDocument().getStatus().getFileStatusDesc() + "\t";
-                //     this.writeLine(title + file + rule + desc);
-                // }
-                // this.writeLine("");
 
                 this.writeLine("");
                 this.writeLine("Project End " + index + "/" + oatReportInfoList.size() + ": \t");

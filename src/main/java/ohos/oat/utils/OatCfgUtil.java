@@ -219,11 +219,15 @@ public final class OatCfgUtil {
                 String line = "\n";
                 boolean start = false;
                 while ((line = fileReader.readLine()) != null) {
-                    if (!start && line.trim().equals("<configuration>")) {
+                    final String tmpStr = line.trim().replace("\t", " ");
+                    if (!start && tmpStr.equals("<configuration>")) {
                         start = true;
                     }
                     if (start) {
-                        stringBuilder.append("\n" + line);
+                        stringBuilder.append("\n" + tmpStr);
+                        if (tmpStr.equals("</configuration>")) {
+                            break;
+                        }
                     }
                 }
                 oatProject.putData("ProjectOAT", stringBuilder.toString());
