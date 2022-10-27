@@ -39,6 +39,8 @@ public class OatReportCopyrightInfo {
 
     private final Map<String, List<OatReportFile>> copyright2FileList = new HashMap<>();
 
+    private final Map<String, String> copyright2Flag = new HashMap<>();
+
     private final List<OatReportFile> noCopyrightHeaderFileList = new ArrayList<>();
 
     private final List<OatReportFile> abnormalCopyrightHeaderFileList = new ArrayList<>();
@@ -55,7 +57,7 @@ public class OatReportCopyrightInfo {
 
     private int noCopyrightHeaderFileCount = 0;
 
-    private int normalCopyrightHeaderFileCount = 0;
+    private final int normalCopyrightHeaderFileCount = 0;
 
     private int abnormalCopyrightHeaderFileCount = 0;
 
@@ -78,56 +80,28 @@ public class OatReportCopyrightInfo {
         return this.copyrightCount;
     }
 
-    public void setCopyrightCount(final int copyrightCount) {
-        this.copyrightCount = copyrightCount;
-    }
-
     public int getNormalCopyrightCount() {
         return this.normalCopyrightCount;
-    }
-
-    public void setNormalCopyrightCount(final int normalCopyrightCount) {
-        this.normalCopyrightCount = normalCopyrightCount;
     }
 
     public int getAbnormalCopyrightCount() {
         return this.abnormalCopyrightCount;
     }
 
-    public void setAbnormalCopyrightCount(final int abnormalCopyrightCount) {
-        this.abnormalCopyrightCount = abnormalCopyrightCount;
-    }
-
     public int getHasCopyrightHeaderFileCount() {
         return this.hasCopyrightHeaderFileCount;
-    }
-
-    public void setHasCopyrightHeaderFileCount(final int hasCopyrightHeaderFileCount) {
-        this.hasCopyrightHeaderFileCount = hasCopyrightHeaderFileCount;
     }
 
     public int getNoCopyrightHeaderFileCount() {
         return this.noCopyrightHeaderFileCount;
     }
 
-    public void setNoCopyrightHeaderFileCount(final int noCopyrightHeaderFileCount) {
-        this.noCopyrightHeaderFileCount = noCopyrightHeaderFileCount;
-    }
-
     public int getNormalCopyrightHeaderFileCount() {
         return this.normalCopyrightHeaderFileCount;
     }
 
-    public void setNormalCopyrightHeaderFileCount(final int normalCopyrightHeaderFileCount) {
-        this.normalCopyrightHeaderFileCount = normalCopyrightHeaderFileCount;
-    }
-
     public int getAbnormalCopyrightHeaderFileCount() {
         return this.abnormalCopyrightHeaderFileCount;
-    }
-
-    public void setAbnormalCopyrightHeaderFileCount(final int abnormalCopyrightHeaderFileCount) {
-        this.abnormalCopyrightHeaderFileCount = abnormalCopyrightHeaderFileCount;
     }
 
     public List<String> getCopyrightList() {
@@ -139,6 +113,9 @@ public class OatReportCopyrightInfo {
     }
 
     public void addNormalCopyright(final String copyright) {
+        if (this.copyright2Flag.put(copyright, "true") != null) {
+            return;
+        }
         this.normalCopyrightList.add(copyright);
         this.normalCopyrightCount++;
         this.copyrightList.add(copyright);
@@ -150,6 +127,9 @@ public class OatReportCopyrightInfo {
     }
 
     public void addAbnormalCopyright(final String copyright) {
+        if (this.copyright2Flag.put(copyright, "true") != null) {
+            return;
+        }
         this.abnormalCopyrightList.add(copyright);
         this.abnormalCopyrightCount++;
         this.copyrightList.add(copyright);
