@@ -327,6 +327,8 @@ public class OatDetailPlainReporter extends AbstractOatReporter {
                     "" + oatReportLicenseInfo.getNoLicenseHeaderFileCount());
                 this.writeLine("Policy Not Passed-WrongCopyright Count: ",
                     "" + oatReportCopyrightInfo.getAbnormalCopyrightHeaderFileCount());
+                this.writeLine("Policy Not Passed-NoCopyright Count: ",
+                    "" + oatReportCopyrightInfo.getNoCopyrightHeaderFileCount());
                 this.writeLine("Project License File: ", (oatReportFileNameInfo.isHasLicenseFile() ? "TRUE" : "FALSE"));
                 this.writeLine("Project README: ", (oatReportFileNameInfo.isHasReadmeFile() ? "TRUE" : "FALSE"));
                 this.writeLine("Project README.OpenSource: ",
