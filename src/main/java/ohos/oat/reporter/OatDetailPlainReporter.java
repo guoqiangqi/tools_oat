@@ -249,6 +249,7 @@ public class OatDetailPlainReporter extends AbstractOatReporter {
             this.writeLine("Report Command: ", "java -jar ohos_ossaudittool-" + toolVersion + ".jar "
                 + this.oatReportSummaryInfo.getReportCreatorInfo().getReportInitCommand());
             this.writeLine("");
+
             this.writeLine("========Report Project List========");
             this.writeLine("");
             final List<OatReportInfo> oatReportInfoList = this.oatReportSummaryInfo.getOatReportInfoList();
@@ -264,8 +265,8 @@ public class OatDetailPlainReporter extends AbstractOatReporter {
                 final OatReportLicenseInfo oatReportLicenseInfo = oatReportInfo.getReportLicenseInfo();
                 final OatReportCopyrightInfo oatReportCopyrightInfo = oatReportInfo.getReportCopyrightInfo();
                 final OatReportConfigInfo oatReportConfigInfo = oatReportInfo.getReportConfigInfoInfo();
-
                 this.writeLine("");
+
                 this.writeLine("========Project Basic Information========");
                 this.writeLine("");
                 this.writeLine("Project Name: ", oatReportProjectInfo.getProjectName());
@@ -276,8 +277,8 @@ public class OatDetailPlainReporter extends AbstractOatReporter {
                 this.writeLine("Project Main License: ", oatReportProjectInfo.getMainLicense());
 
                 this.writeLine("");
-                this.writeLine("========Project Summary Information========");
 
+                this.writeLine("========Project Summary Information========");
                 this.writeLine("");
                 this.writeLine("Project File Count: ", "" + oatReportFileInfo.getProjectFileCount());
                 this.writeLine("Project Normal File Count: ", "" + oatReportFileInfo.getProjectNormalFileCount());
@@ -286,13 +287,14 @@ public class OatDetailPlainReporter extends AbstractOatReporter {
                     "" + oatReportFileInfo.getProjectFilteredByHeaderFileCount());
 
                 this.writeLine("");
-                this.writeLine("Policy Filtered Count-FileName: \t" + oatReportFileNameInfo.getFilteredRuleCount());
-                this.writeLine("Policy Filtered Count-FileType: \t" + oatReportFileTypeInfo.getFilteredRuleCount());
+                this.writeLine("Policy Filtered-FileName Count: " + "" + oatReportFileNameInfo.getFilteredRuleCount());
+                this.writeLine("Policy Filtered-FileType Count: " + "" + oatReportFileTypeInfo.getFilteredRuleCount());
                 this.writeLine(
-                    "Policy Filtered Count-LicenseHeader: \t" + oatReportLicenseInfo.getLicenseFilteredRuleCount());
+                    "Policy Filtered-LicenseHeader Count: " + "" + oatReportLicenseInfo.getLicenseFilteredRuleCount());
+                this.writeLine("Policy Filtered-Compatibility Count: " + ""
+                    + oatReportLicenseInfo.getCompatibleFilteredRuleCount());
                 this.writeLine(
-                    "Policy Filtered Count-Compatibility: \t" + oatReportLicenseInfo.getCompatibleFilteredRuleCount());
-                this.writeLine("Policy Filtered Count-Copyright: \t" + oatReportCopyrightInfo.getFilteredRuleCount());
+                    "Policy Filtered-Copyright Count: " + "" + oatReportCopyrightInfo.getFilteredRuleCount());
 
                 this.writeLine("");
                 this.writeLine("Project License Count: ", "" + oatReportLicenseInfo.getLicenseTypeCount());
@@ -308,21 +310,22 @@ public class OatDetailPlainReporter extends AbstractOatReporter {
                     "" + oatReportCopyrightInfo.getAbnormalCopyrightCount());
 
                 this.writeLine("");
-                this.writeLine("Policy Not Passed Count-FileType: ",
+                this.writeLine("Policy Not Passed-FileType Count: ",
                     "" + oatReportFileTypeInfo.getInvalidTypeFileCount());
-                this.writeLine("Policy Not Passed Count-Compatibility: ",
+                this.writeLine("Policy Not Passed-Compatibility Count: ",
                     "" + oatReportLicenseInfo.getNotCompatibleLicenseTypeFileCount());
-                this.writeLine("Policy Not Passed Count-WrongLicenseHeader: ",
+                this.writeLine("Policy Not Passed-WrongLicenseHeader Count: ",
                     "" + oatReportLicenseInfo.getAbnormalLicenseHeaderFileCount());
-                this.writeLine("Policy Not Passed Count-NoLicenseHeader: ",
+                this.writeLine("Policy Not Passed-NoLicenseHeader Count: ",
                     "" + oatReportLicenseInfo.getNoLicenseHeaderFileCount());
-                this.writeLine("Policy Not Passed Count-WrongCopyright: ",
+                this.writeLine("Policy Not Passed-WrongCopyright Count: ",
                     "" + oatReportCopyrightInfo.getAbnormalCopyrightHeaderFileCount());
                 this.writeLine("Project License File: ", (oatReportFileNameInfo.isHasLicenseFile() ? "TRUE" : "FALSE"));
                 this.writeLine("Project README: ", (oatReportFileNameInfo.isHasReadmeFile() ? "TRUE" : "FALSE"));
                 this.writeLine("Project README.OpenSource: ",
                     (oatReportFileNameInfo.isHasReadmeOpenSourceFile() ? "TRUE" : "FALSE"));
                 this.writeLine("");
+
                 this.writeLine("========Project Filtered File Information========");
                 this.writeLine("");
                 final List<OatReportFile> projectFilteredFileList = oatReportFileInfo.getProjectFilteredFileList();
@@ -331,8 +334,8 @@ public class OatDetailPlainReporter extends AbstractOatReporter {
                 final List<OatReportFile> projectFilteredByHeaderFileList
                     = oatReportFileInfo.getProjectFilteredByHeaderFileList();
                 this.writeFileList(projectFilteredByHeaderFileList);
-
                 this.writeLine("");
+
                 this.writeLine("========Project Filtered Policy Information========");
                 this.writeLine("");
 
