@@ -306,6 +306,8 @@ public class OatDetailPlainReporter extends AbstractOatReporter {
                 this.writeLine("Project Normal License Count: ", "" + oatReportLicenseInfo.getNormalLicenseTypeCount());
                 this.writeLine("Project Abnormal License Count: ",
                     "" + oatReportLicenseInfo.getAbnormalLicenseTypeCount());
+                this.writeLine("Project Compatible License Count: ",
+                    "" + oatReportLicenseInfo.getCompatibleLicenseTypeCount());
                 this.writeLine("Project Not Compatible License Count: ",
                     "" + oatReportLicenseInfo.getNotCompatibleLicenseTypeCount());
                 this.writeLine("Project Copyright Count: ", "" + oatReportCopyrightInfo.getCopyrightCount());
@@ -406,6 +408,13 @@ public class OatDetailPlainReporter extends AbstractOatReporter {
                     = oatReportLicenseInfo.getNotCompatibleLicenseTypeList();
                 for (final OatReportLicense oatReportLicense : oatNotCompatibleLicenseList) {
                     this.writeLine("Project Not Compatible License", oatReportLicense.getLicenseId());
+                }
+                this.writeLine("");
+
+                final List<OatReportLicense> oatcompatibleLicenseList
+                    = oatReportLicenseInfo.getCompatibleLicenseTypeList();
+                for (final OatReportLicense oatReportLicense : oatcompatibleLicenseList) {
+                    this.writeLine("Project Compatible License", oatReportLicense.getLicenseId());
                 }
                 this.writeLine("");
 
