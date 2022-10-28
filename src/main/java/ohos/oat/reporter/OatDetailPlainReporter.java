@@ -350,7 +350,7 @@ public class OatDetailPlainReporter extends AbstractOatReporter {
                     this.writeLine("Policy Filtered-FileName-" + filteredRule.getPolicyName(), "",
                         filteredRule.getFilePath(), filteredRule.getFilterItem(), filteredRule.getDesc());
                 }
-                this.writeLine("");
+                this.writeEmptyLine(filteredRuleList.size());
 
                 final List<IOatDocument.FilteredRule> fileTypeFilteredRuleList
                     = oatReportFileTypeInfo.getFilteredRules();
@@ -359,7 +359,7 @@ public class OatDetailPlainReporter extends AbstractOatReporter {
                         filteredRule.getOatDocument().getData("FileType"), filteredRule.getFilePath(),
                         filteredRule.getFilterItem(), filteredRule.getDesc());
                 }
-                this.writeLine("");
+                this.writeEmptyLine(fileTypeFilteredRuleList.size());
 
                 final List<IOatDocument.FilteredRule> licenseFilteredRuleList
                     = oatReportLicenseInfo.getLicenseFilteredRules();
@@ -368,7 +368,7 @@ public class OatDetailPlainReporter extends AbstractOatReporter {
                         filteredRule.getOatDocument().getData("LicenseName"), filteredRule.getFilePath(),
                         filteredRule.getFilterItem(), filteredRule.getDesc());
                 }
-                this.writeLine("");
+                this.writeEmptyLine(licenseFilteredRuleList.size());
 
                 final List<IOatDocument.FilteredRule> compatibleFilteredRuleList
                     = oatReportLicenseInfo.getCompatibleFilteredRules();
@@ -377,7 +377,7 @@ public class OatDetailPlainReporter extends AbstractOatReporter {
                         filteredRule.getOatDocument().getData("LicenseName"), filteredRule.getFilePath(),
                         filteredRule.getFilterItem(), filteredRule.getDesc());
                 }
-                this.writeLine("");
+                this.writeEmptyLine(compatibleFilteredRuleList.size());
 
                 final List<IOatDocument.FilteredRule> copyrightFilteredRuleList
                     = oatReportCopyrightInfo.getFilteredRules();
@@ -385,7 +385,7 @@ public class OatDetailPlainReporter extends AbstractOatReporter {
                     this.writeLine("Policy Filtered-Copyright", filteredRule.getOatDocument().getData("CopyrightOwner"),
                         filteredRule.getFilePath(), filteredRule.getFilterItem(), filteredRule.getDesc());
                 }
-                this.writeLine("");
+                this.writeEmptyLine(copyrightFilteredRuleList.size());
 
                 this.writeLine("========Project License Information========");
                 this.writeLine("");
@@ -395,48 +395,41 @@ public class OatDetailPlainReporter extends AbstractOatReporter {
                 for (final OatReportLicense oatReportLicense : oatReportNormalLicenseList) {
                     this.writeLine("Project Normal License", oatReportLicense.getLicenseId());
                 }
-                this.writeLine("");
+                this.writeEmptyLine(oatReportNormalLicenseList.size());
 
                 final List<OatReportLicense> oatReportAbnormalLicenseList
                     = oatReportLicenseInfo.getAbnormalLicenseTypeList();
                 for (final OatReportLicense oatReportLicense : oatReportAbnormalLicenseList) {
                     this.writeLine("Project Abnormal License", oatReportLicense.getLicenseId());
                 }
-                this.writeLine("");
+                this.writeEmptyLine(oatReportAbnormalLicenseList.size());
 
                 final List<OatReportLicense> oatNotCompatibleLicenseList
                     = oatReportLicenseInfo.getNotCompatibleLicenseTypeList();
                 for (final OatReportLicense oatReportLicense : oatNotCompatibleLicenseList) {
                     this.writeLine("Project Not Compatible License", oatReportLicense.getLicenseId());
                 }
-                this.writeLine("");
+                this.writeEmptyLine(oatNotCompatibleLicenseList.size());
 
                 final List<OatReportLicense> oatcompatibleLicenseList
                     = oatReportLicenseInfo.getCompatibleLicenseTypeList();
                 for (final OatReportLicense oatReportLicense : oatcompatibleLicenseList) {
                     this.writeLine("Project Compatible License", oatReportLicense.getLicenseId());
                 }
-                this.writeLine("");
+                this.writeEmptyLine(oatcompatibleLicenseList.size());
 
                 this.writeLine("========Project Copyright Information========");
                 this.writeLine("");
                 for (final String copyright : oatReportCopyrightInfo.getNormalCopyrightList()) {
                     this.writeLine("Project Normal Copyright", copyright);
                 }
-                this.writeLine("");
+                this.writeEmptyLine(oatReportCopyrightInfo.getNormalCopyrightList().size());
 
                 for (final String copyright : oatReportCopyrightInfo.getAbnormalCopyrightList()) {
                     this.writeLine("Project Abnormal Copyright", copyright);
                 }
-                this.writeLine("");
+                this.writeEmptyLine(oatReportCopyrightInfo.getAbnormalCopyrightList().size());
 
-                this.writeLine("========Project OAT.xml========");
-                this.writeLine("");
-
-                this.writeLine("Project Config: \t");
-                this.writeLine(oatReportConfigInfo.getProjectPolicy());
-
-                this.writeLine("");
                 this.writeLine("");
 
                 this.writeLine("XXXXXXXXX Policy Not Passed Begin XXXXXXXXX");
@@ -461,6 +454,11 @@ public class OatDetailPlainReporter extends AbstractOatReporter {
                 this.writeLine("XXXXXXXXX Policy Not Passed End   XXXXXXXXX");
 
                 this.writeLine("");
+                this.writeLine("========Project OAT.xml========");
+                this.writeLine("Project Config: \t");
+                this.writeLine(oatReportConfigInfo.getProjectPolicy());
+
+                this.writeLine("");
                 this.writeLine("Project End " + index + "/" + oatReportInfoList.size() + ": \t");
                 index++;
             }
@@ -471,6 +469,12 @@ public class OatDetailPlainReporter extends AbstractOatReporter {
             OatLogUtil.traceException(e);
         }
         OatLogUtil.println("", "Result file path:\t" + this.resultFile);
+    }
+
+    private void writeEmptyLine(final int filteredRuleList) throws IOException {
+        if (filteredRuleList > 0) {
+            this.writeLine("");
+        }
     }
 
     private void writeFileList(final List<OatReportFile> invalidTypeFileList) throws IOException {
