@@ -39,7 +39,9 @@ public class OatReportCopyrightInfo {
 
     private final Map<String, List<OatReportFile>> copyright2FileList = new HashMap<>();
 
-    private final Map<String, String> copyright2Flag = new HashMap<>();
+    private final Map<String, String> normalCopyright2Flag = new HashMap<>();
+
+    private final Map<String, String> abnormalCopyright2Flag = new HashMap<>();
 
     private final List<OatReportFile> noCopyrightHeaderFileList = new ArrayList<>();
 
@@ -113,7 +115,7 @@ public class OatReportCopyrightInfo {
     }
 
     public void addNormalCopyright(final String copyright) {
-        if (this.copyright2Flag.put(copyright, "true") != null) {
+        if (this.normalCopyright2Flag.put(copyright, "true") != null) {
             return;
         }
         this.normalCopyrightList.add(copyright);
@@ -127,7 +129,7 @@ public class OatReportCopyrightInfo {
     }
 
     public void addAbnormalCopyright(final String copyright) {
-        if (this.copyright2Flag.put(copyright, "true") != null) {
+        if (this.abnormalCopyright2Flag.put(copyright, "true") != null) {
             return;
         }
         this.abnormalCopyrightList.add(copyright);

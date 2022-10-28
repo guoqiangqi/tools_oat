@@ -30,35 +30,35 @@ import java.util.Map;
  */
 public class OatReportLicenseInfo {
 
-    private final List<IOatDocument.FilteredRule> licenseFilteredRules = new ArrayList<>();
-
-    private final List<IOatDocument.FilteredRule> compatibleFilteredRules = new ArrayList<>();
-
     private final List<OatReportLicense> licenseTypeList = new ArrayList<>();
 
     private final List<OatReportLicense> normalLicenseTypeList = new ArrayList<>();
 
     private final List<OatReportLicense> abnormalLicenseTypeList = new ArrayList<>();
 
+    private final List<OatReportLicense> compatibleLicenseTypeList = new ArrayList<>();
+
     private final List<OatReportLicense> notCompatibleLicenseTypeList = new ArrayList<>();
 
-    private final Map<String, List<OatReportFile>> licenseId2FileList = new HashMap<>();
+    private final Map<String, String> normalLicenseTypeFlag = new HashMap<>();
 
-    private final Map<String, String> license2Flag = new HashMap<>();
+    private final Map<String, String> abnormalLicenseTypeFlag = new HashMap<>();
+
+    private final Map<String, String> compatibleLicenseTypeFlag = new HashMap<>();
+
+    private final Map<String, String> notCompatibleLicenseTypeFlag = new HashMap<>();
+
+    private final Map<String, List<OatReportFile>> licenseId2FileList = new HashMap<>();
 
     private final List<OatReportFile> noLicenseHeaderFileList = new ArrayList<>();
 
     private final List<OatReportFile> abnormalLicenseHeaderFileList = new ArrayList<>();
 
-    private final List<OatReportFile> notCompatibleLicenseTypeFileList = new ArrayList<>();
+    private final List<OatReportFile> notCompatibleLicenseFileList = new ArrayList<>();
 
-    private final int hasLicenseHeaderFileCount = 0;
+    private final List<IOatDocument.FilteredRule> licenseFilteredRules = new ArrayList<>();
 
-    private final int normalLicenseHeaderFileCount = 0;
-
-    private int licenseFilteredRuleCount = 0;
-
-    private int compatibleFilteredRuleCount = 0;
+    private final List<IOatDocument.FilteredRule> compatibleFilteredRules = new ArrayList<>();
 
     private int licenseTypeCount = 0;
 
@@ -66,66 +66,30 @@ public class OatReportLicenseInfo {
 
     private int abnormalLicenseTypeCount = 0;
 
+    private int compatibleLicenseTypeCount = 0;
+
     private int notCompatibleLicenseTypeCount = 0;
 
     private int noLicenseHeaderFileCount = 0;
 
     private int abnormalLicenseHeaderFileCount = 0;
 
-    private int notCompatibleLicenseTypeFileCount = 0;
+    private int notCompatibleLicenseFileCount = 0;
 
-    public List<OatReportLicense> getNotCompatibleLicenseTypeList() {
-        return this.notCompatibleLicenseTypeList;
-    }
+    private int licenseFilteredRuleCount = 0;
 
-    public int getNotCompatibleLicenseTypeCount() {
-        return this.notCompatibleLicenseTypeCount;
-    }
-
-    public void addNotCompatibleLicenseType(final OatReportLicense oatReportLicense) {
-        if (this.license2Flag.put(oatReportLicense.getLicenseId(), "true") != null) {
-            return;
-        }
-        this.notCompatibleLicenseTypeList.add(oatReportLicense);
-        this.notCompatibleLicenseTypeCount++;
-    }
-
-    public List<OatReportFile> getNotCompatibleLicenseTypeFileList() {
-        return this.notCompatibleLicenseTypeFileList;
-    }
-
-    public void addNotCompatibleLicenseTypeFile(final OatReportFile oatReportFile) {
-        this.notCompatibleLicenseTypeFileList.add(oatReportFile);
-        this.notCompatibleLicenseTypeFileCount++;
-    }
-    // private int multiLicenseHeaderFileCount = 0;
+    private int compatibleFilteredRuleCount = 0;
 
     public int getLicenseTypeCount() {
         return this.licenseTypeCount;
-    }
-
-    public int getNormalLicenseTypeCount() {
-        return this.normalLicenseTypeCount;
-    }
-
-    public int getAbnormalLicenseTypeCount() {
-        return this.abnormalLicenseTypeCount;
-    }
-
-    public int getNotCompatibleLicenseTypeFileCount() {
-        return this.notCompatibleLicenseTypeFileCount;
     }
 
     public List<OatReportLicense> getLicenseTypeList() {
         return this.licenseTypeList;
     }
 
-    public void addLicenseType(final OatReportLicense oatReportLicense) {
-        if (this.license2Flag.put(oatReportLicense.getLicenseId(), "true") != null) {
-            return;
-        }
-        this.licenseTypeList.add(oatReportLicense);
-        this.licenseTypeCount++;
+    public int getNormalLicenseTypeCount() {
+        return this.normalLicenseTypeCount;
     }
 
     public List<OatReportLicense> getNormalLicenseTypeList() {
@@ -133,7 +97,7 @@ public class OatReportLicenseInfo {
     }
 
     public void addNormalLicenseType(final OatReportLicense oatReportLicense) {
-        if (this.license2Flag.put(oatReportLicense.getLicenseId(), "true") != null) {
+        if (this.normalLicenseTypeFlag.put(oatReportLicense.getLicenseId(), "true") != null) {
             return;
         }
         this.normalLicenseTypeList.add(oatReportLicense);
@@ -141,12 +105,16 @@ public class OatReportLicenseInfo {
         this.licenseTypeCount++;
     }
 
+    public int getAbnormalLicenseTypeCount() {
+        return this.abnormalLicenseTypeCount;
+    }
+
     public List<OatReportLicense> getAbnormalLicenseTypeList() {
         return this.abnormalLicenseTypeList;
     }
 
     public void addAbnormalLicenseType(final OatReportLicense oatReportLicense) {
-        if (this.license2Flag.put(oatReportLicense.getLicenseId(), "true") != null) {
+        if (this.abnormalLicenseTypeFlag.put(oatReportLicense.getLicenseId(), "true") != null) {
             return;
         }
         this.abnormalLicenseTypeList.add(oatReportLicense);
@@ -154,17 +122,40 @@ public class OatReportLicenseInfo {
         this.licenseTypeCount++;
     }
 
-    public Map<String, List<OatReportFile>> getLicenseId2FileList() {
-        return this.licenseId2FileList;
+    public int getCompatibleLicenseTypeCount() {
+        return this.compatibleLicenseTypeCount;
     }
 
-    public void addLicenseId2File(final String licenseId, final OatReportFile file) {
-        List filelist = this.licenseId2FileList.get(licenseId);
-        if (null == filelist) {
-            filelist = new ArrayList();
-            this.licenseId2FileList.put(licenseId, filelist);
+    public List<OatReportLicense> getCompatibleLicenseTypeList() {
+        return this.compatibleLicenseTypeList;
+    }
+
+    public void addCompatibleLicenseType(final OatReportLicense oatReportLicense) {
+        if (this.compatibleLicenseTypeFlag.put(oatReportLicense.getLicenseId(), "true") != null) {
+            return;
         }
-        filelist.add(file);
+        this.compatibleLicenseTypeList.add(oatReportLicense);
+        this.compatibleLicenseTypeCount++;
+    }
+
+    public int getNotCompatibleLicenseTypeCount() {
+        return this.notCompatibleLicenseTypeCount;
+    }
+
+    public List<OatReportLicense> getNotCompatibleLicenseTypeList() {
+        return this.notCompatibleLicenseTypeList;
+    }
+
+    public void addNotCompatibleLicenseType(final OatReportLicense oatReportLicense) {
+        if (this.notCompatibleLicenseTypeFlag.put(oatReportLicense.getLicenseId(), "true") != null) {
+            return;
+        }
+        this.notCompatibleLicenseTypeList.add(oatReportLicense);
+        this.notCompatibleLicenseTypeCount++;
+    }
+
+    public int getNoLicenseHeaderFileCount() {
+        return this.noLicenseHeaderFileCount;
     }
 
     public List<OatReportFile> getNoLicenseHeaderFileList() {
@@ -174,18 +165,6 @@ public class OatReportLicenseInfo {
     public void addNoLicenseHeaderFile(final OatReportFile file) {
         this.noLicenseHeaderFileList.add(file);
         this.noLicenseHeaderFileCount++;
-    }
-
-    public int getHasLicenseHeaderFileCount() {
-        return this.hasLicenseHeaderFileCount;
-    }
-
-    public int getNoLicenseHeaderFileCount() {
-        return this.noLicenseHeaderFileCount;
-    }
-
-    public int getNormalLicenseHeaderFileCount() {
-        return this.normalLicenseHeaderFileCount;
     }
 
     public int getAbnormalLicenseHeaderFileCount() {
@@ -199,6 +178,32 @@ public class OatReportLicenseInfo {
     public void addAbnormalLicenseHeaderFile(final OatReportFile file) {
         this.abnormalLicenseHeaderFileList.add(file);
         this.abnormalLicenseHeaderFileCount++;
+    }
+
+    public int getNotCompatibleLicenseFileCount() {
+        return this.notCompatibleLicenseFileCount;
+    }
+
+    public List<OatReportFile> getNotCompatibleLicenseFileList() {
+        return this.notCompatibleLicenseFileList;
+    }
+
+    public void addNotCompatibleLicenseTypeFile(final OatReportFile oatReportFile) {
+        this.notCompatibleLicenseFileList.add(oatReportFile);
+        this.notCompatibleLicenseFileCount++;
+    }
+
+    public Map<String, List<OatReportFile>> getLicenseId2FileList() {
+        return this.licenseId2FileList;
+    }
+
+    public void addLicenseId2File(final String licenseId, final OatReportFile file) {
+        List filelist = this.licenseId2FileList.get(licenseId);
+        if (null == filelist) {
+            filelist = new ArrayList();
+            this.licenseId2FileList.put(licenseId, filelist);
+        }
+        filelist.add(file);
     }
 
     public int getLicenseFilteredRuleCount() {

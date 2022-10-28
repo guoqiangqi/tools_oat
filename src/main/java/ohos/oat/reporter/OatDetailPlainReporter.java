@@ -208,7 +208,7 @@ public class OatDetailPlainReporter extends AbstractOatReporter {
         if (oatFileDocument.getData("Result.License").equals("true")) {
             oatReportLicenseInfo.addNormalLicenseType(oatReportlicense);
         } else if (oatFileDocument.getData("Result.License").equals("false")) {
-            if ("NULL".equals(licenseName)) {
+            if ("NULL".equals(licenseName) || "NoLicenseHeader".equals(licenseName)) {
                 oatReportLicenseInfo.addNoLicenseHeaderFile(
                     oatReportFile.copy("Policy Not Passed-NoLicenseHeader", licenseName));
             } else {
@@ -223,6 +223,11 @@ public class OatDetailPlainReporter extends AbstractOatReporter {
             oatReportLicenseInfo.addNotCompatibleLicenseType(oatReportlicense);
             oatReportLicenseInfo.addNotCompatibleLicenseTypeFile(
                 oatReportFile.copy("Policy Not Passed-Compatibility", licenseName));
+        } else {
+            if (licenseName.length() > 0 && !"NULL".equals(licenseName)) {
+                oatReportLicenseInfo.addCompatibleLicenseType(oatReportlicense);
+
+            }
         }
 
     }
@@ -313,7 +318,7 @@ public class OatDetailPlainReporter extends AbstractOatReporter {
                 this.writeLine("Policy Not Passed-FileType Count: ",
                     "" + oatReportFileTypeInfo.getInvalidTypeFileCount());
                 this.writeLine("Policy Not Passed-Compatibility Count: ",
-                    "" + oatReportLicenseInfo.getNotCompatibleLicenseTypeFileCount());
+                    "" + oatReportLicenseInfo.getNotCompatibleLicenseFileCount());
                 this.writeLine("Policy Not Passed-WrongLicenseHeader Count: ",
                     "" + oatReportLicenseInfo.getAbnormalLicenseHeaderFileCount());
                 this.writeLine("Policy Not Passed-NoLicenseHeader Count: ",
@@ -334,7 +339,6 @@ public class OatDetailPlainReporter extends AbstractOatReporter {
                 final List<OatReportFile> projectFilteredByHeaderFileList
                     = oatReportFileInfo.getProjectFilteredByHeaderFileList();
                 this.writeFileList(projectFilteredByHeaderFileList);
-                this.writeLine("");
 
                 this.writeLine("========Project Filtered Policy Information========");
                 this.writeLine("");
@@ -432,7 +436,7 @@ public class OatDetailPlainReporter extends AbstractOatReporter {
                 this.writeFileList(invalidTypeFileList);
 
                 final List<OatReportFile> notCompatibleLicenseFileList
-                    = oatReportLicenseInfo.getNotCompatibleLicenseTypeFileList();
+                    = oatReportLicenseInfo.getNotCompatibleLicenseFileList();
                 this.writeFileList(notCompatibleLicenseFileList);
                 final List<OatReportFile> abnormalLicenseHeaderFile
                     = oatReportLicenseInfo.getAbnormalLicenseHeaderFileList();
@@ -465,7 +469,9 @@ public class OatDetailPlainReporter extends AbstractOatReporter {
             this.writeLine(oatReportFile.getTitle(), oatReportFile.getContent(), oatReportFile.getFilePath(),
                 oatReportFile.getRule(), oatReportFile.getDesc());
         }
-        this.writeLine("");
+        if (invalidTypeFileList.size() > 0) {
+            this.writeLine("");
+        }
     }
 
     private void writeLine(final String desc) throws IOException {
