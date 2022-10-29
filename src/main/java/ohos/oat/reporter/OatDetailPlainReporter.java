@@ -35,6 +35,8 @@ import ohos.oat.reporter.model.file.OatReportFile;
 import ohos.oat.reporter.model.license.OatReportLicense;
 import ohos.oat.utils.OatLogUtil;
 
+import org.apache.commons.io.FilenameUtils;
+
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -134,15 +136,16 @@ public class OatDetailPlainReporter extends AbstractOatReporter {
         final OatReportFile oatReportFile = new OatReportFile(oatFileDocument);
         final IOatDocument.Status status = oatFileDocument.getStatus();
         final OatReportFileInfo oatReportFileInfo = oatReportInfo.getReportFileInfo();
+        final String fileExt = FilenameUtils.getExtension(oatFileDocument.getFile().getName());
         if (status.isFileStatusNormal()) {
             oatReportFileInfo.addProjectNormalFile(oatReportFile);
         } else if (status.isFileStatusFiltered()) {
             oatReportFileInfo.addProjectFilteredFile(
-                oatReportFile.copy("Project Filtered File", "", status.getFileStatusRule(),
+                oatReportFile.copy("Project Filtered File", fileExt, status.getFileStatusRule(),
                     status.getFileStatusDesc()));
         } else if (status.isFileStatusFilteredByHeader()) {
             oatReportFileInfo.addProjectFilteredByHeaderFile(
-                oatReportFile.copy("Project Filtered By Header File", "", status.getFileStatusRule(),
+                oatReportFile.copy("Project Filtered By Header File", fileExt, status.getFileStatusRule(),
                     status.getFileStatusDesc()));
         }
 
@@ -189,7 +192,8 @@ public class OatDetailPlainReporter extends AbstractOatReporter {
 
         if (oatFileDocument.getData("Result.Copyright").equals("true")) {
             oatReportCopyrightInfo.addNormalCopyright(copyrightOwner);
-            oatReportCopyrightInfo.addNormalCopyrightHeaderFile(oatReportFile);
+            oatReportCopyrightInfo.addNormalCopyrightHeaderFile(
+                oatReportFile.copy("Policy Passed-NormalCopyright", copyrightOwner));
         } else if (oatFileDocument.getData("Result.Copyright").equals("false")) {
             if ("NULL".equals(copyrightOwner)) {
                 oatReportCopyrightInfo.addNoCopyrightHeaderFile(
