@@ -25,7 +25,7 @@ public class OatReportCreatorInfo {
 
     private String reportInitCommand = "";
 
-    private final String reportToolVersion = "2.0.0-beta.1";
+    private final String reportToolVersion = "2.0.0-beta.2";
 
     private String reportUser = "";
 
