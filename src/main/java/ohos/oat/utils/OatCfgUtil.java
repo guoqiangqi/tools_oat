@@ -219,7 +219,7 @@ public final class OatCfgUtil {
                 String line = "\n";
                 boolean start = false;
                 while ((line = fileReader.readLine()) != null) {
-                    final String tmpStr = line.trim().replace("\t", " ");
+                    final String tmpStr = line.replace("\t", " ");
                     if (!start && tmpStr.equals("<configuration>")) {
                         start = true;
                     }

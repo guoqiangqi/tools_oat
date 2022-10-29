@@ -224,7 +224,8 @@ public class OatDetailPlainReporter extends AbstractOatReporter {
             oatReportLicenseInfo.addNotCompatibleLicenseTypeFile(
                 oatReportFile.copy("Policy Not Passed-Compatibility", licenseName));
         } else {
-            if (licenseName.length() > 0 && !"NULL".equals(licenseName) && !"NoLicenseHeader".equals(licenseName)) {
+            if (licenseName.length() > 0 && !"NULL".equals(licenseName) && !"NoLicenseHeader".equals(licenseName)
+                && !"InvalidLicense".equals(licenseName)) {
                 oatReportLicenseInfo.addCompatibleLicenseType(oatReportlicense);
 
             }
