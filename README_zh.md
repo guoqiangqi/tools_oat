@@ -21,6 +21,8 @@
 OAT（OSS Audit Tool）是OpenHarmony社区的自动化开源审视工具，用于帮助开发人员基于自定义的规则自动扫描开源仓代码，识别不符合预定规则的代码并输出扫描报告。
 
 OAT遵从极简、实用的原则，不提供复杂的图形化展示界面，无需部署并维护额外的数据库环境，不提供复杂的操作流程从而避免对用户的业务主流程造成影响，而是聚焦于提供灵活的源码扫描方式、高度可定制的许可证匹配及审查等规则、精简的报告数据格式及灵活的问题过滤与确认规则，满足用户快速部署、快速定义规则并扫描、快速确认问题并固化确认结果等诉求。
+近期活动：
+[![OpenHarmony-SIG/tools_oat](https://gitee.com/openharmony-sig/tools_oat/widgets/widget_card.svg?colors=4183c4,ffffff,ffffff,e3e9ed,666666,9b9b9b)](https://gitee.com/openharmony-sig/tools_oat)
 
 ## 特性介绍<a name="section367519246426"></a>
 
