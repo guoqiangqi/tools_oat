@@ -31,7 +31,7 @@ public class OatCommandLineFilterPara {
      * @return OatPolicy
      */
     public static OatFileFilter getOatFileFilter(final String para) {
-        
+
         final String tmpPara = para.trim();
         final OatFileFilter oatFileFilter = new OatFileFilter();
         oatFileFilter.setDesc("Command line filter str: " + tmpPara);
@@ -50,12 +50,12 @@ public class OatCommandLineFilterPara {
             if (kstring.equals("filename")) {
                 final String[] valueparts = OatCfgUtil.getSplitStrings(vstring); // part split by |
                 for (final String valuepart : valueparts) {
-                    oatFileFilter.addFilterItem(valuepart);
+                    oatFileFilter.addFilterItem(valuepart, "");
                 }
             } else if (kstring.equals("filepath")) {
                 final String[] valueparts = OatCfgUtil.getSplitStrings(vstring); // part split by |
                 for (final String valuepart : valueparts) {
-                    oatFileFilter.addFilePathFilterItem(valuepart);
+                    oatFileFilter.addFilePathFilterItem(valuepart, "");
                 }
             } else {
                 return null;

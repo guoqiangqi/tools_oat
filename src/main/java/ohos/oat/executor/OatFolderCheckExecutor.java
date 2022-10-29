@@ -152,7 +152,7 @@ public class OatFolderCheckExecutor extends AbstractOatExecutor {
     @NotNull
     private static String assembleCmdline(final String sourceCodeRepoPath, final OatProject subProject) {
         String cmdLine = "-mode#";
-        cmdLine += "s#-s#" + sourceCodeRepoPath + (subProject.getPath().length() > 0 ? "/" + subProject.getPath() : "");
+        cmdLine += "s#-s#" + sourceCodeRepoPath + (subProject.getPath().length() > 0 ? subProject.getPath() : "");
         // cmdLine += " -r ./";
         cmdLine += "#-n#" + (subProject.getName().length() > 0
             ? subProject.getName()

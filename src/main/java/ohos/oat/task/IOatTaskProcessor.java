@@ -18,7 +18,7 @@ package ohos.oat.task;
 import ohos.oat.analysis.IOatAnalyser;
 import ohos.oat.config.OatConfig;
 import ohos.oat.config.OatTask;
-import ohos.oat.document.OatFileDocument;
+import ohos.oat.document.IOatDocument;
 import ohos.oat.reporter.IOatReporter;
 
 import java.util.List;
@@ -58,7 +58,7 @@ public interface IOatTaskProcessor {
      * @param oatConfig OAT configuration data structure
      * @param oatAnalysers IOatAnalyser to analyse document
      */
-    static void transmit2Analyser(final OatFileDocument document, final OatConfig oatConfig,
+    static void transmit2Analyser(final IOatDocument document, final OatConfig oatConfig,
         final List<IOatAnalyser> oatAnalysers) {
         oatAnalysers.forEach(oatAnalyser -> {
             oatAnalyser.analyse();
@@ -70,7 +70,7 @@ public interface IOatTaskProcessor {
      * @param oatConfig OAT configuration data structure
      * @param oatReporters IOatReporter to report document
      */
-    static void transmit2Reporter(final OatFileDocument document, final OatConfig oatConfig,
+    static void transmit2Reporter(final IOatDocument document, final OatConfig oatConfig,
         final List<IOatReporter> oatReporters) {
         oatReporters.forEach(oatReporter -> {
             oatReporter.report(document);
@@ -86,5 +86,5 @@ public interface IOatTaskProcessor {
         oatReporters.forEach(oatReporter -> oatReporter.writeReport());
     }
 
-    void addFileDocument(OatFileDocument document);
+    void addFileDocument(IOatDocument document);
 }

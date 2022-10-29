@@ -43,7 +43,7 @@ public class OatDefaultFileFilter implements IOatFileFilter {
      * @param oatProject OAT project data structure
      */
     @Override
-    public IOatFileFilter init(OatProject oatProject) {
+    public IOatFileFilter init(final OatProject oatProject) {
         this.oatProject = oatProject;
         return this;
     }
@@ -53,13 +53,13 @@ public class OatDefaultFileFilter implements IOatFileFilter {
      */
     @Override
     public FilenameFilter getFilter() {
-        final List<String> filterItems = oatProject.getFileFilterObj().getFileFilterItems();
+        final List<String> filterItems = this.oatProject.getFileFilterObj().getFileFilterItems();
         final List<String> excludes = new ArrayList<>();
         for (final String filterItem : filterItems) {
-            excludes.add(filterItem.replace(oatProject.getPath(), ""));
+            excludes.add(filterItem.replace(this.oatProject.getPath(), ""));
         }
         final OrFileFilter orFilter = new OrFileFilter();
- 
+
         for (final String exclude : excludes) {
             // skip comments
             if (exclude.startsWith("#") || StringUtils.isEmpty(exclude)) {

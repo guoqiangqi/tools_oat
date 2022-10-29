@@ -16,7 +16,7 @@
 package ohos.oat.analysis;
 
 import ohos.oat.config.OatConfig;
-import ohos.oat.document.OatFileDocument;
+import ohos.oat.document.IOatDocument;
 
 /**
  * Default IOatAnalyser method implementations
@@ -27,8 +27,8 @@ import ohos.oat.document.OatFileDocument;
 public abstract class AbstraceOatAnalyser implements IOatAnalyser {
     protected OatConfig oatConfig;
 
-    protected OatFileDocument oatFileDocument;
-   
+    protected IOatDocument oatFileDocument;
+
     /**
      * Init instance
      *
@@ -36,7 +36,7 @@ public abstract class AbstraceOatAnalyser implements IOatAnalyser {
      * @param oatFileDocument FileDocument to analyse
      */
     @Override
-    public IOatAnalyser init(final OatConfig oatConfig, OatFileDocument oatFileDocument) {
+    public IOatAnalyser init(final OatConfig oatConfig, final IOatDocument oatFileDocument) {
         this.oatConfig = oatConfig;
         this.oatFileDocument = oatFileDocument;
         return this;

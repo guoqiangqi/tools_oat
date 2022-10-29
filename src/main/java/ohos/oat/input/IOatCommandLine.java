@@ -36,8 +36,9 @@ import java.util.List;
  * @since 2.0
  */
 public interface IOatCommandLine {
-    String PROMPT_MESSAGE_SEPARATOR = "--------------------------------------------------------------------------";
-    String PROMPT_MESSAGE_HEADER = "options:";
+    static final String PROMPT_MESSAGE_SEPARATOR
+        = "--------------------------------------------------------------------------";
+    static final String PROMPT_MESSAGE_HEADER = "options:";
 
     /**
      * Receive command line parameters and determine whether the command line corresponds to the operating mode
@@ -140,4 +141,13 @@ public interface IOatCommandLine {
         });
     }
 
+    static void storeCommand2Config(final String[] args, final OatConfig oatConfig) {
+        String tmpargs = "";
+        if (args != null) {
+            for (final String arg : args) {
+                tmpargs += " " + arg;
+            }
+        }
+        oatConfig.putData("initCommand", tmpargs);
+    }
 }
