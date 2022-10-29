@@ -402,3 +402,4 @@ Committer在审核合入代码PR时须检查OAT报告以及各开源仓规则文
 
 本项目遵从Apache License Version 2.0许可证。
 
+[![OpenHarmony-SIG/tools_oat](https://gitee.com/openharmony-sig/tools_oat/widgets/widget_card.svg?colors=4183c4,ffffff,ffffff,e3e9ed,666666,9b9b9b)](https://gitee.com/openharmony-sig/tools_oat)
