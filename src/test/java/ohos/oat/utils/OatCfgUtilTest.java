@@ -110,43 +110,49 @@ public class OatCfgUtilTest {
         task = new OatTask("testTask", "defaultPolicy", "defaultFilter", "");
         final OatPolicy defaultPolicy = new OatPolicy("defaultPolicy", "");
         final OatFileFilter defaultFilter = new OatFileFilter("defaultFilter", "Files that do not need to be scanned");
-        defaultFilter.addFilterItem("OAT*.xml|zunit|signature|Makefile|MANIFEST.MF|Kconfig|*.crt|*.markdown|*.git");
-        defaultFilter.addFilterItem(".mk|.ld|.gitkeep|.gitignore|.gitattributes|.config|*.te|*.json|*.svg|*.swp");
-        defaultFilter.addFilterItem("*.sandbox|*.rslp|*.rc|*.pydeps|*.properties|*.pluginmeta|*.php|*.sgml|.adoc|NEWS");
-        defaultFilter.addFilterItem("*.patch|*.p7b|*.md|*.log|*.ini|*.html|*.htm|*.hml|*.hcs|__init__.py|MANIFEST.in");
-        defaultFilter.addFilterItem("*.hcb|*.gradle|*.gen|*.dic|*.d|*.css|*.cmake|*.cer|*.build|*.aff|*.err|*.pro|*.clang-format|*.ld");
+        defaultFilter.addFilterItem("OAT*.xml|zunit|signature|Makefile|MANIFEST.MF|Kconfig|*.crt|*.markdown|*.git", "");
+        defaultFilter.addFilterItem(".mk|.ld|.gitkeep|.gitignore|.gitattributes|.config|*.te|*.json|*.svg|*.swp", "");
+        defaultFilter.addFilterItem("*.sandbox|*.rslp|*.rc|*.pydeps|*.properties|*.pluginmeta|*.php|*.sgml|.adoc|NEWS",
+            "");
+        defaultFilter.addFilterItem("*.patch|*.p7b|*.md|*.log|*.ini|*.html|*.htm|*.hml|*.hcs|__init__.py|MANIFEST.in",
+            "");
         defaultFilter.addFilterItem(
-            "*.babelrc|*.editorconfig|*.eslintignore|*.prettierrc|*.eslintrc.js|*.template|*.tmpl|*.vcproj|*.def|*" + ".sln");
+            "*.hcb|*.gradle|*.gen|*.dic|*.d|*.css|*.cmake|*.cer|*.build|*.aff|*.err|*.pro|*.clang-format|*.ld", "");
         defaultFilter.addFilterItem(
-            "*_contexts|*.vcxproj|*.vcxproj.filters|*.vcxproj.user|*visual_studio.sln|*.bundle|CERTIFICATE|SIGNATURE");
-        defaultFilter.addFilterItem("*.lds|SConscript|*.pod|*.arb|*.repo");
-        defaultFilter.addFilePathFilterItem("projectroot/target/.*");
-        defaultFilter.addFilePathFilterItem("projectroot/output/.*");
-        defaultFilter.addFilePathFilterItem("projectroot/out/.*");
-        defaultFilter.addFilePathFilterItem("projectroot/log/.*");
-        defaultFilter.addFilePathFilterItem("projectroot/logs/.*");
-        defaultFilter.addFilePathFilterItem("projectroot/.idea/.*");
-        defaultFilter.addFilePathFilterItem("projectroot/.git/.*");
-        defaultFilter.addFilePathFilterItem("projectroot/.svn/.*");
-        defaultFilter.addFilePathFilterItem("projectroot/[a-zA-Z0-9]{20,}.sh");
+            "*.babelrc|*.editorconfig|*.eslintignore|*.prettierrc|*.eslintrc.js|*.template|*.tmpl|*.vcproj|*.def|*"
+                + ".sln", "");
+        defaultFilter.addFilterItem(
+            "*_contexts|*.vcxproj|*.vcxproj.filters|*.vcxproj.user|*visual_studio.sln|*.bundle|CERTIFICATE|SIGNATURE",
+            "");
+        defaultFilter.addFilterItem("*.lds|SConscript|*.pod|*.arb|*.repo", "");
+        defaultFilter.addFilePathFilterItem("projectroot/target/.*", "");
+        defaultFilter.addFilePathFilterItem("projectroot/output/.*", "");
+        defaultFilter.addFilePathFilterItem("projectroot/out/.*", "");
+        defaultFilter.addFilePathFilterItem("projectroot/log/.*", "");
+        defaultFilter.addFilePathFilterItem("projectroot/logs/.*", "");
+        defaultFilter.addFilePathFilterItem("projectroot/.idea/.*", "");
+        defaultFilter.addFilePathFilterItem("projectroot/.git/.*", "");
+        defaultFilter.addFilePathFilterItem("projectroot/.svn/.*", "");
+        defaultFilter.addFilePathFilterItem("projectroot/[a-zA-Z0-9]{20,}.sh", "");
 
         final OatFileFilter defaultPolicyFilter = new OatFileFilter("defaultPolicyFilter", "");
-        defaultPolicyFilter.addFilterItem("README.OpenSource");
-        defaultPolicyFilter.addFilterItem("README");
-        defaultPolicyFilter.addFilterItem("README.md");
-        defaultPolicyFilter.addFilterItem("README_zh.md");
+        defaultPolicyFilter.addFilterItem("README.OpenSource", "");
+        defaultPolicyFilter.addFilterItem("README", "");
+        defaultPolicyFilter.addFilterItem("README.md", "");
+        defaultPolicyFilter.addFilterItem("README_zh.md", "");
 
         final OatFileFilter copyrightPolicyFilter = new OatFileFilter("copyrightPolicyFilter", "");
-        copyrightPolicyFilter.addFilterItem("README.OpenSource");
-        copyrightPolicyFilter.addFilterItem("README");
-        copyrightPolicyFilter.addFilterItem("README.md");
-        copyrightPolicyFilter.addFilterItem("README_zh.md");
+        copyrightPolicyFilter.addFilterItem("README.OpenSource", "");
+        copyrightPolicyFilter.addFilterItem("README", "");
+        copyrightPolicyFilter.addFilterItem("README.md", "");
+        copyrightPolicyFilter.addFilterItem("README_zh.md", "");
 
         final OatFileFilter licenseFileNamePolicyFilter = new OatFileFilter("licenseFileNamePolicyFilter", "");
 
         final OatFileFilter readmeFileNamePolicyFilter = new OatFileFilter("readmeFileNamePolicyFilter", "");
 
-        final OatFileFilter readmeOpenSourcefileNamePolicyFilter = new OatFileFilter("readmeOpenSourcefileNamePolicyFilter", "");
+        final OatFileFilter readmeOpenSourcefileNamePolicyFilter = new OatFileFilter(
+            "readmeOpenSourcefileNamePolicyFilter", "");
 
         final OatFileFilter binaryFileTypePolicyFilter = new OatFileFilter("binaryFileTypePolicyFilter", "");
 
@@ -154,27 +160,25 @@ public class OatCfgUtilTest {
             new OatPolicyItem("license", "Apache-2.0", "!.*LICENSE", "may", "defaultGroup", "defaultPolicyFilter", "",
                 defaultPolicyFilter));
         defaultPolicy.addPolicyItem(
-            new OatPolicyItem("license", "ApacheStyleLicense", ".*LICENSE", "may", "defaultGroup", "defaultPolicyFilter", "",
+            new OatPolicyItem("license", "ApacheStyleLicense", ".*LICENSE", "may", "defaultGroup",
+                "defaultPolicyFilter", "", defaultPolicyFilter));
+        defaultPolicy.addPolicyItem(
+            new OatPolicyItem("license", "Apache-2.0", ".*LICENSE", "may", "defaultGroup", "defaultPolicyFilter", "",
                 defaultPolicyFilter));
         defaultPolicy.addPolicyItem(
-            new OatPolicyItem("license", "Apache-2.0", ".*LICENSE", "may", "defaultGroup", "defaultPolicyFilter", "", defaultPolicyFilter));
+            new OatPolicyItem("copyright", "Huawei Device Co., Ltd.", ".*", "may", "defaultGroup",
+                "copyrightPolicyFilter", "", copyrightPolicyFilter));
+        defaultPolicy.addPolicyItem(new OatPolicyItem("filename", "LICENSE", ".*/adapter/", "may", "defaultGroup",
+            "licenseFileNamePolicyFilter", "", licenseFileNamePolicyFilter));
+        defaultPolicy.addPolicyItem(new OatPolicyItem("filename", "LICENSE", "projectroot", "may", "defaultGroup",
+            "licenseFileNamePolicyFilter", "", licenseFileNamePolicyFilter));
+        defaultPolicy.addPolicyItem(new OatPolicyItem("filename", "README.md", "projectroot", "may", "defaultGroup",
+            "readmeFileNamePolicyFilter", "", readmeFileNamePolicyFilter));
+        defaultPolicy.addPolicyItem(new OatPolicyItem("filename", "README_zh.md", "projectroot", "may", "defaultGroup",
+            "readmeFileNamePolicyFilter", "", readmeFileNamePolicyFilter));
         defaultPolicy.addPolicyItem(
-            new OatPolicyItem("copyright", "Huawei Device Co., Ltd.", ".*", "may", "defaultGroup", "copyrightPolicyFilter", "",
-                copyrightPolicyFilter));
-        defaultPolicy.addPolicyItem(
-            new OatPolicyItem("filename", "LICENSE", ".*/adapter/", "may", "defaultGroup", "licenseFileNamePolicyFilter", "",
-                licenseFileNamePolicyFilter));
-        defaultPolicy.addPolicyItem(
-            new OatPolicyItem("filename", "LICENSE", "projectroot", "may", "defaultGroup", "licenseFileNamePolicyFilter", "",
-                licenseFileNamePolicyFilter));
-        defaultPolicy.addPolicyItem(
-            new OatPolicyItem("filename", "README.md", "projectroot", "may", "defaultGroup", "readmeFileNamePolicyFilter", "",
-                readmeFileNamePolicyFilter));
-        defaultPolicy.addPolicyItem(
-            new OatPolicyItem("filename", "README_zh.md", "projectroot", "may", "defaultGroup", "readmeFileNamePolicyFilter", "",
-                readmeFileNamePolicyFilter));
-        defaultPolicy.addPolicyItem(new OatPolicyItem("filetype", "!binary", ".*", "must", "defaultGroup", "binaryFileTypePolicyFilter", "",
-            binaryFileTypePolicyFilter));
+            new OatPolicyItem("filetype", "!binary", ".*", "must", "defaultGroup", "binaryFileTypePolicyFilter", "",
+                binaryFileTypePolicyFilter));
         defaultPolicy.addPolicyItem(
             new OatPolicyItem("filetype", "!archive", ".*", "must", "defaultGroup", "binaryFileTypePolicyFilter", "",
                 binaryFileTypePolicyFilter));

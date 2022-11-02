@@ -30,14 +30,16 @@ package ohos.oat.task;
 import static ohos.oat.utils.IOatCommonUtils.getTaskDefaultPrjName;
 
 import ohos.oat.analysis.IOatAnalyser;
+import ohos.oat.analysis.OatFileTypeAnalyser;
 import ohos.oat.analysis.OatHeaderMatchAnalyser;
 import ohos.oat.analysis.OatPolicyVerifyAnalyser;
 import ohos.oat.config.OatProject;
-import ohos.oat.document.OatFileDocument;
+import ohos.oat.document.IOatDocument;
 import ohos.oat.file.IOatFileWalker;
 import ohos.oat.file.OatProjectWalker;
 import ohos.oat.reporter.IOatReporter;
-import ohos.oat.reporter.OatOutputReporter;
+import ohos.oat.reporter.OatDetailPlainReporter;
+import ohos.oat.reporter.OatPlainReporter;
 import ohos.oat.utils.OatLogUtil;
 
 import java.util.ArrayList;
@@ -71,9 +73,12 @@ public class OatDefaultTaskProcessor extends AbstractOatTaskProcessor {
     @Override
     public void process() {
         // init reporter first, ensure report file time is consistent
-        final IOatReporter oatReporter = new OatOutputReporter();
+        final IOatReporter oatReporter = new OatPlainReporter();
         oatReporter.init(this.oatConfig, this.oatTask);
+        final IOatReporter oatDetailReporter = new OatDetailPlainReporter();
+        oatDetailReporter.init(this.oatConfig, this.oatTask);
         this.oatReporters.add(oatReporter);
+        this.oatReporters.add(oatDetailReporter);
 
         final long startTime = System.currentTimeMillis();
 
@@ -100,18 +105,24 @@ public class OatDefaultTaskProcessor extends AbstractOatTaskProcessor {
         final ExecutorService exec = Executors.newFixedThreadPool(AbstractOatTaskProcessor.THREAD_POOL_SIZE);
         final long startTime = System.currentTimeMillis();
         for (int i = 0; i < AbstractOatTaskProcessor.THREAD_POOL_SIZE; i++) {
-            final List<OatFileDocument> oatFileDocuments = this.docMap.get(i);
+            final List<IOatDocument> oatFileDocuments = this.docMap.get(i);
             exec.execute(new Runnable() {
                 @Override
                 public void run() {
-                    for (final OatFileDocument oatFileDocument : oatFileDocuments) {
+                    for (final IOatDocument oatFileDocument : oatFileDocuments) {
+                        if (!oatFileDocument.getStatus().isFileStatusNormal()) {
+                            continue;
+                        }
                         final List<IOatAnalyser> oatAnalysers = new ArrayList<>();
-                        final IOatAnalyser oatAnalyser = new OatHeaderMatchAnalyser();
-                        oatAnalyser.init(OatDefaultTaskProcessor.this.oatConfig, oatFileDocument);
-                        final IOatAnalyser oatAnalyser2 = new OatPolicyVerifyAnalyser();
-                        oatAnalyser2.init(OatDefaultTaskProcessor.this.oatConfig, oatFileDocument);
-                        oatAnalysers.add(oatAnalyser);
-                        oatAnalysers.add(oatAnalyser2);
+                        final IOatAnalyser oatFileTypeAnalyser = new OatFileTypeAnalyser();
+                        oatFileTypeAnalyser.init(OatDefaultTaskProcessor.this.oatConfig, oatFileDocument);
+                        final IOatAnalyser oatHeaderMatchAnalyser = new OatHeaderMatchAnalyser();
+                        oatHeaderMatchAnalyser.init(OatDefaultTaskProcessor.this.oatConfig, oatFileDocument);
+                        final IOatAnalyser oatPolicyVerifyAnalyser = new OatPolicyVerifyAnalyser();
+                        oatPolicyVerifyAnalyser.init(OatDefaultTaskProcessor.this.oatConfig, oatFileDocument);
+                        oatAnalysers.add(oatFileTypeAnalyser);
+                        oatAnalysers.add(oatHeaderMatchAnalyser);
+                        oatAnalysers.add(oatPolicyVerifyAnalyser);
                         IOatTaskProcessor.transmit2Analyser(oatFileDocument, OatDefaultTaskProcessor.this.oatConfig,
                             oatAnalysers);
                     }
@@ -140,8 +151,8 @@ public class OatDefaultTaskProcessor extends AbstractOatTaskProcessor {
         // process in one thread of the task
         final long startTime = System.currentTimeMillis();
         for (int i = 0; i < AbstractOatTaskProcessor.THREAD_POOL_SIZE; i++) {
-            final List<OatFileDocument> oatFileDocuments = this.docMap.get(i);
-            for (final OatFileDocument oatFileDocument : oatFileDocuments) {
+            final List<IOatDocument> oatFileDocuments = this.docMap.get(i);
+            for (final IOatDocument oatFileDocument : oatFileDocuments) {
                 IOatTaskProcessor.transmit2Reporter(oatFileDocument, this.oatConfig, this.oatReporters);
             }
         }

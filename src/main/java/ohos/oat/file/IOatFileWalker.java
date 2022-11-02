@@ -29,7 +29,7 @@ import java.io.IOException;
  * @since 2.0
  */
 public interface IOatFileWalker {
- 
+
     /**
      * @param oatConfig OAT configuration data structure
      * @param taskProcessor Task Processor to receive file documments

@@ -17,7 +17,7 @@ package ohos.oat.task;
 
 import ohos.oat.config.OatConfig;
 import ohos.oat.config.OatTask;
-import ohos.oat.document.OatFileDocument;
+import ohos.oat.document.IOatDocument;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -36,7 +36,7 @@ public abstract class AbstractOatTaskProcessor implements IOatTaskProcessor {
 
     protected OatTask oatTask;
 
-    protected final Map<Integer, List<OatFileDocument>> docMap = new HashMap<>();
+    protected final Map<Integer, List<IOatDocument>> docMap = new HashMap<>();
 
     protected final static int THREAD_POOL_SIZE = 16;
 
@@ -64,7 +64,7 @@ public abstract class AbstractOatTaskProcessor implements IOatTaskProcessor {
      * @param oatFileDocument file document
      */
     @Override
-    public void addFileDocument(final OatFileDocument oatFileDocument) {
+    public void addFileDocument(final IOatDocument oatFileDocument) {
         this.docMap.get(this.index).add(oatFileDocument);
         this.index++;
         if (this.index >= AbstractOatTaskProcessor.THREAD_POOL_SIZE) {

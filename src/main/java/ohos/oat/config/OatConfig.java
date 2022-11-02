@@ -22,7 +22,7 @@
 
 package ohos.oat.config;
 
-import ohos.oat.analysis.headermatcher.OatLicense;
+import ohos.oat.analysis.matcher.license.spdx.OatLicense;
 import ohos.oat.utils.OatCfgUtil;
 import ohos.oat.utils.OatFileUtils;
 import ohos.oat.utils.OatLogUtil;
@@ -111,8 +111,8 @@ public class OatConfig {
         if (!this.pluginCheckMode.equals("1")) {
             return true;
         }
-        String absolutePath = OatFileUtils.getFileCanonicalPath(file);
-    
+        final String absolutePath = OatFileUtils.getFileCanonicalPath(file);
+
         final String formatedPath = absolutePath.replace("\\", "/");
         for (final String srcFile : this.srcFileList) {
             if (srcFile.startsWith(formatedPath)) {

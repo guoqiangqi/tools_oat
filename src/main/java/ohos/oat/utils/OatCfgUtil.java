@@ -39,9 +39,14 @@ import org.apache.commons.configuration2.builder.fluent.Configurations;
 import org.apache.commons.configuration2.tree.DefaultExpressionEngine;
 import org.apache.commons.configuration2.tree.DefaultExpressionEngineSymbols;
 import org.apache.commons.configuration2.tree.ImmutableNode;
+import org.apache.commons.io.IOUtils;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.List;
 import java.util.Locale;
 
@@ -205,6 +210,32 @@ public final class OatCfgUtil {
         final File oatFile = new File(prjOatFile);
 
         if (oatFile.exists()) {
+            final StringBuilder stringBuilder = new StringBuilder();
+            try {
+                final FileInputStream fis = new FileInputStream(prjOatFile);
+                final InputStreamReader isr = new InputStreamReader(fis, "UTF-8");
+
+                final BufferedReader fileReader = new BufferedReader(isr);
+                String line = "\n";
+                boolean start = false;
+                while ((line = fileReader.readLine()) != null) {
+                    final String tmpStr = line.replace("\t", " ");
+                    if (!start && tmpStr.equals("<configuration>")) {
+                        start = true;
+                    }
+                    if (start) {
+                        stringBuilder.append("\n" + tmpStr);
+                        if (tmpStr.equals("</configuration>")) {
+                            break;
+                        }
+                    }
+                }
+                oatProject.putData("ProjectOAT", stringBuilder.toString());
+                IOUtils.closeQuietly(fileReader);
+
+            } catch (final IOException e) {
+                throw new RuntimeException(e);
+            }
             final XMLConfiguration prjXmlconfig = OatCfgUtil.getXmlConfiguration(prjOatFile);
             final String licensefile = OatCfgUtil.getValue(prjXmlconfig, "licensefile");
             final String[] licenselist = OatCfgUtil.getSplitStrings(licensefile);
@@ -306,9 +337,9 @@ public final class OatCfgUtil {
             final String desc = OatCfgUtil.getElementAttrValue(fileFilterItemCfg, "desc");
             if (!type.equals("filepath")) {
                 if (oatProject != null) {
-                    oatFileFilter.addFilterItem(oatProject.getPath(), name);
+                    oatFileFilter.addFilterItem(oatProject.getPath(), name, desc);
                 } else {
-                    oatFileFilter.addFilterItem(name);
+                    oatFileFilter.addFilterItem(name, desc);
                 }
                 if (oatProject != null && (!oatFileFilter.getName().contains("dir name underproject"))) {
                     // Project OAT XML
@@ -326,7 +357,7 @@ public final class OatCfgUtil {
                     name = oatProject.getPath() + name;
                 }
             }
-            oatFileFilter.addFilePathFilterItem(name);
+            oatFileFilter.addFilePathFilterItem(name, desc);
             if (oatProject != null) {
                 // Project OAT XML
                 OatLogUtil.logOatConfig(OatCfgUtil.class.getSimpleName(),

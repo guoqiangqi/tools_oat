@@ -19,7 +19,7 @@
 
 package ohos.oat.utils;
 
-import ohos.oat.analysis.headermatcher.OatLicense;
+import ohos.oat.analysis.matcher.license.spdx.OatLicense;
 import ohos.oat.config.OatConfig;
 
 import java.util.Collections;

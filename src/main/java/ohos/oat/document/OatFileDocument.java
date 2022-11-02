@@ -28,11 +28,12 @@
 package ohos.oat.document;
 
 import ohos.oat.config.OatProject;
-
-import org.apache.rat.api.MetaData;
-import org.apache.rat.document.impl.FileDocument;
+import ohos.oat.utils.OatCfgUtil;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -45,80 +46,148 @@ import java.util.concurrent.ConcurrentHashMap;
  * @author chenyaxun
  * @since 1.0
  */
-public class OatFileDocument extends FileDocument {
-    private final Map<String, Boolean> matchResult = new HashMap<>();
+public class OatFileDocument implements IOatDocument {
 
-    private final Map<String, String> data = new HashMap<>();
+    private OatProject oatProject;
+
+    private final String name;
 
     private final File file;
-
-    // This will be used in concurrent threads
-    private final Map<String, List<String>> listData = new ConcurrentHashMap<>();
-
-    private int maxline = 0;
 
     private boolean isProjectRoot = false;
 
     private boolean isDirectory = false;
 
-    private OatProject oatProject;
+    private boolean isArchive = false;
+
+    private boolean isBinary = false;
+
+    private final Map<String, String> data = new HashMap<>();
+
+    // This will be used in concurrent threads
+    private final Map<String, List<String>> listData = new ConcurrentHashMap<>();
+
+    private boolean isReadable;
+
+    private boolean isLicenseNotes;
+
+    private Status status;
 
     public OatFileDocument(final File file) {
-        super(file);
         this.file = file;
+        this.name = OatCfgUtil.formatPath(file.getPath());
+        this.status = new Status();
     }
 
-    public int getMaxline() {
-        return this.maxline;
+    @Override
+    public String getName() {
+        return this.name;
     }
 
-    public void addMaxline() {
-        this.maxline++;
-    }
-
-    public void putMatchResult(final String matcherName, final Boolean result) {
-        this.matchResult.put(matcherName, result);
-    }
-
+    @Override
     public File getFile() {
         return this.file;
     }
 
-    public Boolean getMatchResult(final String matcherName) {
-        final Boolean tmp = this.matchResult.get(matcherName);
-        return tmp != null && tmp;
-    }
-
+    @Override
     public boolean isProjectRoot() {
         return this.isProjectRoot;
     }
 
+    @Override
     public void setProjectRoot(final boolean projectRoot) {
         this.isProjectRoot = projectRoot;
     }
 
+    @Override
     public boolean isDirectory() {
         return this.isDirectory;
     }
 
+    @Override
     public void setDirectory(final boolean directory) {
         this.isDirectory = directory;
     }
 
+    @Override
+    public boolean isArchive() {
+        return this.isArchive;
+    }
+
+    @Override
+    public boolean isBinary() {
+        return this.isBinary;
+    }
+
+    @Override
+    public void setArchive(final boolean archive) {
+        this.isArchive = archive;
+    }
+
+    @Override
+    public void setBinary(final boolean binary) {
+        this.isBinary = binary;
+    }
+
+    @Override
+    public boolean isReadable() {
+        return this.isReadable;
+    }
+
+    @Override
+    public void setReadable(final boolean isReadble) {
+        this.isReadable = isReadble;
+    }
+
+    /**
+     * @return
+     */
+    @Override
+    public boolean isLicenseNotes() {
+        return this.isLicenseNotes;
+    }
+
+    /**
+     * @param licenseNotes
+     */
+    @Override
+    public void setLicenseNotes(final boolean licenseNotes) {
+        this.isLicenseNotes = licenseNotes;
+    }
+
+    /**
+     * @return
+     */
+    @Override
+    public Status getStatus() {
+        return this.status;
+    }
+
+    /**
+     * @param status
+     */
+    @Override
+    public void setStatus(final Status status) {
+        this.status = status;
+    }
+
+    @Override
     public OatProject getOatProject() {
         return this.oatProject;
     }
 
+    @Override
     public void setOatProject(final OatProject oatProject) {
         this.oatProject = oatProject;
-        this.getMetaData().set(new MetaData.Datum("ProjectName", oatProject.getName()));
     }
 
+    @Override
     public String getData(final String key) {
         final String tmp = this.data.get(key);
         return tmp == null ? "" : tmp;
     }
 
+    @Override
     public String getFileName() {
         final String name = this.getName();
         final int index = name.lastIndexOf("/");
@@ -129,15 +198,18 @@ public class OatFileDocument extends FileDocument {
         }
     }
 
+    @Override
     public void putData(final String key, final String value) {
         this.data.put(key, value);
     }
 
+    @Override
     public List<String> getListData(final String key) {
         final List<String> tmpList = this.listData.get(key);
         return tmpList == null ? new ArrayList<>() : tmpList;
     }
 
+    @Override
     public void addListData(final String key, final String value) {
         List<String> tmpList = this.listData.get(key);
         if (tmpList == null) {
@@ -147,11 +219,18 @@ public class OatFileDocument extends FileDocument {
         tmpList.add(value);
     }
 
-    public void copyData(final OatFileDocument fileDocument) {
+    @Override
+    public void copyData(final IOatDocument fileDocument) {
         if (fileDocument == null) {
             return;
         }
-        this.listData.putAll(fileDocument.listData);
-        this.data.putAll(fileDocument.data);
+        final OatFileDocument oatFileDocument = (OatFileDocument) fileDocument;
+        this.listData.putAll(oatFileDocument.listData);
+        this.data.putAll(oatFileDocument.data);
+    }
+
+    @Override
+    public InputStream inputStream() throws IOException {
+        return new FileInputStream(this.file);
     }
 }

@@ -78,6 +78,7 @@ public class OatMultiModeCommandLine extends AbstractOatCommandLine {
     @Override
     public OatConfig parseArgs2Config(final String[] args) {
         final OatConfig oatConfig = new OatConfig();
+        IOatCommandLine.storeCommand2Config(args, oatConfig);
         final CommandLine commandLine = IOatCommandLine.parseOptions(args, this.options);
         final String optionValue_i = commandLine.getOptionValue("i");
         if (null == commandLine || null == optionValue_i || commandLine.hasOption("h")) {

@@ -26,10 +26,12 @@
 
 package ohos.oat.file;
 
-import ohos.oat.analysis.headermatcher.OatMatchUtils;
+import ohos.oat.analysis.matcher.IOatMatcher;
 import ohos.oat.config.OatConfig;
 import ohos.oat.config.OatProject;
+import ohos.oat.document.IOatDocument;
 import ohos.oat.document.OatFileDocument;
+import ohos.oat.task.IOatTaskProcessor;
 import ohos.oat.utils.OatCfgUtil;
 import ohos.oat.utils.OatLogUtil;
 
@@ -41,8 +43,10 @@ import java.io.File;
 import java.io.FilenameFilter;
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.regex.Pattern;
 
 /**
@@ -61,6 +65,10 @@ public class OatDirectoryWalker extends Walker {
     // config of this process
     private final OatConfig oatConfig;
 
+    private final IOatTaskProcessor taskProcessor;
+
+    private final Map<String, IOatDocument> filteredFilePath2Document = new HashMap<>();
+
     /**
      * Constructor method
      *
@@ -68,57 +76,98 @@ public class OatDirectoryWalker extends Walker {
      * @param oatProject Oat project of this walker
      * @param projectRootDir Root dir of current scanning project
      * @param filter Filter information
+     * @param taskProcessor Task Processor
      */
     public OatDirectoryWalker(final OatConfig oatConfig, final OatProject oatProject, final File projectRootDir,
-        final FilenameFilter filter) {
+        final FilenameFilter filter, final IOatTaskProcessor taskProcessor) {
         super(projectRootDir.getPath(), projectRootDir, filter);
         this.oatProject = oatProject;
         this.oatConfig = oatConfig;
+        this.taskProcessor = taskProcessor;
+    }
+
+    /**
+     * Not used
+     *
+     * @param ratReport RatReport
+     * @throws RatException to pass errors
+     */
+    @Override
+    public void run(final RatReport ratReport) throws RatException {
     }
 
     /**
      * The main fuction to process all file in current project
-     *
-     * @param report RatReport to run on this Directory walker.
-     * @throws RatException to pass errors
      */
-    @Override
-    public void run(final RatReport report) throws RatException {
-        final File[] files = this.file.listFiles();
-        if (files == null || files.length <= 0) {
+    public void walkProjectFiles() {
+        final File[] prj1LevelFiles = this.file.listFiles();
+        if (prj1LevelFiles == null || prj1LevelFiles.length == 0) {
             return;
         }
         boolean needprocess = false;
-        for (final File file1 : files) {
-            final boolean notIgnored = this.notFilteredFile(file1);
-            final boolean needCheck = this.needCheck(file1);
+        for (final File prj1LevelFile : prj1LevelFiles) {
+            if (prj1LevelFile.getName().endsWith(".git") || prj1LevelFile.getName().endsWith(".repo")
+                || prj1LevelFile.getName().endsWith(".svn")) {
+                continue;
+            }
 
-            if (needCheck && notIgnored && (!file1.getName().endsWith(".git"))) {
+            final IOatDocument prj1LevelDocument = new OatFileDocument(prj1LevelFile);
+            prj1LevelDocument.setOatProject(this.oatProject);
+
+            final boolean notFilteredFile = this.notFilteredFile(prj1LevelDocument);
+            final boolean notFilteredPath = this.notFilteredPath(prj1LevelDocument);
+            final boolean isNotSubPrj = this.isNotSubPrj(prj1LevelDocument);
+
+            if (notFilteredPath && notFilteredFile && isNotSubPrj) {
                 needprocess = true;
             }
         }
         if (needprocess) {
-            this.process(report, this.file);
+            final IOatDocument prjectDocument = new OatFileDocument(this.file);
+            prjectDocument.setOatProject(this.oatProject);
+            this.process(prjectDocument);
         }
+        this.filteredFilePath2Document.forEach((filteredFilePath, oatDocument) -> {
+            this.taskProcessor.addFileDocument(oatDocument);
+        });
+    }
+
+    private boolean notFilteredFile(final IOatDocument oatDocument) {
+        final String fileName = oatDocument.getFile().getName().toLowerCase(Locale.ENGLISH);
+        final String filePath = oatDocument.getFile().getPath().toLowerCase(Locale.ENGLISH).replace("\\", "/");
+
+        if ((fileName.contains("license") && (fileName.contains(".txt") || fileName.contains(".md")
+            || fileName.contains(".htm"))) || fileName.equals("build.gn") || fileName.equals("license")
+            || filePath.contains("/license/") || filePath.contains("/licenses/")) {
+            return true;
+        }
+
+        final boolean notIgnored = this.isNotIgnored(oatDocument.getFile());
+        if (!notIgnored) {
+            if (this.oatConfig.getData("TraceSkippedAndIgnoredFiles").equals("true")) {
+                OatLogUtil.warn(this.getClass().getSimpleName(),
+                    this.oatProject.getPath() + "\tIgnoredFile\t" + oatDocument.getFile().getPath());
+            }
+            this.filteredFilePath2Document.put(oatDocument.getFile().getPath(), oatDocument);
+            oatDocument.getStatus().setFileStatusFiltered();
+            oatDocument.getStatus()
+                .setFileStatusRule("FileNameFilter:" + this.oatProject.getFileFilterObj().getFileFilterItems());
+            oatDocument.getStatus().setFileStatusDesc(this.oatProject.getFileFilterObj().getFileFilterDesc(""));
+        }
+        return notIgnored;
     }
 
     /**
      * Identify ignorable files
      *
-     * @param file File to process
+     * @param oatDocument File to process
      * @return Whether ignore this file
      */
-    private boolean needCheck(final File file) {
+    private boolean notFilteredPath(final IOatDocument oatDocument) {
 
-        final List<OatProject> includedPrjList = this.oatProject.getIncludedPrjList();
-        String shortPath = OatCfgUtil.getShortPath(this.oatConfig, file);
-        if (!this.oatConfig.needCheck(file)) {
+        String shortPath = OatCfgUtil.getShortPath(this.oatConfig, oatDocument.getFile());
+        if (!this.oatConfig.needCheck(oatDocument.getFile())) {
             return false;
-        }
-        for (final OatProject project : includedPrjList) {
-            if (shortPath.startsWith(project.getPath())) {
-                return false;
-            }
         }
 
         if (this.oatConfig.isPluginMode()) {
@@ -137,80 +186,79 @@ public class OatDirectoryWalker extends Walker {
             if (shortPath.startsWith(piPath)) {
                 if (this.oatConfig.getData("TraceSkippedAndIgnoredFiles").equals("true")) {
                     OatLogUtil.warn(this.getClass().getSimpleName(),
-                        this.oatProject.getPath() + "\t:" + "\tstartsWith-skip\t" + this.name + "\t:" + file.getPath());
+                        this.oatProject.getPath() + "\t:" + "\tstartsWith-skip\t" + this.name + "\t:"
+                            + oatDocument.getFile().getPath());
                 }
+                this.filteredFilePath2Document.put(oatDocument.getFile().getPath(), oatDocument);
+                oatDocument.getStatus().setFileStatusFiltered();
+                oatDocument.getStatus().setFileStatusRule("FilePathFilter:" + piPath);
+                oatDocument.getStatus()
+                    .setFileStatusDesc(this.oatProject.getFileFilterObj().getFilePathFilterDesc(oatFilePathFilterItem));
                 return false;
             }
-            final Pattern pattern = OatMatchUtils.compilePattern(piPath);
+            final Pattern pattern = IOatMatcher.compilePattern(piPath);
             if (pattern == null) {
                 return true;
             }
-            final boolean needFilter = OatMatchUtils.matchPattern(shortPath, pattern);
+            final boolean needFilter = IOatMatcher.matchPattern(shortPath, pattern);
             if (needFilter) {
                 if (this.oatConfig.getData("TraceSkippedAndIgnoredFiles").equals("true")) {
                     OatLogUtil.warn(this.getClass().getSimpleName(),
-                        this.oatProject.getPath() + "\t:" + "\tmatcher-skip\t" + this.name + "\t:" + file.getPath());
+                        this.oatProject.getPath() + "\t:" + "\tmatcher-skip\t" + this.name + "\t:"
+                            + oatDocument.getFile().getPath());
                 }
-
+                this.filteredFilePath2Document.put(oatDocument.getFile().getPath(), oatDocument);
+                oatDocument.getStatus().setFileStatusFiltered();
+                oatDocument.getStatus().setFileStatusRule("FilePathFilter:" + piPath);
+                oatDocument.getStatus()
+                    .setFileStatusDesc(this.oatProject.getFileFilterObj().getFilePathFilterDesc(oatFilePathFilterItem));
                 return false;
             }
         }
         return true;
     }
 
-    private boolean notFilteredFile(final File file) {
-        final String fileName = file.getName().toLowerCase(Locale.ENGLISH);
-        final String filePath = file.getPath().toLowerCase(Locale.ENGLISH).replace("\\", "/");
-
-        if ((fileName.contains("license") && (fileName.contains(".txt") || fileName.contains(".md")
-            || fileName.contains(".htm"))) || fileName.equals("build.gn") || fileName.equals("license")
-            || filePath.contains("/license/") || filePath.contains("/licenses/")) {
-            return true;
-        }
-
-        final boolean notIgnored = this.isNotIgnored(file);
-        if (!notIgnored) {
-            if (this.oatConfig.getData("TraceSkippedAndIgnoredFiles").equals("true")) {
-                OatLogUtil.warn(this.getClass().getSimpleName(),
-                    this.oatProject.getPath() + "\tIgnoredFile\t" + file.getPath());
+    private boolean isNotSubPrj(final IOatDocument file) {
+        final List<OatProject> includedPrjList = this.oatProject.getIncludedPrjList();
+        final String shortPath = OatCfgUtil.getShortPath(this.oatConfig, file.getFile());
+        for (final OatProject project : includedPrjList) {
+            if (shortPath.startsWith(project.getPath())) {
+                return false;
             }
         }
-        return notIgnored;
+        return true;
     }
 
     /**
      * Process a directory, ignoring any files/directories set to be ignored.
      *
-     * @param report RatReport object to analyse this file
-     * @param file File to process
-     * @throws RatException exception wile process
+     * @param oatDocument File to process
      */
-    private void process(final RatReport report, final File file) throws RatException {
-        if (this.needCheck(file)) {
-            final File[] files = file.listFiles();
+    private void process(final IOatDocument oatDocument) {
+        if (this.notFilteredPath(oatDocument)) {
+            final File[] files = oatDocument.getFile().listFiles();
             if (files != null) {
                 Arrays.sort(files, this.comparator);
                 // breadth first traversal
-                this.processNonDirectories(report, files);
-                this.processDirectories(report, files);
+                this.processNonDirectories(files);
+                this.processDirectories(files);
             }
             // Also process folder
-            this.report(report, file);
+            this.report(oatDocument);
         }
     }
 
     /**
      * Process all files in a directory
      *
-     * @param report Rat report to analyse files
      * @param files the files to analyse
-     * @throws RatException exception wile process
      */
-    private void processNonDirectories(final RatReport report, final File[] files) throws RatException {
+    private void processNonDirectories(final File[] files) {
         for (final File file : files) {
-
-            if (this.needCheck(file) && this.notFilteredFile(file) && !file.isDirectory()) {
-                this.report(report, file);
+            final IOatDocument document = new OatFileDocument(file);
+            document.setOatProject(this.oatProject);
+            if (this.notFilteredPath(document) && this.notFilteredFile(document) && !file.isDirectory()) {
+                this.report(document);
             }
         }
     }
@@ -218,15 +266,15 @@ public class OatDirectoryWalker extends Walker {
     /**
      * Process all directories
      *
-     * @param report Rat report to analyse files
      * @param files the directories to analyse
-     * @throws RatException exception wile process
      */
-    private void processDirectories(final RatReport report, final File[] files) throws RatException {
+    private void processDirectories(final File[] files) {
         for (final File file : files) {
-            if (this.needCheck(file) && this.notFilteredFile(file) && file.isDirectory()) {
+            final IOatDocument document = new OatFileDocument(file);
+            document.setOatProject(this.oatProject);
+            if (this.notFilteredPath(document) && this.notFilteredFile(document) && file.isDirectory()) {
                 if (!this.isRestricted(file)) {
-                    this.process(report, file);
+                    this.process(document);
                 }
             }
         }
@@ -234,34 +282,30 @@ public class OatDirectoryWalker extends Walker {
 
     /**
      * Report on the given file.
-     *
-     * @param report Rat report to process the file with
-     * @param file the file to be reported on
-     * @throws RatException exception wile process
      */
-    private void report(final RatReport report, final File file) throws RatException {
-        if (file == null) {
+    private void report(final IOatDocument document) {
+        if (document == null) {
             return;
         }
-        final OatFileDocument document = new OatFileDocument(file);
-        document.setOatProject(this.oatProject);
-        if (this.file.getPath().equals(file.getPath())) {
+        // final IOatDocument document = new OatFileDocument(file);
+        // document.setOatProject(this.oatProject);
+        if (this.file.getPath().equals(document.getFile().getPath())) {
             document.setProjectRoot(true);
             this.oatProject.setProjectFileDocument(document);
         }
-        final boolean isDirectory = file.isDirectory();
+        final boolean isDirectory = document.getFile().isDirectory();
         document.setDirectory(isDirectory);
         if (isDirectory) {
-            final File[] files = file.listFiles();
+            final File[] files = document.getFile().listFiles();
             if (files != null && files.length > 0) {
-                this.collectFileNames(file, document, files);
-                this.collectLicenseFileNames(file, document);
+                this.collectFileNames(document.getFile(), document, files);
+                this.collectLicenseFileNames(document.getFile(), document);
             }
         }
-        report.report(document);
+        this.taskProcessor.addFileDocument(document);
     }
 
-    private void collectLicenseFileNames(final File file, final OatFileDocument document) {
+    private void collectLicenseFileNames(final File file, final IOatDocument document) {
         if (!document.isProjectRoot()) {
             return;
         }
@@ -269,7 +313,7 @@ public class OatDirectoryWalker extends Walker {
         for (final String licenseFile : licenseFiles) {
             final String licensepath = file.getPath() + licenseFile;
             final File file1 = new File(licensepath);
-            if (file1.exists() && this.needCheck(file) && this.notFilteredFile(file)) {
+            if (file1.exists() && this.notFilteredPath(document) && this.notFilteredFile(document)) {
                 final String licensefilename = OatCfgUtil.getShortPath(this.oatConfig, file1);
                 if (!document.getOatProject()
                     .getProjectFileDocument()
@@ -281,9 +325,9 @@ public class OatDirectoryWalker extends Walker {
         }
     }
 
-    private void collectFileNames(final File file, final OatFileDocument document, final File[] files) {
+    private void collectFileNames(final File file, final IOatDocument document, final File[] files) {
         for (final File file1 : files) {
-            if ((!file1.isDirectory()) && this.needCheck(file) && this.notFilteredFile(file)) {
+            if ((!file1.isDirectory()) && this.notFilteredPath(document) && this.notFilteredFile(document)) {
                 final String fileName = file1.getName();
                 final String shotFileName = fileName.toLowerCase(Locale.ENGLISH).replace(" ", "");
                 if (fileName.startsWith("LICENSE") || fileName.startsWith("LICENCE") || (fileName.startsWith("NOTICE"))
