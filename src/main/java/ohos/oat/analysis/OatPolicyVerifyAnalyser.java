@@ -29,12 +29,10 @@
 package ohos.oat.analysis;
 
 import ohos.oat.analysis.matcher.IOatMatcher;
-import ohos.oat.config.OatFileFilter;
-import ohos.oat.config.OatPolicy;
-import ohos.oat.config.OatPolicyItem;
-import ohos.oat.config.OatProject;
+import ohos.oat.config.*;
 import ohos.oat.document.IOatDocument;
 import ohos.oat.utils.OatCfgUtil;
+import ohos.oat.utils.OatFileUtils;
 import ohos.oat.utils.OatLogUtil;
 
 import java.io.File;
@@ -237,7 +235,16 @@ public class OatPolicyVerifyAnalyser extends AbstraceOatAnalyser {
 
         return validResult;
     }
-
+    private boolean isInvalidRefInfo(final String fileName, final OatFileFilter fileFilter, OatFileFilterItem filePathFilterItem) {
+        if (this.oatConfig.getData("verifyRef").equals("true")) {
+            if (OatFileUtils.isPreBuildFile(fileName)) {
+                if (fileFilter.IsRefInfoInvalidWhenBinaryFileFilter(filePathFilterItem)) {
+                    return true;
+                }
+            }
+        }
+        return  false;
+    }
     private boolean isPolicyOk(final String name, final String piName, final String policyType) {
         final boolean result = name.contains(piName);
         if (result) {
@@ -257,20 +264,20 @@ public class OatPolicyVerifyAnalyser extends AbstraceOatAnalyser {
         return false;
     }
 
-    private static boolean isFiltered(final OatPolicyItem oatPolicyItem, final String fullPathFromBasedir,
+    private boolean isFiltered(final OatPolicyItem oatPolicyItem, final String fullPathFromBasedir,
         final String fileName, final IOatDocument subject) {//用MAP缓存过滤规则的结果
         final OatFileFilter fileFilter = oatPolicyItem.getFileFilterObj();
         if (fileName != null && fileName.length() > 0) {
-            for (final String fileFilterItem : fileFilter.getFileFilterItems()) {
+            for (final OatFileFilterItem fileFilterItem : fileFilter.getFileFilterItems()) {
                 // 用文件名匹配，如果匹配成功，则本策略要忽略此文件，故返回false
 
                 final String lastFilterResult = subject.getData(
-                    "FileFilterResult:" + fileFilter.getName() + ":" + fileFilterItem);
+                    "FileFilterResult:" + fileFilter.getName() + ":" + fileFilterItem.getName());
                 if (lastFilterResult.length() > 0) {
                     if (lastFilterResult.equals("true")) {
                         final String policyId = oatPolicyItem.getType() + ":" + oatPolicyItem.getFileFilter();
                         final IOatDocument.FilteredRule filteredRule = new IOatDocument.FilteredRule();
-                        filteredRule.setFilterItem(fileFilterItem);
+                        filteredRule.setFilterItem(fileFilterItem.getName());
                         filteredRule.setPolicyType(oatPolicyItem.getType());
                         filteredRule.setPolicyName(oatPolicyItem.getName());
                         filteredRule.setFilterName(oatPolicyItem.getFileFilter());
@@ -284,25 +291,28 @@ public class OatPolicyVerifyAnalyser extends AbstraceOatAnalyser {
 
                 Pattern pattern = null;
                 try {
-                    String tmpFilterItem = fileFilterItem.replace(subject.getOatProject().getPath(), "");
+                    String tmpFilterItem = fileFilterItem.getName().replace(subject.getOatProject().getPath(), "");
                     tmpFilterItem = tmpFilterItem.replace("*", ".*");
                     pattern = IOatMatcher.compilePattern(tmpFilterItem);
                 } catch (final Exception e) {
                     OatLogUtil.traceException(e);
-                    subject.putData("FileFilterResult:" + fileFilter.getName() + ":" + fileFilterItem, "false");
+                    subject.putData("FileFilterResult:" + fileFilter.getName() + ":" + fileFilterItem.getName(), "false");
                     return false;
                 }
                 if (pattern == null) {
-                    subject.putData("FileFilterResult:" + fileFilter.getName() + ":" + fileFilterItem, "false");
+                    subject.putData("FileFilterResult:" + fileFilter.getName() + ":" + fileFilterItem.getName(), "false");
                     return false;
                 }
                 final boolean needFilter = IOatMatcher.matchPattern(fileName, pattern);
                 if (needFilter) {
+                    if (isInvalidRefInfo(fileName,fileFilter,fileFilterItem)) {
+                        return false;
+                    }
                     // need add reason desc to print all message in output file future
-                    subject.putData("FileFilterResult:" + fileFilter.getName() + ":" + fileFilterItem, "true");
+                    subject.putData("FileFilterResult:" + fileFilter.getName() + ":" + fileFilterItem.getName(), "true");
                     final String policyId = oatPolicyItem.getType() + ":" + oatPolicyItem.getFileFilter();
                     final IOatDocument.FilteredRule filteredRule = new IOatDocument.FilteredRule();
-                    filteredRule.setFilterItem(fileFilterItem);
+                    filteredRule.setFilterItem(fileFilterItem.getName());
                     filteredRule.setPolicyType(oatPolicyItem.getType());
                     filteredRule.setPolicyName(oatPolicyItem.getName());
                     filteredRule.setFilterName(oatPolicyItem.getFileFilter());
@@ -310,21 +320,21 @@ public class OatPolicyVerifyAnalyser extends AbstraceOatAnalyser {
                     subject.getStatus().addPolicyStatusFilteredRule(policyId, filteredRule);
                     return true;
                 } else {
-                    subject.putData("FileFilterResult:" + fileFilter.getName() + ":" + fileFilterItem, "false");
+                    subject.putData("FileFilterResult:" + fileFilter.getName() + ":" + fileFilterItem.getName(), "false");
                 }
 
             }
         }
 
-        for (final String filePathFilterItem : fileFilter.getOatFilePathFilterItems()) {
+        for (final OatFileFilterItem filePathFilterItem : fileFilter.getOatFilePathFilterItems()) {
             // 用从根目录开始的路径匹配，如果匹配成功，则本策略要忽略此文件，故返回false
             final String lastFilterResult = subject.getData(
-                "PathFilterResult:" + fileFilter.getName() + ":" + filePathFilterItem);
+                "PathFilterResult:" + fileFilter.getName() + ":" + filePathFilterItem.getName());
             if (lastFilterResult.length() > 0) {
                 if (lastFilterResult.equals("true")) {
                     final String policyId = oatPolicyItem.getType() + ":" + oatPolicyItem.getFileFilter();
                     final IOatDocument.FilteredRule filteredRule = new IOatDocument.FilteredRule();
-                    filteredRule.setFilterItem(filePathFilterItem);
+                    filteredRule.setFilterItem(filePathFilterItem.getName());
                     filteredRule.setPolicyType(oatPolicyItem.getType());
                     filteredRule.setPolicyName(oatPolicyItem.getName());
                     filteredRule.setFilterName(oatPolicyItem.getFileFilter());
@@ -336,18 +346,21 @@ public class OatPolicyVerifyAnalyser extends AbstraceOatAnalyser {
                 }
             }
 
-            final Pattern pattern = IOatMatcher.compilePattern(filePathFilterItem);
+            final Pattern pattern = IOatMatcher.compilePattern(filePathFilterItem.getName());
             if (pattern == null) {
-                subject.putData("PathFilterResult:" + fileFilter.getName() + ":" + filePathFilterItem, "false");
+                subject.putData("PathFilterResult:" + fileFilter.getName() + ":" + filePathFilterItem.getName(), "false");
                 return false;
             }
             final boolean needFilter = IOatMatcher.matchPattern(fullPathFromBasedir, pattern);
             if (needFilter) {
+                if (isInvalidRefInfo(fileName,fileFilter,filePathFilterItem)) {
+                    return false;
+                }
                 // need add reason desc to print all message in output file future
-                subject.putData("PathFilterResult:" + fileFilter.getName() + ":" + filePathFilterItem, "true");
+                subject.putData("PathFilterResult:" + fileFilter.getName() + ":" + filePathFilterItem.getName(), "true");
                 final String policyId = oatPolicyItem.getType() + ":" + oatPolicyItem.getFileFilter();
                 final IOatDocument.FilteredRule filteredRule = new IOatDocument.FilteredRule();
-                filteredRule.setFilterItem(filePathFilterItem);
+                filteredRule.setFilterItem(filePathFilterItem.getName());
                 filteredRule.setPolicyType(oatPolicyItem.getType());
                 filteredRule.setPolicyName(oatPolicyItem.getName());
                 filteredRule.setFilterName(oatPolicyItem.getFileFilter());
@@ -355,7 +368,7 @@ public class OatPolicyVerifyAnalyser extends AbstraceOatAnalyser {
                 subject.getStatus().addPolicyStatusFilteredRule(policyId, filteredRule);
                 return true;
             } else {
-                subject.putData("PathFilterResult:" + fileFilter.getName() + ":" + filePathFilterItem, "false");
+                subject.putData("PathFilterResult:" + fileFilter.getName() + ":" + filePathFilterItem.getName(), "false");
             }
         }
         return false;
@@ -473,7 +486,7 @@ public class OatPolicyVerifyAnalyser extends AbstraceOatAnalyser {
             //         return false;
             //     }
             // } else {
-            if (OatPolicyVerifyAnalyser.isFiltered(policyItem, fullPathFromBasedir, fileName, subject)) {
+            if (this.isFiltered(policyItem, fullPathFromBasedir, fileName, subject)) {
                 // subject.putData("FilterResult:" + fileFilter.getName(), "true");
                 // final String policyId = policyItem.getType() + policyItem.getName();
                 // subject.getStatus().setPolicyStatusPassedByFilter(policyId);

@@ -151,7 +151,7 @@ public class OatDirectoryWalker extends Walker {
             this.filteredFilePath2Document.put(oatDocument.getFile().getPath(), oatDocument);
             oatDocument.getStatus().setFileStatusFiltered();
             oatDocument.getStatus()
-                .setFileStatusRule("FileNameFilter:" + this.oatProject.getFileFilterObj().getFileFilterItems());
+                .setFileStatusRule("FileNameFilter:" + this.oatProject.getFileFilterObj().getFileFilterNameItems());
             oatDocument.getStatus().setFileStatusDesc(this.oatProject.getFileFilterObj().getFileFilterDesc(""));
         }
         return notIgnored;
@@ -174,7 +174,7 @@ public class OatDirectoryWalker extends Walker {
             shortPath = this.oatProject.getPath() + shortPath;
         }
 
-        final List<String> oatFilePathFilterItems = this.oatProject.getFileFilterObj().getOatFilePathFilterItems();
+        final List<String> oatFilePathFilterItems = this.oatProject.getFileFilterObj().getOatFilePathFilterNameItems();
         for (final String oatFilePathFilterItem : oatFilePathFilterItems) {
             String piPath = oatFilePathFilterItem;
             if (piPath.startsWith("projectroot/")) {

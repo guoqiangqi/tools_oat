@@ -335,11 +335,12 @@ public final class OatCfgUtil {
             final String type = OatCfgUtil.getElementAttrValue(fileFilterItemCfg, "type");
             String name = OatCfgUtil.getElementAttrValue(fileFilterItemCfg, "name");
             final String desc = OatCfgUtil.getElementAttrValue(fileFilterItemCfg, "desc");
+            final String ref = OatCfgUtil.getElementAttrValue(fileFilterItemCfg, "ref");
             if (!type.equals("filepath")) {
                 if (oatProject != null) {
-                    oatFileFilter.addFilterItem(oatProject.getPath(), name, desc);
+                    oatFileFilter.addFilterItem(oatProject.getPath(), type,name,desc,ref);
                 } else {
-                    oatFileFilter.addFilterItem(name, desc);
+                    oatFileFilter.addFilterItem(type,name,desc,ref);
                 }
                 if (oatProject != null && (!oatFileFilter.getName().contains("dir name underproject"))) {
                     // Project OAT XML
@@ -357,7 +358,7 @@ public final class OatCfgUtil {
                     name = oatProject.getPath() + name;
                 }
             }
-            oatFileFilter.addFilePathFilterItem(name, desc);
+            oatFileFilter.addFilePathFilterItem(type,name,desc,ref);
             if (oatProject != null) {
                 // Project OAT XML
                 OatLogUtil.logOatConfig(OatCfgUtil.class.getSimpleName(),

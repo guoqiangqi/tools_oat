@@ -57,6 +57,7 @@ public class OatFolderModeCommandLine extends AbstractOatCommandLine {
         this.options.addOption("p", false, "Ignore project OAT policy");
         this.options.addOption("a", false,
             "Output single mode detection results, include 'single' and 'single_policy' folder");
+        this.options.addOption("verifyRef", false, "verify OAT binaryFileTypefilter Ref Info ");
         return IOatCommandLine.accept(args, this.options, "f");
     }
 
@@ -114,7 +115,9 @@ public class OatFolderModeCommandLine extends AbstractOatCommandLine {
         if (commandLine.hasOption("a")) {
             oatConfig.putData("allreports", "true");
         }
-
+        if (commandLine.hasOption("verifyRef")) {
+            oatConfig.putData("verifyRef", "true");
+        }
         final String policystring = commandLine.getOptionValue("policy");
         if (policystring != null) {
             final OatPolicy oatPolicy = OatCommandLinePolicyPara.getOatPolicy(policystring);
