@@ -71,6 +71,9 @@ public class OatFolderCheckExecutor extends AbstractOatExecutor {
         if (this.oatConfig.getData("IgnoreProjectPolicy").equals("true")) {
             this.postStr += "#-p";
         }
+        if (this.oatConfig.getData("verifyRef").equals("true")) {
+            this.postStr += "#-verifyRef";
+        }
         final String reportFolder = this.oatConfig.getData("reportFolder");
         if (reportFolder.length() > 0) {
             this.postStr += "#-r#" + reportFolder;
