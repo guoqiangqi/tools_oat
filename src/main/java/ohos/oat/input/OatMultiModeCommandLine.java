@@ -66,6 +66,7 @@ public class OatMultiModeCommandLine extends AbstractOatCommandLine {
         this.options.addOption("filter", true,
             "Specify filtering rules to filter some files or directories that do not need to be checked. \n"
                 + "eg:filename:.*.dat|.*.rar; filepath:projectroot/target/.*");
+        this.options.addOption("verifyRef", false, "verify OAT binaryFileTypefilter Ref Info ");
         return IOatCommandLine.accept(args, this.options, "m");
     }
 
@@ -112,6 +113,9 @@ public class OatMultiModeCommandLine extends AbstractOatCommandLine {
         }
         if (commandLine.hasOption("p")) {
             oatConfig.putData("IgnoreProjectPolicy", "true");
+        }
+        if (commandLine.hasOption("verifyRef")) {
+            oatConfig.putData("verifyRef", "true");
         }
         final String policystring = commandLine.getOptionValue("policy");
         if (policystring != null) {

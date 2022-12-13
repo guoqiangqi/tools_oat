@@ -51,6 +51,7 @@ public class OatCollectSubPrjectsCommandLine extends AbstractOatCommandLine {
         this.options.addOption("l", false, "Log switch, used to enable the logger");
         this.options.addOption("s", true, "Source code repository path, eg: c:/test/");
         this.options.addOption("r", true, "Report file path, eg: c:/oatresult.txt");
+        this.options.addOption("verifyRef", false, "verify OAT binaryFileTypefilter Ref Info ");
         return IOatCommandLine.accept(args, this.options, "c");
     }
 
@@ -69,7 +70,9 @@ public class OatCollectSubPrjectsCommandLine extends AbstractOatCommandLine {
         if (null == commandLine || null == optionValue_s || commandLine.hasOption("h")) {
             return null;
         }
-
+        if (commandLine.hasOption("verifyRef")) {
+            oatConfig.putData("verifyRef", "true");
+        }
         // Init Source code repository path, same with basedir
         String sourceCodeRepoPath = "";
         sourceCodeRepoPath = OatCfgUtil.formatPath(optionValue_s);
