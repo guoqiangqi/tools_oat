@@ -110,42 +110,38 @@ public class OatCfgUtilTest {
         task = new OatTask("testTask", "defaultPolicy", "defaultFilter", "");
         final OatPolicy defaultPolicy = new OatPolicy("defaultPolicy", "");
         final OatFileFilter defaultFilter = new OatFileFilter("defaultFilter", "Files that do not need to be scanned");
-        defaultFilter.addFilterItem("OAT*.xml|zunit|signature|Makefile|MANIFEST.MF|Kconfig|*.crt|*.markdown|*.git", "");
-        defaultFilter.addFilterItem(".mk|.ld|.gitkeep|.gitignore|.gitattributes|.config|*.te|*.json|*.svg|*.swp", "");
-        defaultFilter.addFilterItem("*.sandbox|*.rslp|*.rc|*.pydeps|*.properties|*.pluginmeta|*.php|*.sgml|.adoc|NEWS",
-            "");
-        defaultFilter.addFilterItem("*.patch|*.p7b|*.md|*.log|*.ini|*.html|*.htm|*.hml|*.hcs|__init__.py|MANIFEST.in",
-            "");
-        defaultFilter.addFilterItem(
-            "*.hcb|*.gradle|*.gen|*.dic|*.d|*.css|*.cmake|*.cer|*.build|*.aff|*.err|*.pro|*.clang-format|*.ld", "");
-        defaultFilter.addFilterItem(
-            "*.babelrc|*.editorconfig|*.eslintignore|*.prettierrc|*.eslintrc.js|*.template|*.tmpl|*.vcproj|*.def|*"
-                + ".sln", "");
-        defaultFilter.addFilterItem(
-            "*_contexts|*.vcxproj|*.vcxproj.filters|*.vcxproj.user|*visual_studio.sln|*.bundle|CERTIFICATE|SIGNATURE",
-            "");
-        defaultFilter.addFilterItem("*.lds|SConscript|*.pod|*.arb|*.repo", "");
-        defaultFilter.addFilePathFilterItem("projectroot/target/.*", "");
-        defaultFilter.addFilePathFilterItem("projectroot/output/.*", "");
-        defaultFilter.addFilePathFilterItem("projectroot/out/.*", "");
-        defaultFilter.addFilePathFilterItem("projectroot/log/.*", "");
-        defaultFilter.addFilePathFilterItem("projectroot/logs/.*", "");
-        defaultFilter.addFilePathFilterItem("projectroot/.idea/.*", "");
-        defaultFilter.addFilePathFilterItem("projectroot/.git/.*", "");
-        defaultFilter.addFilePathFilterItem("projectroot/.svn/.*", "");
-        defaultFilter.addFilePathFilterItem("projectroot/[a-zA-Z0-9]{20,}.sh", "");
+        defaultFilter.addFilterItem("filename","OAT*.xml|zunit|signature|Makefile|MANIFEST.MF|Kconfig|*.crt|*.markdown|*.git","","");
+        defaultFilter.addFilterItem("filename",".mk|.ld|.gitkeep|.gitignore|.gitattributes|.config|*.te|*.json|*.svg|*.swp","","");
+        defaultFilter.addFilterItem("filename","*.sandbox|*.rslp|*.rc|*.pydeps|*.properties|*.pluginmeta|*.php|*.sgml|.adoc|NEWS","","");
+        defaultFilter.addFilterItem("filename","*.patch|*.p7b|*.md|*.log|*.ini|*.html|*.htm|*.hml|*.hcs|__init__.py|MANIFEST.in","","");
+        defaultFilter.addFilterItem("filename","*.hcb|*.gradle|*.gen|*.dic|*.d|*.css|*.cmake|*.cer|*.build|*.aff|*.err|*.pro|*.clang-format|*.ld","","");
+        defaultFilter.addFilterItem("filename",
+                "*.babelrc|*.editorconfig|*.eslintignore|*.prettierrc|*.eslintrc.js|*.template|*.tmpl|*.vcproj|*.def|*" + ".sln","","");
+        defaultFilter.addFilterItem("filename",
+                "*_contexts|*.vcxproj|*.vcxproj.filters|*.vcxproj.user|*visual_studio.sln|*.bundle|CERTIFICATE|SIGNATURE","","");
+        defaultFilter.addFilterItem("filename","*.lds|SConscript|*.pod|*.arb|*.repo","","");
+        defaultFilter.addFilePathFilterItem("filepath","projectroot/target/.*","out put files","");
+        defaultFilter.addFilePathFilterItem("filepath","projectroot/output/.*","out put files","");
+        defaultFilter.addFilePathFilterItem("filepath","projectroot/out/.*","out put files","");
+        defaultFilter.addFilePathFilterItem("filepath","projectroot/log/.*","out put files","");
+        defaultFilter.addFilePathFilterItem("filepath","projectroot/logs/.*","out put files","");
+        defaultFilter.addFilePathFilterItem("filepath","projectroot/.idea/.*","out put files","");
+        defaultFilter.addFilePathFilterItem("filepath","projectroot/.git/.*","out put files","");
+        defaultFilter.addFilePathFilterItem("filepath","projectroot/.svn/.*","out put files","");
+        defaultFilter.addFilePathFilterItem("filepath","projectroot/[a-zA-Z0-9]{20,}.sh","Temp files","");
 
         final OatFileFilter defaultPolicyFilter = new OatFileFilter("defaultPolicyFilter", "");
-        defaultPolicyFilter.addFilterItem("README.OpenSource", "");
-        defaultPolicyFilter.addFilterItem("README", "");
-        defaultPolicyFilter.addFilterItem("README.md", "");
-        defaultPolicyFilter.addFilterItem("README_zh.md", "");
+        defaultPolicyFilter.addFilterItem("filename","README.OpenSource","","");
+        defaultPolicyFilter.addFilterItem("filename","README","","");
+        defaultPolicyFilter.addFilterItem("filename","README.md","","");
+        defaultPolicyFilter.addFilterItem("filename","README_zh.md","","");
 
         final OatFileFilter copyrightPolicyFilter = new OatFileFilter("copyrightPolicyFilter", "");
-        copyrightPolicyFilter.addFilterItem("README.OpenSource", "");
-        copyrightPolicyFilter.addFilterItem("README", "");
-        copyrightPolicyFilter.addFilterItem("README.md", "");
-        copyrightPolicyFilter.addFilterItem("README_zh.md", "");
+        copyrightPolicyFilter.addFilterItem("filename","README.OpenSource","","");
+        copyrightPolicyFilter.addFilterItem("filename","README","","");
+        copyrightPolicyFilter.addFilterItem("filename","README.md","","");
+        copyrightPolicyFilter.addFilterItem("filename","README_zh.md","","");
+
 
         final OatFileFilter licenseFileNamePolicyFilter = new OatFileFilter("licenseFileNamePolicyFilter", "");
 

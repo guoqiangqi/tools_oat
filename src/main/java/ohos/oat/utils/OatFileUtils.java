@@ -77,7 +77,10 @@ public class OatFileUtils {
     };
 
     private static final String[] PREBUILD_FILE_EXTENSION = new String[] {
-        "scr", "elf", "bin", "ocx", "cpl", "drv", "sys", "vxd"
+        "scr", "elf", "bin", "ocx", "cpl", "drv", "sys", "vxd","jar", "gz", "zip", "tar",
+            "bz", "bz2", "rar","tgz", "xz", "7z","lz4", "rpm", "deb", "class","img", "hap",
+            "exe", "dll", "lib", "so", "a", "o","exp",
+            "CLASS", "PYD", "OBJ", "PYC"
     };
 
     /**
@@ -131,7 +134,7 @@ public class OatFileUtils {
         }
     }
 
-    private static boolean isPreBuildFile(final String name) {
+    public static boolean isPreBuildFile(final String name) {
         if (name != null) {
             final String nameToLower = name.toLowerCase(Locale.US);
             for (int i = 0; i < OatFileUtils.PREBUILD_FILE_EXTENSION.length; ++i) {
