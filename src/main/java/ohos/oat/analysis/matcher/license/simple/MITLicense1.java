@@ -26,7 +26,7 @@ public class MITLicense1 extends OatDefaultSimplePatternLicenseMatcher {
     public MITLicense1() {
         super("MIT", "MIT", "", new String[] {
             "under the terms of the MIT license", "under the permissive MIT License", "under MIT License",
-            "under standard MIT license", "License: MIT", "under the MIT license"
+            "under standard MIT license", "License: MIT", "under the MIT license","MIT Licensed","MIT License"
         });
     }
 }
