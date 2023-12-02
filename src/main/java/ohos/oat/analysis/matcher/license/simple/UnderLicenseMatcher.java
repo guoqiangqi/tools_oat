@@ -40,6 +40,10 @@ public class UnderLicenseMatcher extends AbstractOatLicenseMatcher {
 
     @Override
     public boolean match(final IOatDocument pSubject, final String licenseTxt) {
+        final String licenseName = pSubject.getData("LicenseName");
+        if (licenseName != null && licenseName.length() != 0 && !licenseName.equals("InvalidLicense")) {
+            return true;
+        }
         this.line++;
         if (this.line > 50) {
             return true;
@@ -69,7 +73,6 @@ public class UnderLicenseMatcher extends AbstractOatLicenseMatcher {
                 final String familyName = this.getLicenseFamilyName();
                 this.setLicenseFamilyCategory((familyCategory == null ? cp : familyCategory));
                 this.setLicenseFamilyName((familyName == null ? cp : familyName));
-                System.out.println(pSubject.getFileName() + "++++++" + cp);
                 this.reportLicense(pSubject);
                 return false;
             } else {

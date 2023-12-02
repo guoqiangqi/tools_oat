@@ -156,6 +156,8 @@ public class OatFileAnalyser {
 
     private final List<IOatMatcher> definedHeaderMatchersOri = new ArrayList<>();
 
+    private final List<IOatMatcher> definedHeaderMatchersOri2 = new ArrayList<>();
+
     private final List<IOatMatcher> definedHeaderMatchersClean = new ArrayList<>();
 
     private final List<IOatMatcher> definedHeaderMatchersCleanGpl = new ArrayList<>();
@@ -266,8 +268,6 @@ public class OatFileAnalyser {
         this.definedHeaderMatchersClean.add(new ZlibLicense());
         this.definedHeaderMatchersClean.add(new ZlibLibpngLicense2());
         this.definedHeaderMatchersClean.add(new MITLicense1());
-        this.definedHeaderMatchersClean.add(new AtLicenseMatcher());
-        this.definedHeaderMatchersClean.add(new UnderLicenseMatcher());
         this.definedHeaderMatchersClean.add(new MulanLicense());
         this.definedHeaderMatchersClean.add(new LibertyLicense2());
         this.definedHeaderMatchersClean.add(new XConsortiumLicense());
@@ -298,6 +298,8 @@ public class OatFileAnalyser {
         this.definedHeaderMatchersCleanGpl.add(new LGPLStyleLicense3());
         this.definedHeaderMatchersOri.add(new LGPLStyleLicense());
         this.definedHeaderMatchersOri.add(new GPLStyleLicense());
+        this.definedHeaderMatchersOri2.add(new AtLicenseMatcher());
+        this.definedHeaderMatchersOri2.add(new UnderLicenseMatcher());
 
     }
 
@@ -398,6 +400,13 @@ public class OatFileAnalyser {
         }
         for (final IOatMatcher iOatMatcher : this.defaultHeaderMatchersExceptionClean) {
             for (final String line : this.cleanHeaderTextList) {
+                if (this.matchLine(line, iOatMatcher)) {
+                    break;
+                }
+            }
+        }
+        for (final IOatMatcher iOatMatcher : this.definedHeaderMatchersOri2) {
+            for (final String line : this.oriHeaderTextList) {
                 if (this.matchLine(line, iOatMatcher)) {
                     break;
                 }
