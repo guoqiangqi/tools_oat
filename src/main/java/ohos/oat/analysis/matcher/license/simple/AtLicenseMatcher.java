@@ -31,7 +31,7 @@ import java.util.regex.Pattern;
  * @since 1.0
  */
 public class AtLicenseMatcher extends AbstractOatLicenseMatcher {
-    private final Pattern pattern = IOatMatcher.compilePattern("(@license:(.*))");
+    private final Pattern pattern = IOatMatcher.compilePattern("(@license(.*))");
 
     private int line;
 
@@ -50,7 +50,7 @@ public class AtLicenseMatcher extends AbstractOatLicenseMatcher {
         }
 
         String licensHeaderText = licenseTxt;
-        final int index = licensHeaderText.indexOf("@license:");
+        final int index = licensHeaderText.indexOf("@license");
 
         if (index < 0) {
             return false;
@@ -68,7 +68,7 @@ public class AtLicenseMatcher extends AbstractOatLicenseMatcher {
         final Matcher matcher = this.pattern.matcher(licensHeaderText);
         if (matcher.find()) {
             if (matcher.groupCount() >= 2) {
-                final String cp = matcher.group(2).trim();
+                final String cp = matcher.group(2).trim().replace(":","");
                 final String familyCategory = this.getLicenseFamilyCategory();
                 final String familyName = this.getLicenseFamilyName();
                 this.setLicenseFamilyCategory((familyCategory == null ? cp : familyCategory));
