@@ -68,6 +68,7 @@ import ohos.oat.analysis.matcher.license.full.ZopePublicLicense;
 import ohos.oat.analysis.matcher.license.simple.Apache2License2;
 import ohos.oat.analysis.matcher.license.simple.ApacheStyleLicense;
 import ohos.oat.analysis.matcher.license.simple.ApplePublicSourceLicense;
+import ohos.oat.analysis.matcher.license.simple.AtLicenseMatcher;
 import ohos.oat.analysis.matcher.license.simple.BSDStyleLicense2;
 import ohos.oat.analysis.matcher.license.simple.BSLLicense;
 import ohos.oat.analysis.matcher.license.simple.CreativeCommonsAttribution4InternationalPublicLicense;
@@ -87,6 +88,7 @@ import ohos.oat.analysis.matcher.license.simple.OpenSSLLicense2;
 import ohos.oat.analysis.matcher.license.simple.PublicDomainLicense;
 import ohos.oat.analysis.matcher.license.simple.TMF854License;
 import ohos.oat.analysis.matcher.license.simple.ThirdPartyNotice;
+import ohos.oat.analysis.matcher.license.simple.UnderLicenseMatcher;
 import ohos.oat.analysis.matcher.license.simple.W3CDocLicense;
 import ohos.oat.analysis.matcher.license.simple.W3CLicense;
 import ohos.oat.analysis.matcher.license.simple.XConsortiumLicense;
@@ -153,6 +155,8 @@ public class OatFileAnalyser {
     private final List<IOatMatcher> defaultHeaderMatchersExceptionClean = new ArrayList<>();
 
     private final List<IOatMatcher> definedHeaderMatchersOri = new ArrayList<>();
+
+    private final List<IOatMatcher> definedHeaderMatchersOri2 = new ArrayList<>();
 
     private final List<IOatMatcher> definedHeaderMatchersClean = new ArrayList<>();
 
@@ -294,6 +298,8 @@ public class OatFileAnalyser {
         this.definedHeaderMatchersCleanGpl.add(new LGPLStyleLicense3());
         this.definedHeaderMatchersOri.add(new LGPLStyleLicense());
         this.definedHeaderMatchersOri.add(new GPLStyleLicense());
+        this.definedHeaderMatchersOri2.add(new AtLicenseMatcher());
+        this.definedHeaderMatchersOri2.add(new UnderLicenseMatcher());
 
     }
 
@@ -394,6 +400,13 @@ public class OatFileAnalyser {
         }
         for (final IOatMatcher iOatMatcher : this.defaultHeaderMatchersExceptionClean) {
             for (final String line : this.cleanHeaderTextList) {
+                if (this.matchLine(line, iOatMatcher)) {
+                    break;
+                }
+            }
+        }
+        for (final IOatMatcher iOatMatcher : this.definedHeaderMatchersOri2) {
+            for (final String line : this.oriHeaderTextList) {
                 if (this.matchLine(line, iOatMatcher)) {
                     break;
                 }
