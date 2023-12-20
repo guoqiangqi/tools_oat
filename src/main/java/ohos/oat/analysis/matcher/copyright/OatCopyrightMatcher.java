@@ -39,7 +39,7 @@ public class OatCopyrightMatcher implements IOatMatcher {
     private int line;
 
     public OatCopyrightMatcher() {
-        this.copyrightPatternList.add(IOatMatcher.compilePattern("(Copyright .{0,40}[0-9]{4}(\\-[0-9]{4})? (.*))"));
+        this.copyrightPatternList.add(IOatMatcher.compilePattern("(Copyright .{0,40}[0-9]{4}(\\-[0-9]{4})?\\.? (.*))"));
     }
 
     @Override
