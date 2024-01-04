@@ -201,6 +201,8 @@ example cost time(Analyse|Report):      2|0
 
 _PlainReport_example.txt_ and _PlainReport_example_Detail.txt_ will be generated after successful operation. The former is a brief summary of project issues, while the latter includes configuration information and detailed explanations of project issues. We can correct project issues by reviewing these two files.
 
+In addition, a folder named "log" will be generated under the target path specified by the -r parameter, which includes _License.txt_, _LicenseFile.txt_, _OAT.log_, and _OAT_Config.txt_. These four files record existing license and configuration information, which are included in the "Detail" report file.
+
 ## Default Rule Configuration<a name="section729883153314"></a>
 
 Default rule configurations include configuring policies \(**policylist**\), filters \(**filefilterlist**\), and license matching rules \(**licensematcherlist**\).

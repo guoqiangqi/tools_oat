@@ -122,7 +122,9 @@ Result file path:       E:\example\single\PlainReport_example_Detail.txt
 example cost time(Analyse|Report):      2|0
 ```
 
-运行成功后会生成PlainReport_example.txt和PlainReport_example_Detail.txt两个分析报告文件，前者是对项目问题的简要总结，后者包括配置信息和项目问题的详细说明，可通过查看以上两个文件改正项目问题。
+运行成功后会生成PlainReport_example.txt和PlainReport_example_Detail.txt两个分析报告文件(具体项目的报告文件名由项目名决定，此处以example为例)，前者是对项目问题的简要总结，后者包括配置信息和项目问题的详细说明，可通过查看以上两个文件改正项目问题。
+
+除此之外，还会在-r参数指定的目标路径下生成log文件夹，文件夹内有License.txt、LicenseFile.txt、OAT.log、OAT_Config.txt四个文件，这四个文件记录已有许可证和配置信息，这些信息在Detail报告文件中有所包含。
 
 ### 批量模式运行<a name="section20292217143516"></a>
 
