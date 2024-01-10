@@ -108,6 +108,24 @@ options:
 
 OAT已集成到OpenHarmony社区门禁，门禁被触发时即以此模式在运行，您可以在resources/OAT-Default.xml中查看工具的默认规则。
 
+以windows环境下，根目录路径为E:\example的项目为例，使用OAT发行版v2.0.0-beta.2的运行指令和效果如下：
+
+```
+E:\example>java -jar ohos_ossaudittool-2.0.0-beta.2.jar -mode s -s E:\example -r E:\example -n example
+--------------------------------------------------------------------------
+OpenHarmony OSS Audit Tool
+Copyright (C) 2021-2022 Huawei Device Co., Ltd.
+If you have any questions or concerns, please create issue at https://gitee.com/openharmony-sig/tools_oat/issues
+--------------------------------------------------------------------------
+Result file path:       E:\example\single\PlainReport_example.txt
+Result file path:       E:\example\single\PlainReport_example_Detail.txt
+example cost time(Analyse|Report):      2|0
+```
+
+运行成功后会在-r参数指定的目标路径下生成single文件夹，文件夹内有PlainReport_example.txt和PlainReport_example_Detail.txt两个分析报告文件(具体项目的报告文件名由项目名决定，此处以example为例)，前者是对项目问题的简要总结，后者包括配置信息和项目问题的详细说明，可通过查看以上两个文件改正项目问题。
+
+除此之外，还会在-r参数指定的目标路径下生成log文件夹，文件夹内有License.txt、LicenseFile.txt、OAT.log、OAT_Config.txt四个文件，这四个文件记录已有许可证和配置信息，这些信息在Detail报告文件中有所包含。
+
 ### 批量模式运行<a name="section20292217143516"></a>
 
 ```
