@@ -185,6 +185,24 @@ customize the rules. For details, see  [Open-Source Repository Rule Configuratio
 OAT has been integrated into the code check tools for the OpenHarmony community. When access control is triggered, OAT runs in this mode. You can view the default rules of OAT in  **
 resources/OAT-Default.xml**.
 
+Taking a project with a root directory path of E:\example in the Windows environment as an example, the running instructions and effects of OAT distribution v2.0.0 beta.2 are as follows:
+
+```
+E:\example>java -jar ohos_ossaudittool-2.0.0-beta.2.jar -mode s -s E:\example -r E:\example -n example
+--------------------------------------------------------------------------
+OpenHarmony OSS Audit Tool
+Copyright (C) 2021-2022 Huawei Device Co., Ltd.
+If you have any questions or concerns, please create issue at https://gitee.com/openharmony-sig/tools_oat/issues
+--------------------------------------------------------------------------
+Result file path:       E:\example\single\PlainReport_example.txt
+Result file path:       E:\example\single\PlainReport_example_Detail.txt
+example cost time(Analyse|Report):      2|0
+```
+
+A folder named "single" will be generated after successful operation, which includes _PlainReport_example.txt_ and _PlainReport_example_Detail.txt_(The report file name is determined by the project name, using "example" here as an example). The former is a brief summary of project issues, while the latter includes configuration information and detailed explanations of project issues. We can correct project issues by reviewing these two files.
+
+In addition, a folder named "log" will be generated under the target path specified by the -r parameter, which includes _License.txt_, _LicenseFile.txt_, _OAT.log_, and _OAT_Config.txt_. These four files record existing license and configuration information, which are included in the "Detail" report file.
+
 ## Default Rule Configuration<a name="section729883153314"></a>
 
 Default rule configurations include configuring policies \(**policylist**\), filters \(**filefilterlist**\), and license matching rules \(**licensematcherlist**\).
