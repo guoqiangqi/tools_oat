@@ -83,6 +83,10 @@ public class OatFileUtils {
             "CLASS", "PYD", "OBJ", "PYC"
     };
 
+    private static final String[] SOURCE_FILE_EXTENSION = new String[] {
+        "js", "ts", "c", "cpp", "java", "py", "rb"
+    };
+
     /**
      * API for identify files which donot need copyright headers
      *
@@ -146,10 +150,22 @@ public class OatFileUtils {
         return false;
     }
 
+    public static boolean isSourceFile(final String name) {
+        if (name != null) {
+            final String nameToLower = name.toLowerCase(Locale.US);
+            for (int i = 0; i < OatFileUtils.SOURCE_FILE_EXTENSION.length; ++i) {
+                if (nameToLower.endsWith("." + OatFileUtils.SOURCE_FILE_EXTENSION[i])) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
     public static boolean isBinaryFile(final IOatDocument document) {
         final String fileName = GuessUtils.normalise(document.getName());
         final boolean isNotBinary = BinaryGuesser.isNonBinary(fileName);
-        if (isNotBinary) {
+        if (isNotBinary || OatFileUtils.isSourceFile(fileName)) {
             return false;
         }
         return BinaryGuesser.isBinary(document.getName()) || OatFileUtils.isBinaryDocument(document)
