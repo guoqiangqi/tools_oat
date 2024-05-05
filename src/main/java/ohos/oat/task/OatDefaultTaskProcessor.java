@@ -40,8 +40,11 @@ import ohos.oat.file.OatProjectWalker;
 import ohos.oat.reporter.IOatReporter;
 import ohos.oat.reporter.OatDetailPlainReporter;
 import ohos.oat.reporter.OatPlainReporter;
+import ohos.oat.utils.OatFileUtils;
 import ohos.oat.utils.OatLogUtil;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -71,7 +74,7 @@ public class OatDefaultTaskProcessor extends AbstractOatTaskProcessor {
      * Process task
      */
     @Override
-    public void process() {
+    public void process() throws IOException {
         // init reporter first, ensure report file time is consistent
         final IOatReporter oatReporter = new OatPlainReporter();
         oatReporter.init(this.oatConfig, this.oatTask);
@@ -84,6 +87,17 @@ public class OatDefaultTaskProcessor extends AbstractOatTaskProcessor {
 
         final List<OatProject> projectList = this.oatTask.getProjectList();
         for (final OatProject oatProject : projectList) {
+            // 针对OpenEuler小包模式，扫描根目录下是否有tar.gz包，若有则解压出来进行扫描，
+            // 如果不做此步骤，会导致OpenEuler小包引入的开源软件仅当做一个压缩包，其中的源码没有经过扫描
+            final File baseDir = new File(this.oatConfig.getBasedir());
+            if (baseDir.isDirectory()) {
+                for (final File prj1LevelFile : baseDir.listFiles()) {
+                    if (prj1LevelFile.getName().endsWith(".tar.gz")){
+                         OatFileUtils.decompressGZipFiles(prj1LevelFile);
+                    }
+                }
+            }
+
             final IOatFileWalker fileWalker = new OatProjectWalker();
             fileWalker.init(this.oatConfig, this);
             fileWalker.walkProject(oatProject);

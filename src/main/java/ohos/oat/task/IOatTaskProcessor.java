@@ -21,6 +21,7 @@ import ohos.oat.config.OatTask;
 import ohos.oat.document.IOatDocument;
 import ohos.oat.reporter.IOatReporter;
 
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -41,7 +42,7 @@ public interface IOatTaskProcessor {
     /**
      * Process task
      */
-    void process();
+    void process() throws IOException;
 
     /**
      * Use IOatAnalyser to analyse document, one Document corresponds to one IOatAnalyser instance
