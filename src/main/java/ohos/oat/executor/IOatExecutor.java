@@ -19,6 +19,7 @@ import ohos.oat.config.OatConfig;
 import ohos.oat.config.OatTask;
 import ohos.oat.task.IOatTaskProcessor;
 
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -50,7 +51,11 @@ public interface IOatExecutor {
         final List<IOatTaskProcessor> oatTaskProcessors) {
         oatTaskProcessors.forEach(oatTaskProcessor -> {
             oatTaskProcessor.init(oatConfig, oatTask);
-            oatTaskProcessor.process();
+            try {
+                oatTaskProcessor.process();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
             oatTaskProcessor.transmit2Analyser();
             oatTaskProcessor.transmit2Reporter();
         });

@@ -35,19 +35,15 @@ import org.apache.commons.io.IOUtils;
 import org.apache.rat.document.impl.guesser.BinaryGuesser;
 import org.apache.rat.document.impl.guesser.GuessUtils;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
+import java.io.*;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
+import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
+import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
+import org.apache.commons.compress.compressors.gzip.GzipCompressorInputStream;
 
 /**
  * Stateless utility class for identify files which donot need copyright headers
@@ -252,4 +248,24 @@ public class OatFileUtils {
         return filepath;
     }
 
+
+    public static void decompressGZipFiles(File file) throws IOException {
+        try (FileInputStream fileInputStream = new FileInputStream(file);
+             GzipCompressorInputStream gzipInputStream = new GzipCompressorInputStream(fileInputStream);
+             TarArchiveInputStream tarInputStream = new TarArchiveInputStream(gzipInputStream);) {
+             TarArchiveEntry entry;
+             while ((entry = tarInputStream.getNextTarEntry()) != null) {
+                 if (entry.isDirectory()) {
+                     continue; // 跳过目录
+                 }
+                 File curfile = new File(file.getParent(), entry.getName());
+                 File parent = curfile.getParentFile();
+                 if (!parent.exists()) {
+                     parent.mkdirs();
+                 }
+                 IOUtils.copy(tarInputStream, new FileOutputStream(curfile));
+            }
+        }
+    }
 }
+
