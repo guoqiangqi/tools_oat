@@ -74,6 +74,7 @@ public class OatSingleModeCommandLine extends AbstractOatCommandLine {
             "Specify filtering rules to filter some files or directories that do not need to be checked. \n"
                 + "eg:filename:.*.dat|.*.rar; filepath:projectroot/target/.*");
         this.options.addOption("verifyRef", false, "verify OAT binaryFileTypefilter Ref Info ");
+        this.options.addOption("license", false, "License of every file");
         return IOatCommandLine.accept(args, this.options, "s");
     }
 
@@ -176,6 +177,9 @@ public class OatSingleModeCommandLine extends AbstractOatCommandLine {
         }
         if (commandLine.hasOption("verifyRef")) {
             oatConfig.putData("verifyRef", "true");
+        }
+        if (commandLine.hasOption("license")) {
+            oatConfig.putData("LicenseEveryFile", "true");
         }
         final String policystring = commandLine.getOptionValue("policy");
         if (policystring != null) {

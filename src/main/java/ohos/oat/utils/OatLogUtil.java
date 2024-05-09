@@ -35,6 +35,8 @@ public final class OatLogUtil {
 
     private static final Logger LICENSE_FILE_LOGGER = LogManager.getLogger("Log_License_File");
 
+    private static final Logger LICENSE_EVERY_FILE_LOGGER = LogManager.getLogger("Log_License_Every_File");
+
     private static final Logger OAT_CONFIG_LOGGER = LogManager.getLogger("Log_OAT_Config");
 
     private static boolean isDebugMode = false;
@@ -127,6 +129,15 @@ public final class OatLogUtil {
      */
     public static void logLicenseFile(final String className, final String logtext) {
         LICENSE_FILE_LOGGER.warn(className + "\t" + logtext);
+    }
+
+    /**
+     * write log message
+     *
+     * @param logtext log text
+     */
+    public static void logLicenseEveryFile(final String logtext) {
+        LICENSE_EVERY_FILE_LOGGER.info(logtext);
     }
 
     /**
