@@ -122,6 +122,11 @@ public class OatPolicyVerifyAnalyser extends AbstraceOatAnalyser {
                 }
             }
         }
+        
+        if(this.oatConfig.getData("LicenseEveryFile").equals("true") && !this.oatFileDocument.isDirectory()){
+            OatLogUtil.logLicenseEveryFile("File: /" + shortFileUnderProject + "\t" + (name.equals("") ? "NULL" : name));
+        }
+        
         OatPolicyVerifyAnalyser.analyseProjectRoot(this.oatFileDocument, oatProject, prjPath);
         if (this.oatFileDocument.isDirectory()) {
             return;

@@ -24,6 +24,9 @@
         <File name="Log_License_File" fileName="log/LicenseFile.txt" append="false">
             <PatternLayout pattern="%d{HH:mm:ss} %-5level - %msg%n"/>
         </File>
+        <File name="Log_License_Every_File" fileName="log/LicenseEveryFile.txt" append="false">
+            <PatternLayout pattern="%d{HH:mm:ss} %-5level - %msg%n"/>
+        </File>
         <File name="Log_OAT_Config" fileName="log/OAT_Config.txt" append="false">
             <PatternLayout pattern="%d{HH:mm:ss} %-5level - %msg%n"/>
         </File>
@@ -37,6 +40,9 @@
         </Logger>
         <Logger name="Log_License_File" level="info" additivity="false">
             <AppenderRef ref="Log_License_File"/>
+        </Logger>
+        <Logger name="Log_License_Every_File" level="info" additivity="false">
+            <AppenderRef ref="Log_License_Every_File"/>
         </Logger>
         <Logger name="Log_OAT_Config" level="info" additivity="false">
             <AppenderRef ref="Log_OAT_Config"/>
